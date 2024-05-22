@@ -26,6 +26,7 @@ const links = [{
     </template>
 
     <template #right>
+      <UColorModeButton size="sm" />
       <UButton
         label="Sign in"
         color="gray"
@@ -36,14 +37,14 @@ const links = [{
         icon="i-heroicons-arrow-right-20-solid"
         trailing
         color="black"
-        to="/signup"
+        to="/"
         class="hidden lg:flex"
       />
     </template>
 
     <template #panel>
       <UNavigationTree
-        :links="mapContentNavigation(navigation)"
+        :links="links"
         default-open
       />
     </template>
