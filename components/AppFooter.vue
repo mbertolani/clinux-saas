@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 const toast = useToast()
 
-const email = ref('')
+// const email = ref('')
 const loading = ref(false)
 
 function onSubmit() {
@@ -17,6 +16,8 @@ function onSubmit() {
     loading.value = false
   }, 1000)
 }
+
+onSubmit()
 </script>
 
 <template>

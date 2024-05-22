@@ -20,10 +20,8 @@ useSeoMeta({
       :description="page.hero.description"
       :links="page.hero.links"
     >
-    <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
-
+      <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
     </ULandingHero>
-
   </div>
 </template>
 

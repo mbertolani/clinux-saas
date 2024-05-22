@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import type { NavItem } from '@nuxt/content/dist/runtime/types'
+// import type { NavItem } from '@nuxt/content/dist/runtime/types'
 
-const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
+// const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
 
-const links = [{
-  label: 'Docs',
-  to: '/docs',
-  children: [
-    { label: 'Getting Started', to: '/docs/getting-started' },
-    { label: 'Configuration', to: '/docs/configuration' },
-    { label: 'Deployment', to: '/docs/deployment' }
-  ]
-}, {
-  label: 'Pricing',
-  to: '/pricing'
-}, {
-  label: 'Blog',
-  to: '/blog'
-}]
+const links = [
+  {
+    label: 'Tools',
+    to: '/tools',
+    children: [
+      { label: 'Editor', to: '/tools/editor' },
+      { label: 'Grid', to: '/tools/grid' },
+      { label: 'Data', to: '/tools/data' },
+      { label: 'Form', to: '/tools/form' }
+    ]
+  },
+  {
+    label: 'Pricing',
+    to: '/pricing'
+  },
+  {
+    label: 'Blog',
+    to: '/blog'
+  }
+]
 </script>
 
 <template>
