@@ -1,38 +1,4 @@
 <script setup lang="ts">
-const links = [{
-  label: 'Resources',
-  children: [{
-    label: 'Help center'
-  }, {
-    label: 'Docs'
-  }, {
-    label: 'Roadmap'
-  }, {
-    label: 'Changelog'
-  }]
-}, {
-  label: 'Features',
-  children: [{
-    label: 'Affiliates'
-  }, {
-    label: 'Portal'
-  }, {
-    label: 'Jobs'
-  }, {
-    label: 'Sponsors'
-  }]
-}, {
-  label: 'Company',
-  children: [{
-    label: 'About'
-  }, {
-    label: 'Pricing'
-  }, {
-    label: 'Careers'
-  }, {
-    label: 'Blog'
-  }]
-}]
 
 const toast = useToast()
 
@@ -55,8 +21,8 @@ function onSubmit() {
 
 <template>
   <UFooter>
-    <template #top>
-      <UFooterColumns :links="links">
+    <!-- <template #top>
+      <UFooterColumns>
         <template #right>
           <form @submit.prevent="onSubmit">
             <UFormGroup
@@ -88,7 +54,7 @@ function onSubmit() {
           </form>
         </template>
       </UFooterColumns>
-    </template>
+    </template> -->
 
     <template #left>
       <p class="text-gray-500 dark:text-gray-400 text-sm">
@@ -97,8 +63,6 @@ function onSubmit() {
     </template>
 
     <template #right>
-      <UColorModeButton size="sm" />
-
       <UButton
         to="https://github.com/nuxt-ui-pro/saas"
         target="_blank"

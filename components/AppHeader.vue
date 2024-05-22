@@ -5,7 +5,12 @@ const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
 
 const links = [{
   label: 'Docs',
-  to: '/docs'
+  to: '/docs',
+  children: [
+    { label: 'Getting Started', to: '/docs/getting-started' },
+    { label: 'Configuration', to: '/docs/configuration' },
+    { label: 'Deployment', to: '/docs/deployment' }
+  ]
 }, {
   label: 'Pricing',
   to: '/pricing'
@@ -18,8 +23,8 @@ const links = [{
 <template>
   <UHeader :links="links">
     <template #logo>
-      Nuxt UI Pro <UBadge
-        label="SaaS"
+      Clinux <UBadge
+        label="Ris"
         variant="subtle"
         class="mb-0.5"
       />
