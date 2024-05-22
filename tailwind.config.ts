@@ -3,7 +3,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default <Partial<Config>>{
   content: [
-    './src/**/*.{js,ts,jsx,tsx}', // Adicione os caminhos para seus arquivos aqui
+    './src/**/*.{js,ts,jsx,tsx}' // Adicione os caminhos para seus arquivos aqui
   ],
   theme: {
     extend: {

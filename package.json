@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-ui-pro-template-saas",
+  "name": "clinux-saas",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,23 +9,53 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@formkit/addons": "latest",
+    "@formkit/core": "latest",
+    "@formkit/icons": "latest",
+    "@formkit/nuxt": "latest",
+    "@formkit/pro": "latest",
+    "@formkit/themes": "latest",
+    "@formkit/vue": "latest",
     "@iconify-json/heroicons": "^1.1.21",
     "@iconify-json/simple-icons": "^1.1.102",
     "@nuxt/content": "^2.12.1",
     "@nuxt/fonts": "^0.7.0",
     "@nuxt/image": "^1.7.0",
+    "@nuxt/kit-nightly": "3.12.0-28606556.69430aa2",
     "@nuxt/ui-pro": "^1.2.0",
+    "@syncfusion/ej2-base": "latest",
+    "@syncfusion/ej2-buttons": "latest",
+    "@syncfusion/ej2-dropdowns": "latest",
+    "@syncfusion/ej2-inputs": "latest",
+    "@syncfusion/ej2-lists": "latest",
+    "@syncfusion/ej2-navigations": "latest",
+    "@syncfusion/ej2-popups": "latest",
+    "@syncfusion/ej2-splitbuttons": "latest",
+    "@syncfusion/ej2-vue-documenteditor": "latest",
     "@vueuse/nuxt": "^10.9.0",
+    "ag-charts-community": "9.3.1",
+    "ag-charts-vue3": "^9.3.1",
+    "ag-grid-charts-enterprise": "31.3.1",
+    "ag-grid-community": "31.3.1",
+    "ag-grid-enterprise": "31.3.1",
+    "ag-grid-vue3": "31.3.1",
     "nuxt": "^3.11.2",
-    "nuxt-og-image": "^2.2.4"
+    "nuxt-og-image": "3.0.0-rc.53",
+    "vue-class-component": "8.0.0-rc.1"
   },
   "devDependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@nuxt/eslint": "^0.3.13",
+    "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@nuxthq/studio": "^1.1.0",
+    "@pinia/nuxt": "^0.5.1",
     "eslint": "^8.57.0",
+    "nuxt-auth-utils": "^0.0.25",
+    "typescript": "^5.4.5",
     "vue-tsc": "^2.0.19"
   }
 }
