@@ -23,6 +23,13 @@ const links = [
     to: '/blog'
   }
 ]
+
+const { logUserOut } = useAuthStore()
+const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
+const logout = () => {
+  logUserOut()
+  navigateTo('/')
+}
 </script>
 
 <template>
@@ -38,17 +45,19 @@ const links = [
     <template #right>
       <UColorModeButton size="sm" />
       <UButton
-        label="Sign in"
+        v-if="!authenticated"
+        label="Login"
         color="gray"
         to="/login"
       />
       <UButton
-        label="Sign up"
+        v-if="authenticated"
+        label="Logout"
         icon="i-heroicons-arrow-right-20-solid"
         trailing
         color="black"
-        to="/"
         class="hidden lg:flex"
+        @click="logout()"
       />
     </template>
 

@@ -31,7 +31,7 @@ export const useBaseStore = <T>(route: string) => {
   const errors = ref(null)
 
   // Define http as the result of useAPI function
-  const api = useAPI(url, items, meta, item, httpStatus, errors)
+  const api = useHttpData(url, items, meta, item, httpStatus, errors)
 
   // Define processing as a ref to a boolean, initially set to false
   const processing = ref<boolean>(false)

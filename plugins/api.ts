@@ -1,37 +1,30 @@
-export default defineNuxtPlugin({
-  setup() {
-    console.log('API Plugin')
-    const userAuth = useCookie('token')
-    const config = useRuntimeConfig()
-
-    const api = $fetch.create({
-      baseURL: (config.public.apiBaseURL as string) || 'http://localhost:8082',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      //   Authorization: `Bearer ${userAuth.value}`
-      // },
-      onRequest({ options }) {
-        console.log('onRequest', options)
-        if (userAuth.value) {
-          options.headers = {} as Record<string, string>
-          options.headers.Authorization = `Bearer ${userAuth.value}`
-        }
-      },
-      onResponse({ response }): void | Promise<void> {
-        console.log('onResponse', response)
-      },
-      onResponseError({ response }): void | Promise<void> {
-        console.log('onResponseError', response)
-        if (response.status === 401) {
-          navigateTo('/login')
+export default defineNuxtPlugin(() => {
+  const { session } = useUserSession()
+  const api = $fetch.create({
+    baseURL: (useRuntimeConfig().public.apiBaseURL as string) || 'http://localhost:8082',
+    onRequest({ options }) {
+      if (session.value?.token) {
+        const headers = options.headers ||= {}
+        if (Array.isArray(headers)) {
+          headers.push(['Authorization', `Bearer ${session.value?.token}`])
+        } else if (headers instanceof Headers) {
+          headers.set('Authorization', `Bearer ${session.value?.token}`)
+        } else {
+          headers.Authorization = `Bearer ${session.value?.token}`
         }
       }
-    })
-
-    return {
-      provide: {
-        api
+    },
+    async onResponseError({ response }) {
+      if (response.status === 401) {
+        await navigateTo('/login')
       }
+    }
+  })
+
+  // Expose to useNuxtApp().$api
+  return {
+    provide: {
+      api
     }
   }
 })

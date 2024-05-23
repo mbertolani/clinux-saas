@@ -1,7 +1,7 @@
 // import { build } from 'nuxt'
 // import { Data } from '~/types/generated'
 
-export const useAPI = (
+export const useHttpData = (
   url: string,
   items: any,
   meta: any,

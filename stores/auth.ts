@@ -12,9 +12,10 @@ export const useAuthStore = defineStore('auth', {
     loading: false
   }),
   actions: {
-    async authenticateUser({ username, password }: UserPayloadInterface) {
+    authenticateUser({ username, password }: UserPayloadInterface) {
       // useFetch from nuxt 3
-      const { data, pending }: any = await useCustomFetch('/login/auth', {
+      console.log('authenticateUser', username, password)
+      const { data, error, success }: any = useHttp('/login/auth', {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: {
@@ -22,10 +23,10 @@ export const useAuthStore = defineStore('auth', {
           password
         }
       })
-      this.loading = pending
-
-      if (data.value) {
-        console.log(data.value)
+      // this.loading = pending
+      console.log('set cookie', data, error, success)
+      this.authenticated = success
+      if (success) {
         const token = useCookie('token') // useCookie new hook in nuxt 3
         token.value = data?.value?.token // set token to cookie
         this.authenticated = true // set authenticated  state value to true
