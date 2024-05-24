@@ -1,9 +1,6 @@
 <script setup lang="ts">
-const { authenticateUser } = useAuthStore() // use auth store
-
-const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
-
 definePageMeta({
+  auth: false,
   layout: 'auth'
 })
 
@@ -14,13 +11,16 @@ useSeoMeta({
 const fields = [{
   name: 'username',
   type: 'text',
-  label: 'Email',
-  placeholder: 'Enter your email'
+  label: 'Usuário',
+  placeholder: 'Nome do Usuário',
+  required: true
 }, {
   name: 'password',
-  label: 'Password',
+  label: 'Senha',
   type: 'password',
-  placeholder: 'Enter your password'
+  placeholder: 'Digite sua senha',
+  icon: 'i-heroicons-lock-closed',
+  required: true
 }]
 
 const validate = (state: any) => {
@@ -37,14 +37,40 @@ const providers = [{
   click: () => {
     console.log('Redirect to GitHub')
   }
+},
+{
+  label: 'Continue with Google',
+  icon: 'i-simple-icons-google',
+  color: 'white' as const,
+  click: () => {
+    console.log('Redirect to Google')
+  }
 }]
 
-const onSubmit = (data: any) => {
-  console.log('Submitted', data)
-  authenticateUser(data)
-  console.log('Authenticated', authenticated.value)
-  if (authenticated.value) {
-    navigateTo('/')
+const { signIn } = useAuth()
+// const { loading } = useAuthState()
+const loading = ref(false)
+
+const onSubmit = async (form: any) => {
+  try {
+    loading.value = true
+    await signIn(
+      { ...form },
+      { callbackUrl: '/' } // Where the user will be redirected after a successiful login
+    )
+    useToast().add({
+      title: 'Bem-Vindo',
+      color: 'green',
+      description: 'Login efetuado com sucesso !'
+    })
+  } catch (error) {
+    useToast().add({
+      title: 'Erro',
+      color: 'red',
+      description: error.response?._data.error
+    })
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -57,32 +83,32 @@ const onSubmit = (data: any) => {
       :fields="fields"
       :validate="validate"
       :providers="providers"
-      title="Welcome back"
+      title="Bem-Vindo"
       align="top"
       icon="i-heroicons-lock-closed"
       :ui="{ base: 'text-center', footer: 'text-center' }"
-      :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid' }"
+      :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid', label: 'Entrar', loading: loading }"
       @submit="onSubmit"
     >
-      <template #description>
-        Don't have an account? <NuxtLink
+      <!-- <template #description>
+        Quer se cadastrar ? <NuxtLink
           to="/signup"
           class="text-primary font-medium"
-        >Sign up</NuxtLink>.
-      </template>
+        >Cadastrar</NuxtLink>.
+      </template> -->
 
       <template #password-hint>
         <NuxtLink
           to="/"
           class="text-primary font-medium"
-        >Forgot password?</NuxtLink>
+        >Esqueci a senha?</NuxtLink>
       </template>
 
       <template #footer>
-        By signing in, you agree to our <NuxtLink
+        Você concorda com nosso <NuxtLink
           to="/"
           class="text-primary font-medium"
-        >Terms of Service</NuxtLink>.
+        >Termo de serviço</NuxtLink>.
       </template>
     </UAuthForm>
   </UCard>

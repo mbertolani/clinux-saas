@@ -1,6 +1,6 @@
 <script setup>
 const url = '/se1/doPortalSetup'
-const { data: modules, pending, status, error } = await useCustomFetch(url, { method: 'POST' })
+const { data: modules, pending, status, error } = await useAPI(url, { method: 'POST' })
 </script>
 
 <template>

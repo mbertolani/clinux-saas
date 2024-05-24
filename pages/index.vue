@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ModalDelete } from '#components'
+
 const { data: page } = await useAsyncData('index', () => queryContent('/').findOne())
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
@@ -12,8 +14,25 @@ useSeoMeta({
   ogDescription: page.value.description
 })
 definePageMeta({
-  middleware: []
+  auth: true
 })
+const toast = useToast()
+const modal = useModal()
+const count = ref(0)
+
+function openModal() {
+  console.log('openModal')
+  count.value += 1
+  modal.open(ModalDelete, {
+    count: count.value,
+    onSuccess() {
+      toast.add({
+        title: 'Success !',
+        id: 'modal-success'
+      })
+    }
+  })
+}
 </script>
 
 <template>
@@ -25,6 +44,11 @@ definePageMeta({
     >
       <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
     </ULandingHero>
+    <UButton
+      label="Reveal modal"
+      class="flex w-full justify-center mt-8"
+      @click="openModal"
+    />
   </div>
 </template>
 

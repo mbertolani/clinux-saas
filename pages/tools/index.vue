@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia'
+// import { storeToRefs } from 'pinia'
 import type { Empresa } from '~/stores/gerencial/empresa'
 import type { Funcionario } from '~/stores/gerencial/funcionario'
 import { useEmpresaStore } from '~/stores/gerencial/empresa'
 import { useFuncionarioStore } from '~/stores/gerencial/funcionario'
-
-const { $api } = useNuxtApp()
 
 const { appConfig } = useAppConfig()
 definePageMeta({ layout: 'default' })
@@ -13,22 +11,18 @@ useHead({
   titleTemplate: 'Index page',
   title: (appConfig as { name: string })?.name || 'Nuxt 3 Awesome Starter'
 })
-const router = useRouter()
+// const router = useRouter()
 
-const { logUserOut } = useAuthStore()
-const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
+// const { logUserOut } = useAuthStore()
+// const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
 const listaEmpresas = ref<Empresa[]>([])
 const listaFuncionarios = ref<Funcionario[]>([])
-const logout = () => {
-  logUserOut()
-  router.push('/login')
-}
+// const logout = () => {
+//   logUserOut()
+//   router.push('/login')
+// }
 
-const _customFetch = async () => {
-  // const data = await useNuxtApp().$api("/gerencial/funcionario");
-  const data = await useNuxtApp().$api('/setup/data')
-  listaEmpresas.value = data as Empresa[]
-}
+const { $api } = useNuxtApp()
 
 const apiFetch = async () => {
   listaEmpresas.value = await $api('/gerencial/empresa')
@@ -64,15 +58,9 @@ const showPageError = () => {
     <div class="flex flex-col space-y-5">
       <button
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
-        @click="_customFetch()"
+        @click="navigateTo('/tools/data')"
       >
-        Custom Fetch()
-      </button>
-      <button
-        class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
-        @click="navigateTo('/utils/fetch')"
-      >
-        useCustom Fetch()
+        useApi Fetch()
       </button>
       <button
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
@@ -84,13 +72,13 @@ const showPageError = () => {
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
         @click="getEmpresas()"
       >
-        getEmpresas()
+        Store getEmpresas()
       </button>
       <button
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
         @click="getFuncionarios()"
       >
-        getFuncionarios()
+        Store getFuncionarios()
       </button>
       <button
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
@@ -98,39 +86,8 @@ const showPageError = () => {
       >
         Page Error
       </button>
-      <button
-        v-if="!authenticated"
-        class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
-        @click="navigateTo('/login')"
-      >
-        Login
-      </button>
-      <button
-        v-if="authenticated"
-        class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
-        @click="logout()"
-      >
-        Logout
-      </button>
-      <button
-        v-if="!authenticated"
-        class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
-        @click="navigateTo('/about')"
-      >
-        About
-      </button>
-      <button
-        v-if="!authenticated"
-        class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
-        @click="navigateTo('/')"
-      >
-        Home
-      </button>
     </div>
     <pre>{{ listaEmpresas }}</pre>
     <pre>{{ listaFuncionarios }}</pre>
-    <footer v-if="authenticated">
-      <h1>Footer</h1>
-    </footer>
   </div>
 </template>

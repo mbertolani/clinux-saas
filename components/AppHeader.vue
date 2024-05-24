@@ -24,11 +24,9 @@ const links = [
   }
 ]
 
-const { logUserOut } = useAuthStore()
-const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
+const { signOut, token } = useAuth()
 const logout = () => {
-  logUserOut()
-  navigateTo('/')
+  signOut({ callbackUrl: '/signout' })
 }
 </script>
 
@@ -45,13 +43,13 @@ const logout = () => {
     <template #right>
       <UColorModeButton size="sm" />
       <UButton
-        v-if="!authenticated"
+        v-if="!token"
         label="Login"
         color="gray"
         to="/login"
       />
       <UButton
-        v-if="authenticated"
+        v-if="token"
         label="Logout"
         icon="i-heroicons-arrow-right-20-solid"
         trailing
