@@ -3,6 +3,10 @@ const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 
+const system = useSystem()
+const { client, loadClient } = system
+await loadClient()
+
 useHead({
   meta: [
     { charset: 'utf-8' },
@@ -10,7 +14,7 @@ useHead({
     { key: 'theme-color', name: 'theme-color', content: color }
   ],
   link: [
-    { rel: 'icon', href: '/favicon.ico' }
+    { rel: 'icon', href: `${client.value?.ds_portal_url}/setup/icon` }
   ],
   htmlAttrs: {
     lang: 'en'

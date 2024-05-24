@@ -9,7 +9,10 @@ useHead({
 <template>
   <div class="h-screen flex items-center justify-center overlay">
     <div class="gradient" />
-
+    <UColorModeButton
+      size="sm"
+      class="absolute top-16"
+    />
     <UButton
       icon="i-heroicons-home"
       label="Home"

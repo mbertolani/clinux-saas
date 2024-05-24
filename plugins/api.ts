@@ -1,6 +1,5 @@
 export default defineNuxtPlugin(() => {
   const { token } = useAuth()
-  console.log('api', token)
   const api = $fetch.create({
     baseURL: (useRuntimeConfig().public.apiBaseURL as string) || 'http://localhost:8082',
     onRequest({ options }) {

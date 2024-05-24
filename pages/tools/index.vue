@@ -17,10 +17,10 @@ useHead({
 // const { authenticated } = storeToRefs(useAuthStore()) // make authenticated state reactive
 const listaEmpresas = ref<Empresa[]>([])
 const listaFuncionarios = ref<Funcionario[]>([])
-// const logout = () => {
-//   logUserOut()
-//   router.push('/login')
-// }
+// const setupStore = useSystemStore
+// const { useLoadSetup } = setupStore()
+// const { setup } = storeToRefs(setupStore())
+// useLoadSetup()
 
 const { $api } = useNuxtApp()
 
@@ -87,7 +87,9 @@ const showPageError = () => {
         Page Error
       </button>
     </div>
+    Empresas
     <pre>{{ listaEmpresas }}</pre>
+    Funcionarios
     <pre>{{ listaFuncionarios }}</pre>
   </div>
 </template>

@@ -153,13 +153,16 @@ export const useHttpData = (
    *
    * @returns {string} - The generated API URL.
    */
+  function queryToUrl(query: any) {
+    return Object.keys(query).map(key => `${key}=${query[key]}`).join('&')
+  }
   function generateApiUrl(query: any, _url?: string) {
     _url = typeof query === 'string' ? query : _url
     const tempURL = _url ? `${url}/${_url}` : url
     let urlParam = ''
 
     if (query && typeof query === 'object') {
-      urlParam = `?${useQueryToUrl(query)}`
+      urlParam = `?${queryToUrl(query)}`
     }
 
     const api_url = `${tempURL}${
