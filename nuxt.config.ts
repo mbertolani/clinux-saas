@@ -11,11 +11,10 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/ui',
-    '@nuxt/fonts',
     '@nuxthq/studio',
     '@vueuse/nuxt',
     '@pinia/nuxt',
-    'nuxt-auth-utils',
+    '@sidebase/nuxt-auth',
     'nuxt-og-image'
   ],
   hooks: {
@@ -71,6 +70,33 @@ export default defineNuxtConfig({
     apiKey: '', // Default to an empty string, automatically set at runtime using process.env.NUXT_API_KEY
     public: {
       apiBaseURL: 'http://172.18.0.1:8082' // Exposed to the frontend as well.
+    }
+  },
+  auth: {
+    isEnabled: true,
+    globalAppMiddleware: {
+      isEnabled: true
+    },
+    baseURL: 'http://172.18.0.1:8082/login',
+    provider: {
+      type: 'local',
+      endpoints: {
+        signIn: { path: '/auth', method: 'post' },
+        getSession: { path: '/user', method: 'post' }
+      },
+      token: {
+        signInResponseTokenPointer: '/token'
+      },
+      pages: {
+        login: '/login'
+      },
+      sessionDataType: { id: 'string', email: 'string', name: 'string', role: 'admin | guest | account' }
+    },
+    session: {
+      // Whether to refresh the session every time the browser window is refocused.
+      enableRefreshOnWindowFocus: false,
+      // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
+      enableRefreshPeriodically: 1000 * 60 * 5 // 5 minutes
     }
   }
 })
