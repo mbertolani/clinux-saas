@@ -18,10 +18,8 @@ export const useHttp = async (
   } = { method: 'get' }
 ) => {
   console.log('useHttp', url)
-  const config = useRuntimeConfig()
-  const token = useCookie('token', {
-    domain: config.public.apiBaseURL
-  })
+  // const config = useRuntimeConfig()
+  const { token } = useAuth()
   let data: DataResponse = { data: null, meta: null }
   let error = null
   let success = false
@@ -32,7 +30,7 @@ export const useHttp = async (
     initHeaders.append('Content-Type', 'application/json')
   }
   if (token.value) {
-    initHeaders.append('Authorization', `Bearer ${token.value}`)
+    initHeaders.append('Authorization', token.value)
   }
   if (fileUpload) {
     initHeaders.set('Content-Type', 'multipart/form-data')

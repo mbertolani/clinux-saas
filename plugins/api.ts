@@ -1,16 +1,17 @@
 export default defineNuxtPlugin(() => {
-  const { session } = useUserSession()
+  const { token } = useAuth()
+  console.log('api', token)
   const api = $fetch.create({
     baseURL: (useRuntimeConfig().public.apiBaseURL as string) || 'http://localhost:8082',
     onRequest({ options }) {
-      if (session.value?.token) {
+      if (token) {
         const headers = options.headers ||= {}
         if (Array.isArray(headers)) {
-          headers.push(['Authorization', `Bearer ${session.value?.token}`])
+          headers.push(['Authorization', `${token.value}`])
         } else if (headers instanceof Headers) {
-          headers.set('Authorization', `Bearer ${session.value?.token}`)
+          headers.set('Authorization', `${token.value}`)
         } else {
-          headers.Authorization = `Bearer ${session.value?.token}`
+          headers.Authorization = `${token.value}`
         }
       }
     },
