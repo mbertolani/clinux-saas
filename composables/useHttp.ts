@@ -18,7 +18,7 @@ export const useHttp = async (
   } = { method: 'get' }
 ) => {
   console.log('useHttp', url)
-  const config = useRuntimeConfig()
+  // const config = useRuntimeConfig()
   const { token } = useAuth()
   let data: DataResponse = { data: null, meta: null }
   let error = null
@@ -48,8 +48,7 @@ export const useHttp = async (
   }
 
   try {
-    const response = await fetch(config.public.apiBaseURL + url, options)
-
+    const response = await fetch(url, options)
     // wait for the response to be parsed as JSON
     if (response.ok) {
       const res = await response.json()

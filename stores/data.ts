@@ -2,10 +2,10 @@
 // export const useBaseStore = <T>(id: string, route: string) => defineStore(id, () => {
 export const useBaseStore = <T>(route: string) => {
   // Access the runtime config with useRuntimeConfig
-  const config = useRuntimeConfig()
+  // const config = useRuntimeConfig()
 
   // Define the URL for the API using the runtime config
-  const url = `${config.public.apiBaseURL}${route}`
+  const url = `${useSystemStore().apiUrl}${route}`
 
   // Define items as a ref to an empty array
   // The "items" variable stores the list of array items retrieved from the backend.

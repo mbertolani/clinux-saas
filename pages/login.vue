@@ -4,10 +4,6 @@ definePageMeta({
   layout: 'auth'
 })
 
-useSeoMeta({
-  title: 'Login'
-})
-
 const fields = [{
   name: 'username',
   type: 'text',
@@ -50,18 +46,19 @@ const providers = [{
 }]
 
 const { signIn } = useAuth()
-// const { loading } = useAuthState()
 const loading = ref(false)
 
-const system = useSystem()
-const { setup, logo, loadLogo, loadSetup } = system
+const system = useSystemStore()
+const { setup, logo } = storeToRefs(system)
+const { loadLogo, loadSetup, apiUrl } = system
+
 await loadSetup()
 
 const onSubmit = async (form: any) => {
   try {
     loading.value = true
     await signIn(
-      { ...form },
+      { ...form, api: apiUrl },
       { callbackUrl: '/' } // Where the user will be redirected after a successiful login
     )
     useToast().add({

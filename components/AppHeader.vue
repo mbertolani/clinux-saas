@@ -50,11 +50,10 @@ const logout = () => {
       />
       <UButton
         v-if="token"
-        label="Logout"
         icon="i-heroicons-arrow-right-20-solid"
         trailing
         color="black"
-        class="hidden lg:flex"
+        class="flex bg-center"
         @click="logout()"
       />
     </template>

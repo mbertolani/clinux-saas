@@ -1,3 +1,5 @@
+import { defineStore } from 'pinia'
+
 export type Empresa = {
   cd_empresa: number
   ds_empresa: string

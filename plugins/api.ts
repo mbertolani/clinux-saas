@@ -1,7 +1,8 @@
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin(async () => {
   const { token } = useAuth()
+  await useSystemStore().loadClient()
   const api = $fetch.create({
-    baseURL: (useRuntimeConfig().public.apiBaseURL as string) || 'http://localhost:8082',
+    baseURL: useSystemStore().apiUrl || 'http://localhost:8082',
     onRequest({ options }) {
       if (token) {
         const headers = options.headers ||= {}
