@@ -73,7 +73,6 @@ export interface MainMenu {
   sn_ativo: boolean
 }
 export type Nullable<T> = T | null
-
 export type ID<T = string> = {
   id: T
 }
@@ -135,13 +134,13 @@ export const useSystem = () => {
         ds_portal_url: 'http://localhost:8082',
         ds_portal_id: 'localhost'
       }
-      return
-    }
-    try {
-      const { data } = await useFetch('https://lumen.clinux.com.br/chamados/cgi-bin/dwserver.cgi/se1/dotListaCgi?id=' + route.query.id)
-      client.value = data.value[0]
-    } catch (error) {
-      console.log(error)
+    } else {
+      try {
+        const { data } = await useFetch('https://lumen.clinux.com.br/chamados/cgi-bin/dwserver.cgi/se1/dotListaCgi?id=' + route.query.id)
+        client.value = data.value[0]
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
