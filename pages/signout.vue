@@ -3,8 +3,8 @@ definePageMeta({
   auth: false,
   layout: 'auth'
 })
-const { client } = useSystemStore()
-const homeUrl = computed(() => `/login?id=${client.ds_portal_id}`)
+const { moduleId, clientId } = useRouterStore()
+const homeUrl = computed(() => `/${moduleId}/${clientId}`)
 </script>
 
 <template>

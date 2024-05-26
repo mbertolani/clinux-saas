@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
-import type { ModuleType, Setup, MainMenu, Client } from '~/types/system'
+import { type Setup, type MainMenu } from '~/types/system'
+
+// https://masteringpinia.com/blog/top-5-mistakes-to-avoid-when-using-pinia
+// https://pinia.vuejs.org/ssr/nuxt.html
 
 export const useSystemStore = defineStore('system', () => {
-// export const useSystem = () => {
-  const name = <ModuleType>'dicomvix'
-  const client = ref<Client>()
+  // export const useSystem = () => {
   const setup = ref<Setup>()
   const menu = ref<MainMenu[]>([])
   const icon = ref(null)
   const logo = ref(null)
   const loading = ref(false)
   const toast = useToast()
-  const route = useRoute()
 
   const toastError = (error: any) => {
     toast.add({
@@ -65,42 +65,26 @@ export const useSystemStore = defineStore('system', () => {
     menu.value = data.value
   }
 
-  const loadClient = async () => {
-    if (client.value && client.value?.ds_portal_id === route.query.id) return
-
-    if (!route.query.id || route.query.id === 'localhost') {
-      client.value = {
-        cd_empresa: 1,
-        ds_empresa: 'Genesis',
-        ds_portal_url: 'http://172.18.0.1:8082',
-        ds_portal_id: 'localhost'
-      }
-    } else {
-      try {
-        console.log('loadClient', route.query.id)
-        const { data } = await useFetch('https://lumen.clinux.com.br/chamados/cgi-bin/dwserver.cgi/se1/dotListaCgi?id=' + route.query.id)
-        client.value = data.value[0]
-      } catch (error) {
-        console.log(error)
-      }
-    }
+  function $reset() {
+    setup.value = null
+    menu.value = null
+    icon.value = null
+    logo.value = null
+    loading.value = null
   }
 
-  const apiUrl = computed(() => client.value?.ds_portal_url)
-
   return {
-    apiUrl,
-    name,
-    client,
     menu,
     setup,
     logo,
     icon,
     loading,
+    $reset,
     loadSetup,
     loadMenu,
-    loadClient,
     loadLogo,
     getAll
   }
-})
+},
+{ persist: true }
+)

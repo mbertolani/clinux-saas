@@ -46,12 +46,11 @@ const providers = [{
 }]
 
 const { signIn } = useAuth()
-const loading = ref(false)
-
+const { apiUrl } = useRouterStore()
 const system = useSystemStore()
 const { setup, logo } = storeToRefs(system)
-const { loadLogo, loadSetup, apiUrl } = system
-
+const { loadLogo, loadSetup } = system
+const loading = ref(false)
 await loadSetup()
 
 const onSubmit = async (form: any) => {
@@ -76,7 +75,9 @@ const onSubmit = async (form: any) => {
     loading.value = false
   }
 }
-const imageLogo = computed(() => logo.value ? URL.createObjectURL(logo.value as unknown as Blob) as string : '')
+const imageLogo = computed(() => {
+  return logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
+})
 
 onMounted(async () => {
   await loadLogo()

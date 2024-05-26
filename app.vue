@@ -3,7 +3,7 @@ const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 
-const { apiUrl } = useSystemStore()
+const { apiUrl } = useRouterStore()
 
 useHead({
   meta: [

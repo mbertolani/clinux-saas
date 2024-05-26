@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     '@nuxthq/studio',
     '@vueuse/nuxt',
     '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
     '@sidebase/nuxt-auth',
     'nuxt-og-image'
   ],
