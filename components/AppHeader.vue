@@ -15,8 +15,8 @@ const links = [
     ]
   },
   {
-    label: 'Pricing',
-    to: '/pricing'
+    label: 'Empresa',
+    to: '/gerencial/empresa'
   },
   {
     label: 'Blog',
@@ -28,13 +28,14 @@ const { signOut, token } = useAuth()
 const logout = () => {
   signOut({ callbackUrl: '/signout' })
 }
+const { moduleId, clientName } = useRouterStore()
 </script>
 
 <template>
   <UHeader :links="links">
     <template #logo>
-      Clinux <UBadge
-        label="Ris"
+      {{ clientName }} <UBadge
+        :label="moduleId"
         variant="subtle"
         class="mb-0.5"
       />

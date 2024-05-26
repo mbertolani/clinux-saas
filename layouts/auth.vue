@@ -4,6 +4,7 @@ useHead({
     class: 'dark:bg-gray-950'
   }
 })
+const { moduleId } = useRouterStore()
 </script>
 
 <template>
@@ -12,6 +13,11 @@ useHead({
     <UColorModeButton
       size="sm"
       class="absolute top-16"
+    />
+    <UBadge
+      :label="moduleId"
+      variant="subtle"
+      class="absolute top-8"
     />
     <slot />
   </div>

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ModuleType, type Client } from '~/types/system'
 
 export const useRouterStore = defineStore({
-  id: 'myRouterStore',
+  id: 'routerStore',
   state: () => ({
     clientId: ref(null),
     moduleId: ref<ModuleType>(),
@@ -10,7 +10,8 @@ export const useRouterStore = defineStore({
   }),
 
   getters: {
-    apiUrl: state => state.client?.ds_portal_url
+    apiUrl: state => state.client?.ds_portal_url,
+    clientName: state => state.client?.ds_empresa
   },
 
   actions: {
