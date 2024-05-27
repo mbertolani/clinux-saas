@@ -3,7 +3,13 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 
 export default <Partial<Config>>{
   content: [
-    './src/**/*.{js,ts,jsx,tsx}' // Adicione os caminhos para seus arquivos aqui
+    './src/**/*.vue',
+    './src/**/*.js',
+    './src/**/*.jsx',
+    './src/**/*.ts',
+    './src/**/*.tsx',
+    './src/**/*.html',
+    './public/index.html'
   ],
   theme: {
     extend: {

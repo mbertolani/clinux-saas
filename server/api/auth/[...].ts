@@ -1,5 +1,6 @@
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 import { NuxtAuthHandler } from '#auth'
 
 export default NuxtAuthHandler({
@@ -11,6 +12,12 @@ export default NuxtAuthHandler({
     GithubProvider.default({
       clientId: process.env.GITHUB_CLIENT_ID || 'enter-your-client-id-here',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || 'enter-your-client-secret-here'
+    }),
+    // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
+    GoogleProvider.default({
+      clientId: process.env.GOOGLE_CLIENT_ID || 'enter-your-client-id-here',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'enter-your-client-secret-here',
+      allowDangerousEmailAccountLinking: true
     }),
     // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
     CredentialsProvider.default({
@@ -46,5 +53,12 @@ export default NuxtAuthHandler({
         }
       }
     })
-  ]
+  ],
+  debug: process.env.NODE_ENV === 'development'
+  // pages: {
+  //   signIn: '/'
+  // },
+  // session: {
+  //   strategy: 'jwt'
+  // }
 })

@@ -28,12 +28,17 @@ const validate = (state: any) => {
   return errors
 }
 
+const socialAction = async (action: string) => {
+  console.log('action', action)
+  // await signIn(action, { redirect: false })
+}
+
 const providers = [{
   label: 'Continue with GitHub',
   icon: 'i-simple-icons-github',
   color: 'white' as const,
   click: () => {
-    console.log('Redirect to GitHub')
+    socialAction('github')
   }
 },
 {
@@ -41,7 +46,7 @@ const providers = [{
   icon: 'i-simple-icons-google',
   color: 'white' as const,
   click: () => {
-    console.log('Redirect to Google')
+    socialAction('google')
   }
 }]
 
