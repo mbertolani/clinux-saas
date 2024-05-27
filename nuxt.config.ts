@@ -16,7 +16,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@sidebase/nuxt-auth',
-    'nuxt-og-image'
+    'nuxt-og-image',
+    'nuxt-security'
   ],
   hooks: {
     // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
@@ -98,6 +99,11 @@ export default defineNuxtConfig({
       enableRefreshOnWindowFocus: false,
       // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
       enableRefreshPeriodically: 1000 * 60 * 60 // 5 minutes
+    }
+  },
+  security: {
+    headers: {
+      crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp'
     }
   }
 })

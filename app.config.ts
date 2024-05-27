@@ -29,6 +29,20 @@ export default defineAppConfig({
       hero: {
         wrapper: 'lg:py-24'
       }
+    },
+    header: {
+      links: {
+        trailingIcon: {
+          name: 'i-ph-caret-down' // Defaults to `ui.icons.chevron`
+        }
+      },
+      button: {
+        base: 'lg:hidden',
+        icon: {
+          open: 'i-heroicons-bars-3-20-solid',
+          close: 'i-heroicons-x-mark-20-solid'
+        }
+      }
     }
   }
 })
