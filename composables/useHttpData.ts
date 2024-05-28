@@ -24,23 +24,24 @@ export const useHttpData = (
    * (if the query included pagination) is updated with the response data.
    */
   const getAll = async (query?: any, _url?: string) => {
-    const response = await useHttp(generateApiUrl(query, _url), {
+    const { data, error, success } = await useHttp(generateApiUrl(query, _url), {
       method: 'get'
     })
-
     // Update the value of status based on the success of the response
-    status.value = response.success
-
+    status.value = success
+    error.value = error
     // If the retrieval operation was successful
-    if (response.success) {
+    if (success) {
       // If pagination was included in the query, update 'items' with the data and 'meta' with the pagination info
       if (query !== undefined && 'page' in query) {
-        items.value = response.data.data
-        meta.value = response.data.meta
+        items.value = data.data
+        meta.value = data.meta
       } else {
         // If pagination was not included in the query, update 'items' with the entire response data
-        items.value = response.data
+        items.value = data
       }
+    } else {
+      items.value = []
     }
   }
 
@@ -58,19 +59,16 @@ export const useHttpData = (
    * and the new item is also pushed into the `items` array.
    */
   const create = async (body: any, _url?: string) => {
-    const response = await useHttp(`${generateApiUrl(_url)}`, {
+    const { data, error, success } = await useHttp(`${generateApiUrl(_url)}`, {
       method: 'post',
       body
     })
 
     // Update the value of status based on the success of the response
-    status.value = response.success
-
-    // If the creation operation was successful, update the value of item and push the new item to items array
-    if (response.success) {
-      item.value = response.data
-      items.value.push(response.data)
-    }
+    status.value = success
+    error.value = error
+    item.value = success ? data : null
+    items.value.push(data)
   }
 
   /**
@@ -86,17 +84,13 @@ export const useHttpData = (
    * and potentially the item value, if the retrieval operation was successful.
    */
   const get = async (url: string, id: number) => {
-    const response = await useHttp(`${url}/${id}`, {
-      method: 'get'
-    })
+    const { data, error, success } = await useHttp(`${url}/${id}`, { method: 'get' })
 
     // Update the value of status based on the success of the response
-    status.value = response.success
-
+    status.value = success
+    error.value = error
     // If the retrieval operation was successful, update the value of item with the response data
-    if (response.success) {
-      item.value = response.data
-    }
+    item.value = success ? data : null
   }
 
   /**
@@ -111,9 +105,10 @@ export const useHttpData = (
    * the success or failure of the request.
    */
   const remove = async (id: number) => {
-    return await useHttp(`${url}/${id}`, {
-      method: 'delete'
-    })
+    const { data, error, success } = await useHttp(`${url}/${id}`, { method: 'delete' })
+    status.value = success
+    error.value = error
+    item.value = success ? data : null
   }
 
   /**
@@ -127,18 +122,15 @@ export const useHttpData = (
    * and potentially the item value, if the update operation was successful.
    */
   const update = async (id: string | number, body: any, _url?: string) => {
-    const response = await useHttp(`${generateApiUrl(_url)}/${id}`, {
+    const { data, error, success } = await useHttp(`${generateApiUrl(_url)}/${id}`, {
       method: 'put',
       body
     })
 
     // Update the value of status based on the success of the response
-    status.value = response.success
-
-    // If the update operation was successful, update the value of item with the response data
-    if (response.success) {
-      item.value = response.data
-    }
+    status.value = success
+    error.value = error
+    item.value = success ? data : null
   }
 
   /**
@@ -176,6 +168,46 @@ export const useHttpData = (
 
   const getGrid = async () => {
     grid.value = await useGrid(url).getCols()
+    return grid.value
+  }
+
+  const action = async (body: any, _url: string, method: string) => {
+    const { data, error, success } = await useHttp(_url, {
+      method,
+      body
+    })
+    status.value = success
+    error.value = error
+    item.value = success ? data : null
+    items.value.push(data)
+  }
+
+  const Post = async (body: any, _url: string) => {
+    return action(body, _url, 'post')
+  }
+
+  const Get = async (body: any, _url: string) => {
+    return action(body, generateApiUrl(body), 'get')
+  }
+
+  const find = async (body: any) => {
+    return await Post('find', body)
+  }
+
+  const exec = async (body: any) => {
+    return await Post('exec', body)
+  }
+
+  const state = async (body: any) => {
+    return await Post('state', body)
+  }
+
+  const menu = async (body: any) => {
+    return await Get('menu', body)
+  }
+
+  const log = async (body: any) => {
+    return await Get('log', body)
   }
 
   return {
@@ -186,6 +218,11 @@ export const useHttpData = (
     remove,
     create,
     update,
-    get
+    get,
+    log,
+    find,
+    exec,
+    state,
+    menu
   }
 }
