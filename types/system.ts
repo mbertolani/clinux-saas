@@ -84,3 +84,66 @@ export interface Alert extends ID<number> {
   urls?: string
   timeout?: number
 }
+
+export const mainMenu = [
+  {
+    label: 'Gerencial',
+    children: [
+      { label: 'Empresa', to: '/gerencial/empresa' },
+      { label: 'Funcionário', to: '/gerencial/funcionario' },
+      { label: 'Sala', to: '/' },
+      { label: 'Médico', to: '/' }
+    ]
+  },
+  {
+    label: 'Atendimento',
+    children: [
+      { label: 'Agendamento', to: '/login' },
+      { label: 'Atendimento', to: '/login' },
+      { label: 'Paciente', to: '/login' },
+      { label: 'Médico', to: '/login' }
+    ]
+  },
+  {
+    label: 'Estoque',
+    children: [
+      { label: 'Estoque', to: '/login' },
+      { label: 'Material', to: '/login' },
+      { label: 'Unidade', to: '/login' },
+      { label: 'Compras', to: '/login' }
+    ]
+  },
+  {
+    label: 'Faturamento',
+    children: [
+      { label: 'Faturamento', to: '/login' },
+      { label: 'Plano', to: '/login' },
+      { label: 'Guia', to: '/login' },
+      { label: 'Tabela', to: '/login' }
+    ]
+  },
+  {
+    label: 'Financeiro',
+    children: [
+      { label: 'Lançamentos', to: '/login' },
+      { label: 'Fornecedores', to: '/login' },
+      { label: 'Bancos', to: '/login' },
+      { label: 'Planos de Conta', to: '/login' }
+    ]
+  },
+  {
+    label: 'Relatórios',
+    children: [
+    ]
+  },
+  {
+    label: 'Setup',
+    to: '/tools',
+    children: [
+      { label: 'Editor', to: '/tools/editor' },
+      { label: 'Grid', to: '/tools/grid' },
+      { label: 'Data', to: '/tools/data' },
+      { label: 'Form', to: '/tools/form' }
+    ]
+  }
+]

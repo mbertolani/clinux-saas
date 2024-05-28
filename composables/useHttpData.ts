@@ -4,6 +4,7 @@
 export const useHttpData = (
   url: string,
   items: any,
+  grid: any,
   meta: any,
   item: any,
   status: any,
@@ -173,9 +174,14 @@ export const useHttpData = (
     return api_url
   }
 
+  const getGrid = async () => {
+    grid.value = await useGrid(url).getCols()
+  }
+
   return {
     status,
     errors,
+    getGrid,
     getAll,
     remove,
     create,

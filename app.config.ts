@@ -2,6 +2,11 @@ export default defineAppConfig({
   ui: {
     primary: 'sky',
     gray: 'cool',
+    container: {
+      base: 'mx-auto',
+      padding: 'px-4 sm:px-6 lg:px-4',
+      constrained: 'max-w-full'
+    },
     button: {
       rounded: 'rounded-full',
       default: {
@@ -29,20 +34,20 @@ export default defineAppConfig({
       hero: {
         wrapper: 'lg:py-24'
       }
-    },
-    header: {
-      links: {
-        trailingIcon: {
-          name: 'i-ph-caret-down' // Defaults to `ui.icons.chevron`
-        }
-      },
-      button: {
-        base: 'lg:hidden',
-        icon: {
-          open: 'i-heroicons-bars-3-20-solid',
-          close: 'i-heroicons-x-mark-20-solid'
-        }
-      }
     }
+    // header: {
+    //   links: {
+    //     trailingIcon: {
+    //       name: 'i-ph-caret-down' // Defaults to `ui.icons.chevron`
+    //     }
+    //   },
+    //   button: {
+    //     base: 'lg:hidden',
+    //     icon: {
+    //       open: 'i-heroicons-bars-3-20-solid',
+    //       close: 'i-heroicons-x-mark-20-solid'
+    //     }
+    //   }
+    // }
   }
 })

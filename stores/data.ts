@@ -29,9 +29,10 @@ export const useBaseStore = <T>(route: string) => {
   // Define errors as a ref initially set to null
   // required state if using useAPI composable
   const errors = ref(null)
+  const grid = ref(null)
 
   // Define http as the result of useAPI function
-  const api = useHttpData(url, items, meta, item, httpStatus, errors)
+  const api = useHttpData(url, items, grid, meta, item, httpStatus, errors)
 
   // Define processing as a ref to a boolean, initially set to false
   const processing = ref<boolean>(false)
@@ -42,6 +43,7 @@ export const useBaseStore = <T>(route: string) => {
     processing,
     api,
     items,
-    item
+    item,
+    grid
   }
 }

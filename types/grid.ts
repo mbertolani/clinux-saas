@@ -1,6 +1,6 @@
 // export type TableColumnType = 'DATE' | 'DATETIME' | 'DATETIME_PRETTY' | 'CURRENCY' | 'PERCENT' | 'BOOLEAN'
 
-export type ItemDataType = 'ftString' | 'ftInteger' | 'ftDate' | 'ftDateTime' | 'ftBoolean'
+export type ItemDataType = 'ftString' | 'ftInteger' | 'ftDate' | 'ftDateTime' | 'ftBoolean' | 'ftFloat' | 'ftCurrency'
 
 export type ItemAlignment = 'taLeftJustify' | 'taRightJustify' | 'taCenter'
 
@@ -17,13 +17,13 @@ export interface DbGridColumn {
   readOnly: boolean
 }
 
-export interface AgGridColumn {
-  field: string
-  headerName: string
-  cellDataType: string
-  width: number
-  valueFormatter?: string
-  filter: string
-  filterParams?: Record<string, unknown>
-  cellClass: string
-}
+// export interface AgGridColumn {
+//   field: string
+//   headerName: string
+//   type: string
+//   width: number
+//   valueFormatter?: string
+//   filter: string
+//   filterParams?: Record<string, unknown>
+//   cellClass: string
+// }

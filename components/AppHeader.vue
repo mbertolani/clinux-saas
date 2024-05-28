@@ -1,29 +1,9 @@
 <script setup lang="ts">
+import { mainMenu } from '~/types/system'
+
 // import type { NavItem } from '@nuxt/content/dist/runtime/types'
 
 // const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
-
-const links = [
-  {
-    label: 'Tools',
-    to: '/tools',
-    children: [
-      { label: 'Editor', to: '/tools/editor' },
-      { label: 'Grid', to: '/tools/grid' },
-      { label: 'Data', to: '/tools/data' },
-      { label: 'Form', to: '/tools/form' }
-    ]
-  },
-  {
-    label: 'Empresa',
-    to: '/gerencial/empresa'
-  },
-  {
-    label: 'Blog',
-    to: '/blog'
-  }
-]
-
 const { signOut, token } = useAuth()
 const logout = () => {
   signOut({ callbackUrl: '/signout' })
@@ -32,7 +12,9 @@ const { moduleId, clientName } = useRouterStore()
 </script>
 
 <template>
-  <UHeader :links="links">
+  <UHeader
+    :links="mainMenu"
+  >
     <template #logo>
       {{ clientName }} <UBadge
         :label="moduleId"
@@ -61,7 +43,7 @@ const { moduleId, clientName } = useRouterStore()
 
     <template #panel>
       <UNavigationTree
-        :links="links"
+        :links="mainMenu"
         default-open
       />
     </template>
