@@ -16,19 +16,19 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@sidebase/nuxt-auth',
-    'nuxt-og-image',
-    'nuxt-security'
+    'nuxt-og-image'
+    // 'nuxt-security'
   ],
-  hooks: {
-    // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
-    'components:extend': (components) => {
-      const globals = components.filter(c =>
-        ['UButton'].includes(c.pascalName)
-      )
+  // hooks: {
+  //   // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
+  //   'components:extend': (components) => {
+  //     const globals = components.filter(c =>
+  //       ['UButton'].includes(c.pascalName)
+  //     )
 
-      globals.forEach(c => (c.global = true))
-    }
-  },
+  //     globals.forEach(c => (c.global = true))
+  //   }
+  // },
   ui: {
     icons: ['heroicons', 'simple-icons']
   },
@@ -74,6 +74,17 @@ export default defineNuxtConfig({
       apiBaseURL: 'http://172.18.0.1:8082' // Exposed to the frontend as well.
     }
   },
+  // auth: {
+  //   isEnabled: true,
+  //   baseURL: process.env.AUTH_ORIGIN,
+  //   provider: {
+  //     type: 'authjs'
+  //   },
+  //   globalAppMiddleware: {
+  //     isEnabled: true,
+  //     addDefaultCallbackUrl: false
+  //   }
+  // }
   auth: {
     isEnabled: true,
     globalAppMiddleware: {
@@ -100,10 +111,10 @@ export default defineNuxtConfig({
       // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
       enableRefreshPeriodically: 1000 * 60 * 60 // 5 minutes
     }
-  },
-  security: {
-    headers: {
-      crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp'
-    }
   }
+  // security: {
+  //   headers: {
+  //     crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp'
+  //   }
+  // }
 })
