@@ -37,6 +37,10 @@ await api.getAll()
 await api.getGrid()
 rowData.value = items.value
 columnDefs.value = grid.value
+
+const onSelectionChanged = (event) => {
+  console.log(event.api.getSelectedRows())
+}
 </script>
 
 <template>
@@ -49,17 +53,13 @@ columnDefs.value = grid.value
     </UPageHeader>
 
     <UPageBody class="mt-0">
-      <ClientOnly
-        fallback-tag="span"
-        fallback="Carregando..."
-      >
-        <BaseGrid
-          :side-bar="false"
-          :endpoint="props.endpoint"
-          :row-data="rowData"
-          :column-defs="columnDefs"
-        />
-      </ClientOnly>
+      <BaseGrid
+        :side-bar="true"
+        :endpoint="props.endpoint"
+        :row-data="rowData"
+        :column-defs="columnDefs"
+        :on-selection-changed="onSelectionChanged"
+      />
       <BaseForm />
     </UPageBody>
 

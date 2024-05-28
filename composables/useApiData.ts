@@ -1,6 +1,5 @@
 import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
 
-const auth = useAuth()
 export const useApiData = async <
     DefaultT = unknown,
     DefaultR extends NitroFetchRequest = NitroFetchRequest,
@@ -13,7 +12,7 @@ export const useApiData = async <
 ) => $fetch<T>(url, {
   ...options,
   headers: {
-    Authorization: auth.token.value ? auth.token.value : '',
+    Authorization: useAuth().token.value ? useAuth().token.value : '',
     ...options?.headers
   }
 })

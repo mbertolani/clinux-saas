@@ -47,11 +47,20 @@ export const useSystemStore = defineStore('system', () => {
       loading.value = false
     }
   }
+
+  const changePrimaryColor = (primary, gray) => {
+    // const config = useAppConfig()
+    console.log('config', primary, gray)
+    // config.ui.primary = primary
+    // config.ui.gray = gray
+  }
+
   const loadSetup = async () => {
     try {
       loading.value = true
       const { data } = await useAPI('/setup/data', { method: 'GET', default: () => null })
       setup.value = data.value ? data?.value[0] : null
+      changePrimaryColor(setup.value?.ds_dicomvix_tema, setup.value?.ds_dicomvix_tema)
     } catch (error) {
       console.log('error', error)
       toastError(error.response?._data.error)

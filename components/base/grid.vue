@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-theme-balham.min.css'
 import { AgGridVue } from 'ag-grid-vue3'
 import type { GridOptions } from 'ag-grid-community'
 import { LicenseManager } from 'ag-grid-enterprise'
+import { AG_GRID_LOCALE_PT_BR } from '@/locales/grid'
 
 LicenseManager.setLicenseKey(
   'Using_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-051714}_in_excess_of_the_licence_granted_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_changing_this_key_please_contact_info@ag-grid.com___{Genesis_Tecnologia}_is_granted_a_{Single_Application}_Developer_License_for_the_application_{Clinux}_only_for_{1}_Front-End_JavaScript_developer___All_Front-End_JavaScript_developers_working_on_{Clinux}_need_to_be_licensed___{Clinux}_has_been_granted_a_Deployment_License_Add-on_for_{1}_Production_Environment___This_key_works_with_{AG_Charts_and_AG_Grid}_Enterprise_versions_released_before_{1_January_2025}____[v3]_[0102]_MTczNTY4OTYwMDAwMA==3be157b75b26c094fd0faf3609d46ba5'
@@ -22,10 +23,19 @@ LicenseManager.setLicenseKey(
 // })
 
 const colorMode = useColorMode()
-
-const color = computed(() => {
+const color = ref(null)
+const getColor = () => {
   return colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
+}
+watch(colorMode, () => {
+  color.value = getColor()
 })
+onMounted(() => {
+  color.value = getColor()
+})
+// const color = computed(() => {
+//   return colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
+// })
 
 const apiGrid = ref()
 const getRowId = ref(null)
@@ -128,7 +138,9 @@ defineExpose({
     ref="apiGrid"
     style="height: 78vh; width: 100%"
     v-bind="$attrs"
+    row-model-type="clientSide"
     :class="color"
+    row-selection="multiple"
     :default-col-def="defaultColDef"
     :on-grid-ready="onGridReady"
     :grid-options="defaultGridOptions"
@@ -137,5 +149,6 @@ defineExpose({
     :pagination-page-size="100"
     :pagination-page-size-selector="[10, 100, 1000]"
     :pagination-auto-page-size="false"
+    :locale-text="AG_GRID_LOCALE_PT_BR"
   />
 </template>

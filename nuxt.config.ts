@@ -7,11 +7,9 @@ export default defineNuxtConfig({
   modules: [
     '@formkit/auto-animate',
     '@formkit/nuxt',
-    '@nuxt/content',
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/ui',
-    '@nuxthq/studio',
     '@vueuse/nuxt',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',

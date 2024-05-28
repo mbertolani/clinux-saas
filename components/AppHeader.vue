@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { mainMenu } from '~/types/system'
 
-// import type { NavItem } from '@nuxt/content/dist/runtime/types'
-
-// const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
 const { signOut, token } = useAuth()
 const logout = () => {
   signOut({ callbackUrl: '/signout' })

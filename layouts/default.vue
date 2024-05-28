@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
+// import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
 
-const { data: navigation } = await useAsyncData('navigation', () => fetchContentNavigation(), { default: () => [] })
-const { data: files } = useLazyFetch<ParsedContent[]>('/api/search.json', { default: () => [], server: false })
+// const { data: navigation } = await useAsyncData('navigation', () => fetchContentNavigation(), { default: () => [] })
+// const { data: files } = useLazyFetch<ParsedContent[]>('/api/search.json', { default: () => [], server: false })
 
-provide('navigation', navigation)
+// provide('navigation', navigation)
 </script>
 
 <template>
@@ -17,11 +17,11 @@ provide('navigation', navigation)
 
     <AppFooter />
 
-    <ClientOnly>
+    <!-- <ClientOnly>
       <LazyUContentSearch
         :files="files"
         :navigation="navigation"
       />
-    </ClientOnly>
+    </ClientOnly> -->
   </div>
 </template>

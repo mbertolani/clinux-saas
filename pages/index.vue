@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { ModalDelete } from '#components'
 
-const { data: page } = await useAsyncData('index', () => queryContent('/').findOne())
-if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
-}
-
+// const { data: page } = await useAsyncData('index', () => queryContent('/').findOne())
+// if (!page.value) {
+//   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+// }
+const page = ref({
+  hero: {
+    title: 'Clinux Web',
+    description: 'Healthcare Framework',
+    links: [
+      { label: 'Learn more', href: '/about' }
+    ]
+  }
+})
 useSeoMeta({
   titleTemplate: '',
-  title: page.value.title,
-  ogTitle: page.value.title,
-  description: page.value.description,
-  ogDescription: page.value.description
+  title: page.value.hero.title,
+  ogTitle: page.value.hero.title,
+  description: page.value.hero.description,
+  ogDescription: page.value.hero.description
 })
 definePageMeta({
   auth: true
@@ -45,8 +53,9 @@ function openModal() {
       <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
     </ULandingHero>
     <UButton
+      v-if="false"
       label="Reveal modal"
-      class="flex w-full justify-center mt-8"
+      class="flex justify-center mt-8"
       @click="openModal"
     />
   </div>
