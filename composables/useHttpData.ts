@@ -1,6 +1,3 @@
-// import { build } from 'nuxt'
-// import { Data } from '~/types/generated'
-
 export const useHttpData = (
   url: string,
   items: any,
@@ -29,7 +26,8 @@ export const useHttpData = (
     })
     // Update the value of status based on the success of the response
     status.value = success
-    error.value = error
+    errors = error
+
     // If the retrieval operation was successful
     if (success) {
       // If pagination was included in the query, update 'items' with the data and 'meta' with the pagination info
@@ -66,7 +64,7 @@ export const useHttpData = (
 
     // Update the value of status based on the success of the response
     status.value = success
-    error.value = error
+    errors = error
     item.value = success ? data : null
     items.value.push(data)
   }
@@ -88,7 +86,7 @@ export const useHttpData = (
 
     // Update the value of status based on the success of the response
     status.value = success
-    error.value = error
+    errors = error
     // If the retrieval operation was successful, update the value of item with the response data
     item.value = success ? data : null
   }
@@ -107,7 +105,7 @@ export const useHttpData = (
   const remove = async (id: number) => {
     const { data, error, success } = await useHttp(`${url}/${id}`, { method: 'delete' })
     status.value = success
-    error.value = error
+    errors = error
     item.value = success ? data : null
   }
 
@@ -129,7 +127,7 @@ export const useHttpData = (
 
     // Update the value of status based on the success of the response
     status.value = success
-    error.value = error
+    errors = error
     item.value = success ? data : null
   }
 
@@ -177,7 +175,7 @@ export const useHttpData = (
       body
     })
     status.value = success
-    error.value = error
+    errors = error
     item.value = success ? data : null
     items.value.push(data)
   }

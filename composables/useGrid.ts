@@ -184,7 +184,6 @@ export const useGrid = (url: string) => {
       ...(item.dataType === 'ftInteger' ? fieldNumber : {}),
       ...(item.dataType === 'ftDate' ? fieldDate : {})
     }))
-    console.log('getCols', AgGridColumns.value)
     return AgGridColumns.value
   }
 
