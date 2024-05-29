@@ -21,7 +21,7 @@
     "@formkit/themes": "latest",
     "@formkit/vue": "latest",
     "@iconify-json/heroicons": "^1.1.21",
-    "@iconify-json/simple-icons": "^1.1.102",
+    "@iconify-json/simple-icons": "^1.1.103",
     "@nuxt/fonts": "^0.7.0",
     "@nuxt/image": "^1.7.0",
     "@nuxt/kit-nightly": "3.12.0-28606556.69430aa2",
@@ -35,7 +35,7 @@
     "@syncfusion/ej2-popups": "latest",
     "@syncfusion/ej2-splitbuttons": "latest",
     "@syncfusion/ej2-vue-documenteditor": "latest",
-    "@vueuse/nuxt": "^10.9.0",
+    "@vueuse/nuxt": "^10.10.0",
     "ag-charts-community": "9.3.1",
     "ag-charts-vue3": "^9.3.1",
     "ag-grid-charts-enterprise": "31.3.1",
@@ -49,7 +49,7 @@
     "vue-class-component": "8.0.0-rc.1"
   },
   "devDependencies": {
-    "@formkit/auto-animate": "^0.8.2",
+    "@formkit/auto-animate": "latest",
     "@nuxt/eslint": "^0.3.13",
     "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",

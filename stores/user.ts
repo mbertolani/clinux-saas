@@ -1,34 +1,41 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('user', () => {
-  /**
-   * Current name of the user.
-   */
-  const savedName = ref('')
-  const previousNames = ref(new Set<string>())
+interface UserPayloadInterface {
+  username: string
+  password: string
+}
 
-  const usedNames = computed(() => Array.from(previousNames.value))
-  const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
-
-  /**
-   * Changes the current name of the user and saves the one that was used
-   * before.
-   *
-   * @param name - new name to set
-   */
-  function setNewName(name: string) {
-    if (savedName.value)
-      previousNames.value.add(savedName.value)
-
-    savedName.value = name
-  }
-
-  return {
-    setNewName,
-    otherNames,
-    savedName
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    user: null,
+    authenticated: false,
+    loading: false
+  }),
+  actions: {
+    authenticateUser({ username, password }: UserPayloadInterface) {
+      // useFetch from nuxt 3
+      console.log('authenticateUser', username, password)
+      const { data, error, success }: any = useHttp('/login/auth', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          username,
+          password
+        }
+      })
+      // this.loading = pending
+      console.log('set cookie', data, error, success)
+      this.authenticated = success
+      if (success) {
+        const token = useCookie('token') // useCookie new hook in nuxt 3
+        token.value = data?.value?.token // set token to cookie
+        this.authenticated = true // set authenticated  state value to true
+      }
+    },
+    logUserOut() {
+      const token = useCookie('token') // useCookie new hook in nuxt 3
+      this.authenticated = false // set authenticated  state value to false
+      token.value = null // clear the token cookie
+    }
   }
 })
-
-if (import.meta.hot)
-  import.meta.hot.accept(acceptHMRUpdate(useUserStore as any, import.meta.hot))

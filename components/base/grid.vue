@@ -37,8 +37,7 @@ onMounted(() => {
 //   return colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
 // })
 
-const apiGrid = ref()
-const getRowId = ref(null)
+const gridApi = ref()
 const rowSelection = ref('multiple')
 const suppressRowClickSelection = ref(true)
 const rowCount = ref(0)
@@ -98,8 +97,9 @@ const convertToNativeDate = (inputDate) => {
   return new Date(parts[2], parts[1] - 1, parts[0])
 }
 
+const getRowId = ({ data }) => Object.values(data)[0]
+
 onBeforeMount(() => {
-  getRowId.value = params => params.data?.id
   columnTypes.value = {
     currency: {
       width: 150,
@@ -112,11 +112,13 @@ onBeforeMount(() => {
   }
 })
 
-const onGridReady = () => { }
+const onGridReady = () => {
+  console.log('Grid is ready', gridApi.value.api)
+  gridApi.value.api.closeToolPanel()
+}
 
 defineExpose({
-  apiGrid,
-  getRowId,
+  gridApi,
   rowSelection,
   suppressRowClickSelection,
   rowCount,
@@ -135,13 +137,16 @@ defineExpose({
 
 <template>
   <AgGridVue
-    ref="apiGrid"
+    ref="gridApi"
     style="height: 78vh; width: 100%"
     v-bind="$attrs"
     row-model-type="clientSide"
     :class="color"
     row-selection="multiple"
+    :side-bar="true"
+    :side-bar-params="{ toolPanels: ['columns'] }"
     :default-col-def="defaultColDef"
+    :get-row-id="getRowId"
     :on-grid-ready="onGridReady"
     :grid-options="defaultGridOptions"
     :suppress-row-click-selection="false"

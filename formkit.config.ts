@@ -1,16 +1,82 @@
 import { genesisIcons } from '@formkit/icons'
 import { defineFormKitConfig } from '@formkit/vue'
-import { createProPlugin, rating, toggle } from '@formkit/pro'
+import { createProPlugin, autocomplete,
+  colorpicker,
+  datepicker,
+  dropdown,
+  mask,
+  rating,
+  repeater,
+  slider,
+  taglist,
+  toggle,
+  togglebuttons,
+  transferlist,
+  currency } from '@formkit/pro'
 import { rootClasses } from './formkit.theme'
 
 const proPlugin = createProPlugin('fk-5bd805bc8f', {
+  autocomplete,
+  colorpicker,
+  datepicker,
+  dropdown,
+  mask,
   rating,
-  toggle
+  repeater,
+  slider,
+  taglist,
+  toggle,
+  togglebuttons,
+  transferlist,
+  currency
   // any other Pro Inputs
 })
+/**
+ * Set initial values to empty strings instead of undefined
+ **/
+
+function defaultToEmptyString(node) {
+  node.hook.input((value, next) => {
+    if (value === undefined) return next('')
+    return next(value)
+  })
+}
+/**
+ * A little plugin that automatically scrolls to the first error.
+ **/
+function scrollToErrors(node) {
+  if (node.props.type === 'form') {
+    function scrollTo(node) {
+      const el = document.getElementById(node.props.id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+      }
+    }
+
+    function scrollToErrors() {
+      node.walk((child) => {
+        // Check if this child has errors
+        if (child.ledger.value('blocking') || child.ledger.value('errors')) {
+          // We found an input with validation errors
+          scrollTo(child)
+          // Stop searching
+          return false
+        }
+      }, true)
+    }
+
+    const onSubmitInvalid = node.props.onSubmitInvalid
+    node.props.onSubmitInvalid = () => {
+      onSubmitInvalid(node)
+      scrollToErrors()
+    }
+    node.on('unsettled:errors', scrollToErrors)
+  }
+  return false
+}
 
 export default defineFormKitConfig(() => ({
-  plugins: [proPlugin],
+  plugins: [proPlugin, scrollToErrors, defaultToEmptyString],
   icons: { ...genesisIcons },
   config: { rootClasses }
 }))

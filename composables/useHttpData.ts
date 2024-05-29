@@ -81,8 +81,10 @@ export const useHttpData = (
    * The response from the request is awaited and then used to update the status
    * and potentially the item value, if the retrieval operation was successful.
    */
-  const get = async (url: string, id: number) => {
-    const { data, error, success } = await useHttp(`${url}/${id}`, { method: 'get' })
+  const get = async (id: number, fields?: string) => {
+    const { data, error, success } = await useHttp(`${url}/${id}?fields=${fields}`, {
+      method: 'get'
+    })
 
     // Update the value of status based on the success of the response
     status.value = success
@@ -120,7 +122,7 @@ export const useHttpData = (
    * and potentially the item value, if the update operation was successful.
    */
   const update = async (id: string | number, body: any, _url?: string) => {
-    const { data, error, success } = await useHttp(`${generateApiUrl(_url)}/${id}`, {
+    const { data, error, success } = await useHttp(`${url}/${id}`, {
       method: 'put',
       body
     })

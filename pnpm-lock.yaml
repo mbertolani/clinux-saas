@@ -7,30 +7,30 @@ settings:
 dependencies:
   '@formkit/addons':
     specifier: latest
-    version: 1.6.4
+    version: 1.6.5
   '@formkit/core':
     specifier: latest
-    version: 1.6.4
+    version: 1.6.5
   '@formkit/icons':
     specifier: latest
-    version: 1.6.4
+    version: 1.6.5
   '@formkit/nuxt':
     specifier: latest
-    version: 1.6.4(esbuild@0.20.2)(tailwindcss@3.4.3)(unocss@0.60.3)(vite@5.2.12)(vue@3.4.27)(webpack@5.91.0)
+    version: 1.6.5(esbuild@0.20.2)(tailwindcss@3.4.3)(unocss@0.60.3)(vite@5.2.12)(vue@3.4.27)(webpack@5.91.0)
   '@formkit/pro':
     specifier: latest
-    version: 0.126.4(@formkit/core@1.6.4)(@formkit/inputs@1.6.4)
+    version: 0.126.4(@formkit/core@1.6.5)(@formkit/inputs@1.6.5)
   '@formkit/themes':
     specifier: latest
-    version: 1.6.4(tailwindcss@3.4.3)(unocss@0.60.3)
+    version: 1.6.5(tailwindcss@3.4.3)(unocss@0.60.3)
   '@formkit/vue':
     specifier: latest
-    version: 1.6.4(tailwindcss@3.4.3)(unocss@0.60.3)(vue@3.4.27)
+    version: 1.6.5(tailwindcss@3.4.3)(unocss@0.60.3)(vue@3.4.27)
   '@iconify-json/heroicons':
     specifier: ^1.1.21
     version: 1.1.21
   '@iconify-json/simple-icons':
-    specifier: ^1.1.102
+    specifier: ^1.1.103
     version: 1.1.103
   '@nuxt/fonts':
     specifier: ^0.7.0
@@ -72,7 +72,7 @@ dependencies:
     specifier: latest
     version: 25.2.6
   '@vueuse/nuxt':
-    specifier: ^10.9.0
+    specifier: ^10.10.0
     version: 10.10.0(nuxt@3.11.2)(vue@3.4.27)
   ag-charts-community:
     specifier: 9.3.1
@@ -110,7 +110,7 @@ dependencies:
 
 devDependencies:
   '@formkit/auto-animate':
-    specifier: ^0.8.2
+    specifier: latest
     version: 0.8.2
   '@nuxt/eslint':
     specifier: ^0.3.13
@@ -520,8 +520,8 @@ packages:
     dependencies:
       mime: 3.0.0
 
-  /@codemirror/autocomplete@6.16.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1):
-    resolution: {integrity: sha512-P/LeCTtZHRTCU4xQsa89vSKWecYv1ZqwzOd5topheGRf+qtacFgBeIMQi3eL8Kt/BUNvxUWkx+5qP2jlGoARrg==}
+  /@codemirror/autocomplete@6.16.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1):
+    resolution: {integrity: sha512-A8ouvLbTi9rGNhdmqRuj0ohY7pSWwO4iK3DdiIhWvUjI8T9Yiqul6t8z9warW8nFq2fyW1Pr+KZWZhuQL+iOqg==}
     peerDependencies:
       '@codemirror/language': ^6.0.0
       '@codemirror/state': ^6.0.0
@@ -1038,62 +1038,62 @@ packages:
   /@floating-ui/utils@0.2.2:
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
 
-  /@formkit/addons@1.6.4:
-    resolution: {integrity: sha512-IsEWcHm0ab8dV8555ZykTkGrWPAOc/XRq+4S+6J9bgyss7qtoX+BTFNgDjlufD/TQnZ+7pKgYDR6jJeuVm4LtA==}
+  /@formkit/addons@1.6.5:
+    resolution: {integrity: sha512-lI42uFX0a1UV/0J4ZzfuBAdoPykpDLOpH/fPNn6vI8hAKtkbOiStNZDex0r3aam0z3O1vPCtgUtsBCdWBVzxkw==}
     dependencies:
       '@formkit/auto-animate': 0.8.2
-      '@formkit/core': 1.6.4
-      '@formkit/inputs': 1.6.4
-      '@formkit/utils': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/inputs': 1.6.5
+      '@formkit/utils': 1.6.5
     dev: false
 
   /@formkit/auto-animate@0.8.2:
     resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
-  /@formkit/core@1.6.4:
-    resolution: {integrity: sha512-6Y6tW7kr5jGycQ1cVM4YwF7INDtuAvWYgcFQOVzMWE4iqaZpQVVzK+M0DDtE/xEbSWMaw5hqoPGjQCOo3OkvgQ==}
+  /@formkit/core@1.6.5:
+    resolution: {integrity: sha512-LLq8+vLd9ddPYA0NkyvnKycN4ESU8Wqcl9TrllPyU/axduJunSIJMZz4LHzlwK8G26b0pQNegXF/hXaj4wbmng==}
     dependencies:
-      '@formkit/utils': 1.6.4
+      '@formkit/utils': 1.6.5
     dev: false
 
-  /@formkit/dev@1.6.4:
-    resolution: {integrity: sha512-uRn1+KuPL/VGNa+jIxy/Sfy0GyicMpuU4/EGsMf1eWpZu4PdQe3TBStEf1GXnHcwGtubTsoPmHfLX3bqJ03PnQ==}
+  /@formkit/dev@1.6.5:
+    resolution: {integrity: sha512-dg62HTehLPi9lLBShixr9AoYgIv13gpxTZgiHEvf1UZz2HQq0Lcp63d0a+XT/tQ2HTz2ewLUGeXSN9dUVkYFSg==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/utils': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/utils': 1.6.5
     dev: false
 
   /@formkit/drag-and-drop@0.0.38:
     resolution: {integrity: sha512-3uJFcqz1xL7x/5pClDnyqEDfyFRDFH+75MFpJYXnVF17oekxLrwbUaOBN7ttKGn1jW2MdojRw4WMnSN1iLryvw==}
     dev: false
 
-  /@formkit/i18n@1.6.4:
-    resolution: {integrity: sha512-Qma7UIdFo9pBNlpoz7WYU2/5C/DKDD6K2HND2kg6msnMnu5RQWuMUEqRF/5FElaBp+9uz4CgTgdqmQpv5ATnkg==}
+  /@formkit/i18n@1.6.5:
+    resolution: {integrity: sha512-mM1UKGSa0Mdd8a8AAF+6BCNFnf8gUD1nOzU6dJ9UoPE8M/qA+hmcPR3PJm39p6e3OaT5O0Gn/J6JxgccPyWmGA==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/utils': 1.6.4
-      '@formkit/validation': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/utils': 1.6.5
+      '@formkit/validation': 1.6.5
     dev: false
 
-  /@formkit/icons@1.6.4:
-    resolution: {integrity: sha512-AZi5smrwm2JwYRZXVPQytdGzDPdO6F9fqC9wkiDu3u0INj40QzsZG3wSiRJsXVqyfULWdp6/R3JNjzRSULq2fg==}
+  /@formkit/icons@1.6.5:
+    resolution: {integrity: sha512-Owlw/aGi8R5koMKwq2j5bz59H/4bwscmGdgmRpAns7Fgm9ceZmbrYLcbV4t2m0NYnb+1X7IySP5UutEKt6yuPw==}
     dependencies:
-      '@formkit/core': 1.6.4
+      '@formkit/core': 1.6.5
     dev: false
 
-  /@formkit/inputs@1.6.4:
-    resolution: {integrity: sha512-HRJvjBVim7udwXDkxgGWUKns4nWaUuVK66J8te45UiwpQK4bn1rAgYLsNJH+NrWzSObnu1GH5ZqU5Rx4zsVpGw==}
+  /@formkit/inputs@1.6.5:
+    resolution: {integrity: sha512-mHLMF0JMFZL/JC6NYrG4xaIdi7lUNE+tdC+QMipBdhobUhND0EJSpO6QNPGF6OLd9Zm9MDgqAzNXEtc05/nvow==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/utils': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/utils': 1.6.5
     dev: false
 
-  /@formkit/nuxt@1.6.4(esbuild@0.20.2)(tailwindcss@3.4.3)(unocss@0.60.3)(vite@5.2.12)(vue@3.4.27)(webpack@5.91.0):
-    resolution: {integrity: sha512-bv0Ht81zpddQTW7HWPhI7wnYpUoBGBCGukQkmyxILWhljU+vNrZRq1otTE0Y7EqHB0JRMAsJb+D5FcxSKCI9oQ==}
+  /@formkit/nuxt@1.6.5(esbuild@0.20.2)(tailwindcss@3.4.3)(unocss@0.60.3)(vite@5.2.12)(vue@3.4.27)(webpack@5.91.0):
+    resolution: {integrity: sha512-/jzQ833DoUmD3qWc7RHxJDpfT1kRQBi4oqRzwKIzOJ1+s0/Q1p11m1XAWayF4io/kEs3rHEnIn6X+nzpxzjICw==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/i18n': 1.6.4
-      '@formkit/vue': 1.6.4(tailwindcss@3.4.3)(unocss@0.60.3)(vue@3.4.27)
+      '@formkit/core': 1.6.5
+      '@formkit/i18n': 1.6.5
+      '@formkit/vue': 1.6.5(tailwindcss@3.4.3)(unocss@0.60.3)(vue@3.4.27)
       '@nuxt/kit': 3.11.2
       chokidar: 3.6.0
       pathe: 1.1.2
@@ -1111,39 +1111,39 @@ packages:
       - windicss
     dev: false
 
-  /@formkit/observer@1.6.4:
-    resolution: {integrity: sha512-5wJM2AsclSoqOAXnjB5ThtBD5pulz/n6aEywNQ8yeDmr3PBoIh7XHSr6momZ+lEfAh65Mktsev4a/Ql124IslQ==}
+  /@formkit/observer@1.6.5:
+    resolution: {integrity: sha512-3Vh2Pj6tHX3wosbNm5VvwVVlTI5Zq0FT3dl/+DAuaCG84abpTLoc3O0C2pmbQcDaJ4aCuxu3+tBmhY9J7qFXMQ==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/utils': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/utils': 1.6.5
     dev: false
 
-  /@formkit/pro@0.126.4(@formkit/core@1.6.4)(@formkit/inputs@1.6.4):
+  /@formkit/pro@0.126.4(@formkit/core@1.6.5)(@formkit/inputs@1.6.5):
     resolution: {integrity: sha512-kO7GDyyys1wsEs1oK0je1rlcqG0GbnZk0TqWi1qcDiZBMLoY/LuSqa53ZMd/gTBBAkAlA+wErtemo2FYD4uz7A==}
     peerDependencies:
       '@formkit/core': ^1.6.3
       '@formkit/inputs': ^1.6.3
     dependencies:
-      '@formkit/core': 1.6.4
+      '@formkit/core': 1.6.5
       '@formkit/drag-and-drop': 0.0.38
-      '@formkit/inputs': 1.6.4
+      '@formkit/inputs': 1.6.5
       '@formkit/tempo': 0.0.8
     dev: false
 
-  /@formkit/rules@1.6.4:
-    resolution: {integrity: sha512-nspqnCa8Um8dINyq8olzYpBHhp1ok6NGCw7udYALDG1Ky7KtrCpD8Dwm7D3xDpxarj5uyYOuFqbfXmw5HB2Www==}
+  /@formkit/rules@1.6.5:
+    resolution: {integrity: sha512-j9ylAibBvNx+3tEAkYzl2HjQwDzWV2mRPmFH7GTAmtxijFiktPS8HTU9H88H/x2stkYk9S13/MMeqDgZnc3VrQ==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/utils': 1.6.4
-      '@formkit/validation': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/utils': 1.6.5
+      '@formkit/validation': 1.6.5
     dev: false
 
   /@formkit/tempo@0.0.8:
     resolution: {integrity: sha512-q9Ch3Epjb5yFVNV2vAruHyPwcvZujiPcBQ7r6if+HmOciMhwkQccL9NOm9LNmN23hNk2y3+El/ygUH2/x539sg==}
     dev: false
 
-  /@formkit/themes@1.6.4(tailwindcss@3.4.3)(unocss@0.60.3):
-    resolution: {integrity: sha512-Ock93tkTPFQri+kXOTFu5ChiJY2xkDA2KB/RJv47rBYwNX8qkVBTWR3wrvkPEMV30ARN15WQnd+hsepJ+wEQoQ==}
+  /@formkit/themes@1.6.5(tailwindcss@3.4.3)(unocss@0.60.3):
+    resolution: {integrity: sha512-C+ANzH6qw4zS7niv+RamJAqpASOPfrZvMURVj5HQcT1XlcYB7ULvA9UmDW/AKOqP/OGf/OL6WvOzA7B16UkiiA==}
     peerDependencies:
       tailwindcss: ^3.2.0
       unocss: 0.x.x
@@ -1156,37 +1156,37 @@ packages:
       windicss:
         optional: true
     dependencies:
-      '@formkit/core': 1.6.4
+      '@formkit/core': 1.6.5
       tailwindcss: 3.4.3
       unocss: 0.60.3(@unocss/webpack@0.60.3)(postcss@8.4.38)(vite@5.2.12)
     dev: false
 
-  /@formkit/utils@1.6.4:
-    resolution: {integrity: sha512-etcShj6RmFXQ+5OZ1qYSn9x+SWKGVGd6nZd3MSmiMWQ6n5FzuyX/y+XrvU9nX7xxF5l3TFCK/AQeMEZo2ujr8w==}
+  /@formkit/utils@1.6.5:
+    resolution: {integrity: sha512-fohOg344tqFujHlEwvyHzzH5YiOBgecuOPkg7r7QObUrsH8gP1N8Rp9CHZlafxZ1zAEHZY2nTNx0VVQBkVmJbA==}
     dev: false
 
-  /@formkit/validation@1.6.4:
-    resolution: {integrity: sha512-naJospBA3nuEYlxM4El40dn2SqI+D+Xl1gBizQvAL6e+p4Q9DBhlzlOCzxEHAdT1TH7hdm3lPDGzI1s7nqyUAw==}
+  /@formkit/validation@1.6.5:
+    resolution: {integrity: sha512-mnU+F6uXsNlczbU7QOq6QfsafSYNmMF9zvOpk4ravn9mba0IDXRhkPgU/+VFpcF/EEiXmqQql3pqQ7Vqv2wVbg==}
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/observer': 1.6.4
-      '@formkit/utils': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/observer': 1.6.5
+      '@formkit/utils': 1.6.5
     dev: false
 
-  /@formkit/vue@1.6.4(tailwindcss@3.4.3)(unocss@0.60.3)(vue@3.4.27):
-    resolution: {integrity: sha512-SCEDl7lIfd7SdTfDu4HptM5cs0FQPb/TwT2CEvWblECTpyHHGPog3+fOLP0FIzvCnE2zztTeZijLCPbeJmACNQ==}
+  /@formkit/vue@1.6.5(tailwindcss@3.4.3)(unocss@0.60.3)(vue@3.4.27):
+    resolution: {integrity: sha512-D5W8JfhFJXUXm8RX0OfPbPZt3Ds68iqxSrvbvmyabae2cBlGl8sqhMEuc48FptnsGOYqYXOhG+CPni+uE72Whw==}
     peerDependencies:
       vue: ^3.4.0
     dependencies:
-      '@formkit/core': 1.6.4
-      '@formkit/dev': 1.6.4
-      '@formkit/i18n': 1.6.4
-      '@formkit/inputs': 1.6.4
-      '@formkit/observer': 1.6.4
-      '@formkit/rules': 1.6.4
-      '@formkit/themes': 1.6.4(tailwindcss@3.4.3)(unocss@0.60.3)
-      '@formkit/utils': 1.6.4
-      '@formkit/validation': 1.6.4
+      '@formkit/core': 1.6.5
+      '@formkit/dev': 1.6.5
+      '@formkit/i18n': 1.6.5
+      '@formkit/inputs': 1.6.5
+      '@formkit/observer': 1.6.5
+      '@formkit/rules': 1.6.5
+      '@formkit/themes': 1.6.5(tailwindcss@3.4.3)(unocss@0.60.3)
+      '@formkit/utils': 1.6.5
+      '@formkit/validation': 1.6.5
       vue: 3.4.27(typescript@5.4.5)
     transitivePeerDependencies:
       - tailwindcss
@@ -4912,7 +4912,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001624
+      caniuse-lite: 1.0.30001625
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.1
@@ -4931,8 +4931,8 @@ packages:
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  /bare-events@2.2.2:
-    resolution: {integrity: sha512-h7z00dWdG0PYOQEvChhOSWvOfkIKsdZGkWr083FgN/HyoQuebSew/cgirYqh9SCuy/hRvxc5Vy6Fw8xAmYHLkQ==}
+  /bare-events@2.3.1:
+    resolution: {integrity: sha512-sJnSOTVESURZ61XgEleqmP255T6zTYwHPwE4r6SssIh0U9/uDvfpdoJYpVUerJJZH2fueO+CdT8ZT+OC/7aZDA==}
     requiresBuild: true
     optional: true
 
@@ -4940,7 +4940,7 @@ packages:
     resolution: {integrity: sha512-TNFqa1B4N99pds2a5NYHR15o0ZpdNKbAeKTE/+G6ED/UeOavv8RY3dr/Fu99HW3zU3pXpo2kDNO8Sjsm2esfOw==}
     requiresBuild: true
     dependencies:
-      bare-events: 2.2.2
+      bare-events: 2.3.1
       bare-path: 2.1.3
       bare-stream: 1.0.0
     dev: false
@@ -5033,7 +5033,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001624
+      caniuse-lite: 1.0.30001625
       electron-to-chromium: 1.4.783
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.0)
@@ -5153,12 +5153,12 @@ packages:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001624
+      caniuse-lite: 1.0.30001625
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
 
-  /caniuse-lite@1.0.30001624:
-    resolution: {integrity: sha512-0dWnQG87UevOCPYaOR49CBcLBwoZLpws+k6W37nLjWUhumP1Isusj0p2u+3KhjNloRWK9OKMgjBBzPujQHw4nA==}
+  /caniuse-lite@1.0.30001625:
+    resolution: {integrity: sha512-4KE9N2gcRH+HQhpeiRZXd+1niLB/XNLAhSy4z7fI8EzcbcPoAqjNInxVHTiTwWfTIV4w096XG8OtCOCQQKPv3w==}
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -7898,7 +7898,7 @@ packages:
       '@opentelemetry/api': 1.8.0
       '@swc/helpers': 0.5.2
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001624
+      caniuse-lite: 1.0.30001625
       postcss: 8.4.31
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -10026,7 +10026,7 @@ packages:
       fast-fifo: 1.3.2
       queue-tick: 1.0.1
     optionalDependencies:
-      bare-events: 2.2.2
+      bare-events: 2.3.1
 
   /string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -10845,7 +10845,7 @@ packages:
   /vanilla-jsoneditor@0.23.4(@lezer/common@1.2.1):
     resolution: {integrity: sha512-pZejBrNZkQriByIUpwn+rk8gDSDGZVZdX6E83AtNf65qKLesdYzRHYn6SEyxtr5TKttY70RWpphmraTMpc0NoQ==}
     dependencies:
-      '@codemirror/autocomplete': 6.16.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1)
+      '@codemirror/autocomplete': 6.16.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1)
       '@codemirror/commands': 6.5.0
       '@codemirror/lang-json': 6.0.1
       '@codemirror/language': 6.10.1
