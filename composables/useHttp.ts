@@ -17,7 +17,7 @@ export const useHttp = async (
     fileUpload?: boolean
   } = { method: 'get' }
 ) => {
-  console.log('useHttp', url)
+  console.log('useHttp', method, url)
   // const config = useRuntimeConfig()
   const { token } = useAuth()
   let data: DataResponse = { data: null, meta: null }

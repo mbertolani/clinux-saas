@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // import { ref } from 'vue'
 import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-balham.min.css'
+import 'ag-grid-community/styles/ag-theme-quartz.min.css'
 import { AgGridVue } from 'ag-grid-vue3'
 import type { GridOptions } from 'ag-grid-community'
 import { LicenseManager } from 'ag-grid-enterprise'
@@ -25,7 +25,7 @@ LicenseManager.setLicenseKey(
 const colorMode = useColorMode()
 const color = ref(null)
 const getColor = () => {
-  return colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
+  return colorMode.value === 'dark' ? 'ag-theme-quartz-auto-dark' : 'ag-theme-quartz'
 }
 watch(colorMode, () => {
   color.value = getColor()
@@ -33,11 +33,9 @@ watch(colorMode, () => {
 onMounted(() => {
   color.value = getColor()
 })
-// const color = computed(() => {
-//   return colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
-// })
 
 const gridApi = ref()
+const gridSideBar = ref(true)
 const rowSelection = ref('multiple')
 const suppressRowClickSelection = ref(true)
 const rowCount = ref(0)
@@ -46,7 +44,7 @@ const columnTypes = ref(null)
 
 const defaultGridOptions: GridOptions = {
   suppressHorizontalScroll: false,
-  alwaysShowVerticalScroll: true,
+  alwaysShowVerticalScroll: false,
   autoSizeStrategy: {
     type: 'fitCellContents'
   }
@@ -113,9 +111,91 @@ onBeforeMount(() => {
 })
 
 const onGridReady = () => {
-  console.log('Grid is ready', gridApi.value.api)
   gridApi.value.api.closeToolPanel()
+  restoreColumnState()
 }
+const onFirstDataRendered = () => {
+
+}
+const onRowDataUpdated = ({ api }) => {
+  api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
+}
+const resetColumnState = () => {
+  gridApi.value.api.resetColumnState()
+}
+const saveColumnState = () => {
+  const state = gridApi.value.api.getColumnState()
+  localStorage.setItem('gridState', JSON.stringify(state))
+}
+const restoreColumnState = () => {
+  const savedState = JSON.parse(localStorage.getItem('gridState'))
+  if (savedState) {
+    gridApi.value.api.applyColumnState({
+      state: savedState,
+      applyOrder: true
+    })
+  }
+}
+const autoSizeColumn = (skipHeader) => {
+  const allColumnIds = []
+  gridApi.value.api.getColumns().forEach((column) => {
+    allColumnIds.push(column.getId())
+  })
+  gridApi.value.api.autoSizeColumns(allColumnIds, skipHeader)
+}
+const gridSizeColumn = () => {
+  gridApi.value.api.sizeColumnsToFit()
+}
+const getContextMenuItems = () => {
+  const builtItems = [
+    'copy',
+    'copyWithHeaders',
+    'separator',
+    'export',
+    'chartRange',
+    'separator'
+  ]
+  const customItems = [
+    {
+      name: 'Ajustar colunas ao conteúdo',
+      action: () => autoSizeColumn(true)
+    },
+    {
+      name: 'Ajustar colunas ao grid',
+      action: () => gridSizeColumn()
+    },
+    {
+      name: 'Exibir todas as colunas',
+      action: () => resetColumnState()
+    },
+    'separator',
+    {
+      name: 'Salvar colunas',
+      action: () => saveColumnState()
+    },
+    {
+      name: 'Restaurar colunas',
+      action: () => restoreColumnState()
+    },
+    'separator',
+    {
+      name: 'Painel Lateral',
+      action: () => {
+        console.log('Painel Lateral', gridSideBar.value)
+        gridSideBar.value = !gridSideBar.value
+        // gridApi.value.rowGroupPanelShow = gridSideBar.value
+        //   ? 'always'
+        //   : 'never'
+      }
+    }
+  ]
+  return [...builtItems, ...customItems]
+}
+defineShortcuts({
+  ctrl_a: {
+    handler: () => { gridApi.value.api.selectAll() }
+  }
+})
 
 defineExpose({
   gridApi,
@@ -143,17 +223,23 @@ defineExpose({
     row-model-type="clientSide"
     :class="color"
     row-selection="multiple"
-    :side-bar="true"
+    :get-context-menu-items
+    :side-bar="gridSideBar"
     :side-bar-params="{ toolPanels: ['columns'] }"
     :default-col-def="defaultColDef"
     :get-row-id="getRowId"
     :on-grid-ready="onGridReady"
+    :on-first-data-rendered="onFirstDataRendered"
     :grid-options="defaultGridOptions"
     :suppress-row-click-selection="false"
+    :suppress-cell-focus="false"
+    :suppress-row-hover-highlight="false"
+    :suppress-header-focus="true"
     :pagination="true"
     :pagination-page-size="100"
     :pagination-page-size-selector="[10, 100, 1000]"
     :pagination-auto-page-size="false"
     :locale-text="AG_GRID_LOCALE_PT_BR"
+    @row-data-updated="onRowDataUpdated"
   />
 </template>

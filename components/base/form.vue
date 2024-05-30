@@ -22,21 +22,14 @@ const emit = defineEmits(['success', 'close'])
 function onClose() {
   emit('close')
 }
-// function onSuccess() {
-//   emit('success')
-// }
+
 async function submitHandler(_data: any) {
   emit('success', model.value)
-  // await new Promise(resolve => setTimeout(resolve, 1000))
-  // node.setErrors([
-  //   'The server doesn’t like your name 😃. Sorry.'
-  // ])
 }
 
 defineShortcuts({
   escape: {
     usingInput: true,
-    // whenever: [isOpen],
     handler: () => { onClose() }
   }
 })

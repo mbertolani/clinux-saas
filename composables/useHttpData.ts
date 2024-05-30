@@ -5,7 +5,7 @@ export const useHttpData = (
   meta: any,
   item: any,
   status: any,
-  errors: object
+  errors: any
 ) => {
   /**
    * This asynchronous function sends a GET request to the API to retrieve all items.
@@ -26,7 +26,7 @@ export const useHttpData = (
     })
     // Update the value of status based on the success of the response
     status.value = success
-    errors = error
+    errors.value = error
 
     // If the retrieval operation was successful
     if (success) {
@@ -64,7 +64,7 @@ export const useHttpData = (
 
     // Update the value of status based on the success of the response
     status.value = success
-    errors = error
+    errors.value = error
     item.value = success ? data : null
     items.value.push(data)
   }
@@ -88,7 +88,7 @@ export const useHttpData = (
 
     // Update the value of status based on the success of the response
     status.value = success
-    errors = error
+    errors.value = error
     // If the retrieval operation was successful, update the value of item with the response data
     item.value = success ? data : null
   }
@@ -106,8 +106,9 @@ export const useHttpData = (
    */
   const remove = async (id: number) => {
     const { data, error, success } = await useHttp(`${url}/${id}`, { method: 'delete' })
+    // console.log('remove', data, error, success)
     status.value = success
-    errors = error
+    errors.value = error
     item.value = success ? data : null
   }
 
@@ -129,7 +130,7 @@ export const useHttpData = (
 
     // Update the value of status based on the success of the response
     status.value = success
-    errors = error
+    errors.value = error
     item.value = success ? data : null
   }
 
@@ -177,7 +178,7 @@ export const useHttpData = (
       body
     })
     status.value = success
-    errors = error
+    errors.value = error
     item.value = success ? data : null
     items.value.push(data)
   }
