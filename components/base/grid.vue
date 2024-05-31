@@ -79,10 +79,7 @@ const onRowDataUpdated = ({ api }) => {
 }
 const saveColumnState = () => {
   const state = gridApi.value.api.getColumnState()
-  // emit('saveColumnState', state)
-  // console.log(state, props.http)
   props.http.gridState(state)
-  // localStorage.setItem('gridState', JSON.stringify(state))
 }
 const restoreColumnState = async () => {
   const savedState = await props.http.gridState()
@@ -109,6 +106,7 @@ const gridSizeColumn = () => {
 }
 const gridResetColumn = () => {
   gridApi.value.api.resetColumnState()
+  // gridApi.value.api.applyColumnState({ state: [] })
 }
 
 const getContextMenuItems = () => {
@@ -122,11 +120,11 @@ const getContextMenuItems = () => {
   ]
   const customItems = [
     {
-      name: 'Ajustar colunas ao conteúdo',
+      name: 'Ajustar colunas',
       action: () => autoSizeColumn(false)
     },
     {
-      name: 'Ajustar colunas ao grid',
+      name: 'Expandir colunas',
       action: () => gridSizeColumn()
     },
     {

@@ -2,7 +2,7 @@ import type { ItemDataType, ItemAlignment, DbGridColumn } from '@/types/grid'
 
 export const useGrid = (url: string) => {
   // const headerColumns: Ref<DbGridColumn[]> = ref([])
-  const gridFontSize = 13
+  const gridFontSize = 12
   const DbGridColumns = ref<DbGridColumn[]>([])
   const AgGridColumns = ref([])
 
@@ -50,7 +50,7 @@ export const useGrid = (url: string) => {
 
   const dataTypeWidthMapping: Record<ItemDataType, number> = {
     ftBoolean: 8 * gridFontSize,
-    ftDate: 9 * gridFontSize,
+    ftDate: 8 * gridFontSize,
     ftDateTime: 12 * gridFontSize,
     ftInteger: 8 * gridFontSize,
     ftString: 0,
@@ -72,7 +72,8 @@ export const useGrid = (url: string) => {
     taCenter: 'ag-center-aligned-cell'
   }
   const formatWidth = (item: DbGridColumn): number => {
-    return dataTypeWidthMapping[item.dataType] || item.size * 5
+    const width = dataTypeWidthMapping[item.dataType] || item.size * 5
+    return width < dataTypeWidthMapping['ftBoolean'] ? dataTypeWidthMapping['ftBoolean'] : width
   }
   const formatCellClass = (item: DbGridColumn): string => {
     return alignmentMapping[item.alignment] || 'ag-default-cell'
