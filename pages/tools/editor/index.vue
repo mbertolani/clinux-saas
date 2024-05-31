@@ -57,8 +57,9 @@ watch(
 const click = () => {
   myEditor.value.open(sfdt)
 }
+
 registerLicense(
-  'Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM='
+  useRuntimeConfig().public.syncfusionKey
 )
 
 export default {

@@ -66,7 +66,7 @@ import {
 import { registerLicense } from '@syncfusion/ej2-base'
 
 registerLicense(
-  'Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM='
+  useRuntimeConfig().public.syncfusionKey
 )
 // https://ej2.syncfusion.com/vue/documentation/document-editor/how-to/enable-ruler-in-document-editor-component
 export default {

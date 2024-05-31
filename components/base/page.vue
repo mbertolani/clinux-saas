@@ -67,6 +67,8 @@ const rowForm = ref(null)
 const { api, item, items, grid } = useEmpresa()
 await api.getAll()
 await api.getGrid()
+// const menu = await api.menu()
+
 rowData.value = items.value
 columnDefs.value = grid.value
 const handleGrid: any = () => baseApi.value?.gridApi.api
@@ -168,7 +170,7 @@ defineShortcuts({
     <UPageHeader
       :title="props.header.title"
       headline=""
-      icon="i-heroicons-building-office"
+      :icon="props.header.icon"
       :ui="{ strategy: 'override', wrapper: 'relative border-b border-gray-200 dark:border-gray-800 py-2' }"
       :links="[
         { label: 'Pesquisar', icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
@@ -188,18 +190,8 @@ defineShortcuts({
         :column-defs="columnDefs"
         :on-selection-changed="onSelectionChanged"
         :on-row-double-clicked="onRowDoubleClicked"
+        :http="api"
       />
     </UPageBody>
-
-    <!-- <template
-      #right
-    >
-      Right
-    </template>
-    <template
-      #left
-    >
-      Left
-    </template> -->
   </UPage>
 </template>

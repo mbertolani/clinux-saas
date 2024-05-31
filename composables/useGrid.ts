@@ -144,32 +144,31 @@ export const useGrid = (url: string) => {
   //   }
   // ]
 
-  const convertToNativeDate = (inputDate) => {
-    const parts = inputDate.split('/')
-    return new Date(parts[2], parts[1] - 1, parts[0])
-  }
+  // const convertToNativeDate = (inputDate) => {
+  //   const parts = inputDate.split('/')
+  //   return new Date(parts[2], parts[1] - 1, parts[0])
+  // }
   function formatCNPJ(cnpj: string) {
     return cnpj?.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
   }
-  const getRows = async (data: any[]) => {
-    const columns = await getCols()
-    const response = data.map((item) => {
-      columns.forEach((column) => {
-        if (column.dataType === 'ftDate' && item[column.fieldName]) {
-          item[column.fieldName] = convertToNativeDate(item[column.fieldName])
-        }
-        if (column.dataType === 'ftFloat' && item[column.fieldName]) {
-          item[column.fieldName] = parseFloat(item[column.fieldName])
-        }
-        if (column.fieldName === 'ds_cnpj' && item[column.fieldName]) {
-          item[column.fieldName] = formatCNPJ(item[column.fieldName])
-        }
-      })
-      return item
-    })
-    console.log('getRows', response)
-    return response
-  }
+  // const getRows = async (data: any[]) => {
+  //   const columns = await getCols()
+  //   const response = data.map((item) => {
+  //     columns.forEach((column) => {
+  //       if (column.dataType === 'ftDate' && item[column.fieldName]) {
+  //         item[column.fieldName] = convertToNativeDate(item[column.fieldName])
+  //       }
+  //       if (column.dataType === 'ftFloat' && item[column.fieldName]) {
+  //         item[column.fieldName] = parseFloat(item[column.fieldName])
+  //       }
+  //       if (column.fieldName === 'ds_cnpj' && item[column.fieldName]) {
+  //         item[column.fieldName] = formatCNPJ(item[column.fieldName])
+  //       }
+  //     })
+  //     return item
+  //   })
+  //   return response
+  // }
   const getCols = async () => {
     DbGridColumns.value = await apiGrid()
     AgGridColumns.value = DbGridColumns.value.filter(item => item.visible).map(item => ({
@@ -198,7 +197,6 @@ export const useGrid = (url: string) => {
 
   return {
     columns,
-    getRows,
     getCols
   }
 }

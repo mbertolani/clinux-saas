@@ -106,7 +106,6 @@ export const useHttpData = (
    */
   const remove = async (id: number) => {
     const { data, error, success } = await useHttp(`${url}/${id}`, { method: 'delete' })
-    // console.log('remove', data, error, success)
     status.value = success
     errors.value = error
     item.value = success ? data : null
@@ -172,8 +171,8 @@ export const useHttpData = (
     return grid.value
   }
 
-  const action = async (body: any, _url: string, method: string) => {
-    const { data, error, success } = await useHttp(_url, {
+  const sendHttp = async (payload: any, method: string, body?: any) => {
+    const { data, error, success } = await useHttp(`${url}/${payload}`, {
       method,
       body
     })
@@ -184,12 +183,12 @@ export const useHttpData = (
     return success ? data : error
   }
 
-  const Post = async (body: any, _url: string) => {
-    return action(body, _url, 'post')
+  const Post = async (payload: string, body?: any) => {
+    return sendHttp(payload, 'post', body)
   }
 
-  const Get = async (body?: any) => {
-    return action(body, generateApiUrl(body), 'get')
+  const Get = async (payload: string, body?: any) => {
+    return sendHttp(payload, 'get', generateApiUrl(body))
   }
 
   const find = async (body: any) => {
@@ -200,8 +199,9 @@ export const useHttpData = (
     return await Post('exec', body)
   }
 
-  const state = async (body: any) => {
-    return await Post('state', body)
+  const gridState = async (body: any) => {
+    const response = await Post('state', body)
+    return response?.bb_grid ? useNuxtApp().$base64ToJson(response?.bb_grid) : null
   }
 
   const menu = async () => {
@@ -224,7 +224,7 @@ export const useHttpData = (
     log,
     find,
     exec,
-    state,
+    gridState,
     menu
   }
 }

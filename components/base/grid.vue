@@ -5,22 +5,24 @@ import 'ag-grid-community/styles/ag-theme-quartz.min.css'
 import { AgGridVue } from 'ag-grid-vue3'
 import type { GridOptions } from 'ag-grid-community'
 import { LicenseManager } from 'ag-grid-enterprise'
+import gridToolPanel from './gridToolPanel.vue'
 import { AG_GRID_LOCALE_PT_BR } from '@/locales/grid'
 
 LicenseManager.setLicenseKey(
-  'Using_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-051714}_in_excess_of_the_licence_granted_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_changing_this_key_please_contact_info@ag-grid.com___{Genesis_Tecnologia}_is_granted_a_{Single_Application}_Developer_License_for_the_application_{Clinux}_only_for_{1}_Front-End_JavaScript_developer___All_Front-End_JavaScript_developers_working_on_{Clinux}_need_to_be_licensed___{Clinux}_has_been_granted_a_Deployment_License_Add-on_for_{1}_Production_Environment___This_key_works_with_{AG_Charts_and_AG_Grid}_Enterprise_versions_released_before_{1_January_2025}____[v3]_[0102]_MTczNTY4OTYwMDAwMA==3be157b75b26c094fd0faf3609d46ba5'
+  useRuntimeConfig().public.aggridKey
 )
+const props = defineProps({
+  http: {
+    type: Object,
+    required: true
+  }
+})
 
-// defineProps({
-//   rowData: {
-//     type: Array,
-//     required: true
-//   },
-//   columnDefs: {
-//     type: Array,
-//     required: true
-//   }
-// })
+const gridApi = ref()
+
+defineExpose({
+  gridApi
+})
 
 const colorMode = useColorMode()
 const color = ref(null)
@@ -34,14 +36,12 @@ onMounted(() => {
   color.value = getColor()
 })
 
-const gridApi = ref()
-const gridSideBar = ref(true)
+// const gridSideBar = ref(true)
 const rowSelection = ref('multiple')
-const suppressRowClickSelection = ref(true)
-const rowCount = ref(0)
-const rowStatus = ref('')
-const columnTypes = ref(null)
 
+// const computedSideBar = computed(() => {
+//   return gridSideBar.value ? toolPanel.value : null
+// })
 const defaultGridOptions: GridOptions = {
   suppressHorizontalScroll: false,
   alwaysShowVerticalScroll: false,
@@ -50,65 +50,22 @@ const defaultGridOptions: GridOptions = {
   }
 }
 
-const currencyFormatter = p =>
-  parseFloat(p.value).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  })
-
-const fieldCurrency = {
-  filter: 'agNumberColumnFilter',
-  type: 'numericColumn',
-  aggFunc: 'sum',
-  valueFormatter: currencyFormatter
-}
-
-const fieldNumber = {
-  filter: 'agNumberColumnFilter',
-  type: 'numericColumn',
-  cellRenderer: 'agAnimateShowChangeCellRenderer',
-  aggFunc: 'sum'
-}
-
-const fieldDate = {
-  filter: 'agDateColumnFilter',
-  valueFormatter: p => new Date(p.value).toLocaleDateString('pt-BR')
-}
-
 const defaultColDef = ref({
-  flex: 1,
-  minWidth: 100,
+  // flex: 1,
+  // minWidth: 100,
   editable: false,
   filter: true,
   enableRowGroup: false,
   enableCellChangeFlash: true
 })
 
-const isFirstColumn = (params) => {
-  const displayedColumns = params.api.getAllDisplayedColumns()
-  const thisIsFirstColumn = displayedColumns[0] === params.column
-  return thisIsFirstColumn
-}
-
-const convertToNativeDate = (inputDate) => {
-  const parts = inputDate.split('/')
-  return new Date(parts[2], parts[1] - 1, parts[0])
-}
+// const isFirstColumn = (params) => {
+//   const displayedColumns = params.api.getAllDisplayedColumns()
+//   const thisIsFirstColumn = displayedColumns[0] === params.column
+//   return thisIsFirstColumn
+// }
 
 const getRowId = ({ data }) => Object.values(data)[0]
-
-onBeforeMount(() => {
-  columnTypes.value = {
-    currency: {
-      width: 150,
-      filter: 'agNumberColumnFilter',
-      valueFormatter: currencyFormatter
-    },
-    shaded: {
-      cellClass: 'shaded-class'
-    }
-  }
-})
 
 const onGridReady = () => {
   gridApi.value.api.closeToolPanel()
@@ -120,15 +77,16 @@ const onFirstDataRendered = () => {
 const onRowDataUpdated = ({ api }) => {
   api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
 }
-const resetColumnState = () => {
-  gridApi.value.api.resetColumnState()
-}
 const saveColumnState = () => {
   const state = gridApi.value.api.getColumnState()
-  localStorage.setItem('gridState', JSON.stringify(state))
+  // emit('saveColumnState', state)
+  // console.log(state, props.http)
+  props.http.gridState(state)
+  // localStorage.setItem('gridState', JSON.stringify(state))
 }
-const restoreColumnState = () => {
-  const savedState = JSON.parse(localStorage.getItem('gridState'))
+const restoreColumnState = async () => {
+  const savedState = await props.http.gridState()
+  // const savedState = JSON.parse(localStorage.getItem('gridState'))
   if (savedState) {
     gridApi.value.api.applyColumnState({
       state: savedState,
@@ -136,7 +94,7 @@ const restoreColumnState = () => {
     })
   }
 }
-const autoSizeColumn = (skipHeader) => {
+const autoSizeColumn = (skipHeader: boolean) => {
   const allColumnIds = []
   gridApi.value.api.getColumns().forEach((column) => {
     allColumnIds.push(column.getId())
@@ -146,6 +104,10 @@ const autoSizeColumn = (skipHeader) => {
 const gridSizeColumn = () => {
   gridApi.value.api.sizeColumnsToFit()
 }
+const gridResetColumn = () => {
+  gridApi.value.api.resetColumnState()
+}
+
 const getContextMenuItems = () => {
   const builtItems = [
     'copy',
@@ -158,15 +120,15 @@ const getContextMenuItems = () => {
   const customItems = [
     {
       name: 'Ajustar colunas ao conteúdo',
-      action: () => autoSizeColumn(true)
+      action: () => autoSizeColumn(false)
     },
     {
       name: 'Ajustar colunas ao grid',
       action: () => gridSizeColumn()
     },
     {
-      name: 'Exibir todas as colunas',
-      action: () => resetColumnState()
+      name: 'Resetar colunas',
+      action: () => gridResetColumn()
     },
     'separator',
     {
@@ -176,18 +138,19 @@ const getContextMenuItems = () => {
     {
       name: 'Restaurar colunas',
       action: () => restoreColumnState()
-    },
-    'separator',
-    {
-      name: 'Painel Lateral',
-      action: () => {
-        console.log('Painel Lateral', gridSideBar.value)
-        gridSideBar.value = !gridSideBar.value
-        // gridApi.value.rowGroupPanelShow = gridSideBar.value
-        //   ? 'always'
-        //   : 'never'
-      }
     }
+    // {
+    //   name: 'Painel Lateral',
+    //   action: () => {
+    //     gridSideBar.value = !gridSideBar.value
+    //   }
+    // },
+    // {
+    //   name: 'Multi-Seleção',
+    //   action: () => {
+    //     rowSelection.value = rowSelection.value === 'multiple' ? 'single' : 'multiple'
+    //   }
+    // }
   ]
   return [...builtItems, ...customItems]
 }
@@ -197,35 +160,50 @@ defineShortcuts({
   }
 })
 
-defineExpose({
-  gridApi,
-  rowSelection,
-  suppressRowClickSelection,
-  rowCount,
-  rowStatus,
-  columnTypes,
-  currencyFormatter,
-  fieldCurrency,
-  fieldNumber,
-  fieldDate,
-  defaultColDef,
-  isFirstColumn,
-  convertToNativeDate,
-  onGridReady
-})
+const menu = await props.http.menu()
+const toolPanel = ref(null)
+
+toolPanel.value = {
+  toolPanels: [
+    {
+      id: 'custom',
+      labelDefault: 'Funções',
+      labelKey: 'custom',
+      iconKey: 'menu',
+      toolPanel: 'gridToolPanel',
+      toolPanelParams: { menu }
+    },
+    {
+      id: 'columns',
+      labelDefault: 'Columns',
+      labelKey: 'columns',
+      iconKey: 'columns',
+      toolPanel: 'agColumnsToolPanel'
+    },
+    {
+      id: 'filters',
+      labelDefault: 'Filters',
+      labelKey: 'filters',
+      iconKey: 'filter',
+      toolPanel: 'agFiltersToolPanel'
+    }
+
+  ]
+}
 </script>
 
 <template>
   <AgGridVue
     ref="gridApi"
-    style="height: 78vh; width: 100%"
+    style="height: 85vh; width: 100%"
     v-bind="$attrs"
     row-model-type="clientSide"
     :class="color"
-    row-selection="multiple"
+    :row-selection
     :get-context-menu-items
-    :side-bar="gridSideBar"
-    :side-bar-params="{ toolPanels: ['columns'] }"
+    :components="{ gridToolPanel }"
+    :side-bar="toolPanel"
+    :side-bar-params="{ toolPanels: ['custom'] }"
     :default-col-def="defaultColDef"
     :get-row-id="getRowId"
     :on-grid-ready="onGridReady"
@@ -233,8 +211,9 @@ defineExpose({
     :grid-options="defaultGridOptions"
     :suppress-row-click-selection="false"
     :suppress-cell-focus="false"
-    :suppress-row-hover-highlight="false"
+    :suppress-row-hover-highlight="true"
     :suppress-header-focus="true"
+    :suppress-copy-rows-to-clipboard="true"
     :pagination="true"
     :pagination-page-size="100"
     :pagination-page-size-selector="[10, 100, 1000]"
