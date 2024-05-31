@@ -48,6 +48,7 @@ export const useHttp = async (
   }
 
   try {
+    useLoadingIndicator().start()
     const response = await fetch(url, options)
     // wait for the response to be parsed as JSON
     if (response.ok) {
@@ -62,6 +63,8 @@ export const useHttp = async (
     }
   } catch (error) {
     success = false
+  } finally {
+    useLoadingIndicator().finish()
   }
   return {
     data,

@@ -86,9 +86,12 @@ const saveColumnState = () => {
 }
 const restoreColumnState = async () => {
   const savedState = await props.http.gridState()
-  // const savedState = JSON.parse(localStorage.getItem('gridState'))
   if (savedState) {
-    gridApi.value.api.applyColumnState({
+    if (!gridApi.value.api) {
+      useToast().add({ title: 'Grid não carregado', color: 'red' })
+      return
+    }
+    gridApi.value.api?.applyColumnState({
       state: savedState,
       applyOrder: true
     })
