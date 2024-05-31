@@ -91,10 +91,10 @@ export default defineNuxtConfig({
     // baseURL: 'http://172.18.0.1:8082/login',
     provider: {
       type: 'local',
-      endpoints: {
-        // signIn: { path: '/auth', method: 'post' },
-        // getSession: { path: '/user', method: 'post' }
-      },
+      // endpoints: {
+      //   // signIn: { path: '/auth', method: 'post' },
+      //   // getSession: { path: '/user', method: 'post' }
+      // },
       token: {
         signInResponseTokenPointer: '/token/bearer'
       },

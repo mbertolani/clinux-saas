@@ -31,7 +31,7 @@ const schema = [
 
 <template>
   <BasePage
-    :header="{ title: 'Empresas', description: 'Cadastro de Empresas' }"
+    :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
     :schema="schema"
     endpoint="/gerencial/empresa"
   />

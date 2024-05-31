@@ -179,15 +179,16 @@ export const useHttpData = (
     })
     status.value = success
     errors.value = error
-    item.value = success ? data : null
-    items.value.push(data)
+    // item.value = success ? data : null
+    // items.value.push(data)
+    return success ? data : error
   }
 
   const Post = async (body: any, _url: string) => {
     return action(body, _url, 'post')
   }
 
-  const Get = async (body: any, _url: string) => {
+  const Get = async (body?: any) => {
     return action(body, generateApiUrl(body), 'get')
   }
 
@@ -203,12 +204,12 @@ export const useHttpData = (
     return await Post('state', body)
   }
 
-  const menu = async (body: any) => {
-    return await Get('menu', body)
+  const menu = async () => {
+    return await Get('menu')
   }
 
-  const log = async (body: any) => {
-    return await Get('log', body)
+  const log = async () => {
+    return await Get('log')
   }
 
   return {

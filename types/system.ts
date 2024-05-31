@@ -89,7 +89,7 @@ export const mainMenu = [
   {
     label: 'Gerencial',
     children: [
-      { label: 'Empresa', to: '/gerencial/empresa' },
+      { label: 'Empresa', to: '/gerencial/empresa', icon: 'i-heroicons-building-office' },
       { label: 'Funcionário', to: '/gerencial/funcionario' },
       { label: 'Sala', to: '/' },
       { label: 'Médico', to: '/' }
