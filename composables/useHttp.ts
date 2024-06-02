@@ -48,7 +48,8 @@ export const useHttp = async (
   }
 
   try {
-    useLoadingIndicator().start()
+    useSystemStore()?.startLoading()
+    // await new Promise(r => setTimeout(r, 1000))
     const response = await fetch(url, options)
     // wait for the response to be parsed as JSON
     if (response.ok) {
@@ -64,7 +65,7 @@ export const useHttp = async (
   } catch (error) {
     success = false
   } finally {
-    useLoadingIndicator().finish()
+    useSystemStore()?.finishLoading()
   }
   return {
     data,

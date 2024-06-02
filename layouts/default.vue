@@ -16,12 +16,5 @@
     </UMain>
 
     <AppFooter />
-
-    <!-- <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-      />
-    </ClientOnly> -->
   </div>
 </template>

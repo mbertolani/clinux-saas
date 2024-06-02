@@ -82,12 +82,21 @@ export const useSystemStore = defineStore('system', () => {
     loading.value = null
   }
 
+  function startLoading() {
+    loading.value = true
+  }
+  function finishLoading() {
+    loading.value = false
+  }
+
   return {
     menu,
     setup,
     logo,
     icon,
     loading,
+    startLoading,
+    finishLoading,
     $reset,
     loadSetup,
     loadMenu,

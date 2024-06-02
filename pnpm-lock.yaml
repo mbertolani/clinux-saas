@@ -107,6 +107,9 @@ dependencies:
   vue-class-component:
     specifier: 8.0.0-rc.1
     version: 8.0.0-rc.1(vue@3.4.27)
+  vue-spinner:
+    specifier: ^1.0.4
+    version: 1.0.4
 
 devDependencies:
   '@formkit/auto-animate':
@@ -11142,6 +11145,10 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.6.1
       vue: 3.4.27(typescript@5.4.5)
+
+  /vue-spinner@1.0.4:
+    resolution: {integrity: sha512-GNG2F+8BLX201JT/jUX+84Gsi3ZteVQwt9K7mues3ts9FcQ95dGn7uu6a5ndSxdYYUEzfh1KngZiOE0u+l4itA==}
+    dev: false
 
   /vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}

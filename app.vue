@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+
 const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
@@ -30,7 +32,12 @@ useSeoMeta({
 <template>
   <div>
     <NuxtLoadingIndicator />
-
+    <pulse-loader
+      class="loader-container"
+      :loading="useSystemStore()?.loading"
+      color="#D0D0D0"
+      size="15px"
+    />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -39,3 +46,19 @@ useSeoMeta({
     <UModals />
   </div>
 </template>
+
+<style scoped>
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fundo preto com 50% de opacidade */
+  backdrop-filter: blur(0.5px); /* Embarcado */
+  z-index: 9999; /* Garante que o loader esteja acima de outros elementos */
+}
+</style>

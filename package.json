@@ -46,7 +46,8 @@
     "nuxt-og-image": "3.0.0-rc.53",
     "sharp": "^0.33.4",
     "tailwindcss": "^3.4.3",
-    "vue-class-component": "8.0.0-rc.1"
+    "vue-class-component": "8.0.0-rc.1",
+    "vue-spinner": "^1.0.4"
   },
   "devDependencies": {
     "@formkit/auto-animate": "latest",

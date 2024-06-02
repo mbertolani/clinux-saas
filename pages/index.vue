@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ModalDelete, UtilMemory } from '#components'
+import { ModalDelete, BaseDashboard } from '#components'
 
 // const { data: page } = await useAsyncData('index', () => queryContent('/').findOne())
 // if (!page.value) {
@@ -53,7 +53,7 @@ function openModal() {
       <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
     </ULandingHero>
     <div class="flex justify-center">
-      <UtilMemory />
+      <BaseDashboard />
     </div>
     <UButton
       v-if="false"
