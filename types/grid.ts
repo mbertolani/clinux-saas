@@ -27,3 +27,7 @@ export interface DbGridColumn {
 //   filterParams?: Record<string, unknown>
 //   cellClass: string
 // }
+export type ActionMenuItem = {
+  name: string
+  action: any
+}

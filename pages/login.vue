@@ -65,17 +65,9 @@ const onSubmit = async (form: any) => {
       { ...form, api: apiUrl },
       { callbackUrl: '/' } // Where the user will be redirected after a successiful login
     )
-    useToast().add({
-      title: 'Bem-Vindo',
-      color: 'green',
-      description: 'Login efetuado com sucesso !'
-    })
+    useSystemStore().showMessage('Login efetuado com sucesso')
   } catch (error) {
-    useToast().add({
-      title: 'Erro',
-      color: 'red',
-      description: error.response?._data.error
-    })
+    useSystemStore().showError(error.response?._data.error)
   } finally {
     loading.value = false
   }

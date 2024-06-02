@@ -1,31 +1,20 @@
 <script lang="ts" setup>
-import { FormKitSchema } from '@formkit/vue'
-
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     required: true
-  },
-  schema: {
-    type: Array<any>,
-    required: true
-  },
-  data: {
-    type: Object,
-    default: () => ({}),
-    required: false
   }
 })
-const model = ref(props.data)
+// const model = ref(props.data)
 const emit = defineEmits(['success', 'close'])
 
 function onClose() {
   emit('close')
 }
 
-async function submitHandler(_data: any) {
-  emit('success', model.value)
-}
+// async function submitHandler(_data: any) {
+//   emit('success', model.value)
+// }
 
 defineShortcuts({
   escape: {
@@ -41,7 +30,7 @@ defineShortcuts({
       <template #header>
         <div class="flex items-center justify-between">
           <div class="text-base font-semibold leading-6 text-gray-900 dark:text-white">
-            {{ props.title }}
+            {{ title }}
           </div>
 
           <UButton
@@ -54,27 +43,7 @@ defineShortcuts({
         </div>
       </template>
 
-      <FormKit
-        v-slot="{ state: { dirty } }"
-        v-model="model"
-        dirty-behavior="compare"
-        type="form"
-        :actions="false"
-        @submit="submitHandler"
-      >
-        <FormKitSchema
-          :schema="props.schema"
-        />
-        <FormKit
-          type="submit"
-          label="Salvar"
-          :disabled="!dirty"
-        />
-      </FormKit>
-      <pre
-        v-if="true"
-        wrap
-      >{{ model }}</pre>
+      <slot />
     </UCard>
   </UModal>
 </template>

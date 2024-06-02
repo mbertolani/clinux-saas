@@ -2,6 +2,7 @@ export const useHttpData = (
   url: string,
   items: any,
   grid: any,
+  menu: any,
   meta: any,
   item: any,
   status: any,
@@ -168,7 +169,6 @@ export const useHttpData = (
 
   const getGrid = async () => {
     grid.value = await useGrid(url).getCols()
-    return grid.value
   }
 
   const sendHttp = async (payload: any, method: string, body?: any) => {
@@ -199,13 +199,13 @@ export const useHttpData = (
     return await Post('exec', body)
   }
 
-  const gridState = async (body: any) => {
+  const getState = async (body: any) => {
     const response = await Post('state', body)
     return response?.bb_grid ? useNuxtApp().$base64ToJson(response?.bb_grid) : null
   }
 
-  const menu = async () => {
-    return await Get('menu')
+  const getMenu = async () => {
+    menu.value = await Get('menu')
   }
 
   const log = async () => {
@@ -224,7 +224,7 @@ export const useHttpData = (
     log,
     find,
     exec,
-    gridState,
-    menu
+    getState,
+    getMenu
   }
 }

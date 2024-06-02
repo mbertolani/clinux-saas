@@ -10,14 +10,23 @@ export const useSystemStore = defineStore('system', () => {
   const menu = ref<MainMenu[]>([])
   const icon = ref(null)
   const logo = ref(null)
-  const loading = ref(false)
+  const loading = ref(0)
   const toast = useToast()
 
-  const toastError = (error: any) => {
+  const showError = (message: string) => {
+    console.log('showError', message)
     toast.add({
-      title: 'Erro',
+      title: 'Aviso de Erro',
       color: 'red',
-      description: error || 'Não foi possível conectar ao servidor'
+      description: message
+    })
+  }
+  const showMessage = (message: string) => {
+    console.log('showMessage', message)
+    toast.add({
+      title: 'Aviso',
+      color: 'green',
+      description: message
     })
   }
 
@@ -37,14 +46,14 @@ export const useSystemStore = defineStore('system', () => {
 
   const loadLogo = async () => {
     try {
-      loading.value = true
+      // loading.value = true
       // const { data: response } = await useAPI('/setup/logo')
       const response = await useNuxtApp().$api('/setup/logo')
       logo.value = response
     } catch (error) {
-      toastError(error.response?._data.error)
+      showError(error.response?._data.error || 'Não foi possível conectar ao servidor')
     } finally {
-      loading.value = false
+      // loading.value = false
     }
   }
 
@@ -57,15 +66,14 @@ export const useSystemStore = defineStore('system', () => {
 
   const loadSetup = async () => {
     try {
-      loading.value = true
+      // loading.value = true
       const { data } = await useAPI('/setup/data', { method: 'GET', default: () => null })
       setup.value = data.value ? data?.value[0] : null
       changeTheme(setup.value?.ds_dicomvix_tema, setup.value?.ds_dicomvix_tema)
     } catch (error) {
-      console.log('error', error)
-      toastError(error.response?._data.error)
+      showError(error.response?._data.error || 'Não foi possível conectar ao servidor')
     } finally {
-      loading.value = false
+      // loading.value = false
     }
   }
 
@@ -83,10 +91,10 @@ export const useSystemStore = defineStore('system', () => {
   }
 
   function startLoading() {
-    loading.value = true
+    loading.value++
   }
   function finishLoading() {
-    loading.value = false
+    loading.value--
   }
 
   return {
@@ -101,7 +109,9 @@ export const useSystemStore = defineStore('system', () => {
     loadSetup,
     loadMenu,
     loadLogo,
-    getAll
+    getAll,
+    showError,
+    showMessage
   }
 },
 { persist: true }

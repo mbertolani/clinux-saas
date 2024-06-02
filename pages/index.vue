@@ -24,7 +24,6 @@ useSeoMeta({
 definePageMeta({
   auth: true
 })
-const toast = useToast()
 const modal = useModal()
 const count = ref(0)
 
@@ -34,10 +33,7 @@ function openModal() {
   modal.open(ModalDelete, {
     count: count.value,
     onSuccess() {
-      toast.add({
-        title: 'Success !',
-        id: 'modal-success'
-      })
+      useSystemStore().showMessage('teste')
     }
   })
 }

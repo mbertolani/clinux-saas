@@ -17,7 +17,11 @@ export default {
             label: item.title,
             icon: `i-heroicons-${iconMapping[item.icon]}`,
             click: () => {
-              console.log(item.action)
+              if (typeof item.action === 'function') {
+                item.action()
+              } else {
+                console.log(item.action)
+              }
               this.params.api.closeToolPanel()
             }
           })

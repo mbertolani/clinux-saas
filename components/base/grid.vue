@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-// import { ref } from 'vue'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-quartz.min.css'
 import { AgGridVue } from 'ag-grid-vue3'
-import type { GridOptions } from 'ag-grid-community'
+import type { GridOptions, CellPosition, NavigateToNextCellParams } from 'ag-grid-community'
 import { LicenseManager } from 'ag-grid-enterprise'
 import gridToolPanel from './gridToolPanel.vue'
 import { AG_GRID_LOCALE_PT_BR } from '@/locales/grid'
@@ -15,19 +14,64 @@ const props = defineProps({
   http: {
     type: Object,
     required: true
+  },
+  rowClassRules: {
+    type: Object,
+    default: null
+  },
+  menu: {
+    type: Array,
+    default: () => []
   }
 })
 
 const gridApi = ref()
 
+const gotoPage = (node) => {
+  const pageSize = gridApi.value.api.paginationGetPageSize()
+  const rowIndex = gridApi.value.api.getRowNode(node.id).rowIndex
+  const pageNumber = Math.floor(rowIndex / pageSize)
+  gridApi.value.api.paginationGoToPage(pageNumber)
+}
+
+const applyTransaction = (transaction) => {
+  const response = gridApi.value.api.applyTransaction(transaction)
+  response.add.forEach((node) => {
+    node.setSelected(true, true)
+    gotoPage(node)
+  })
+}
+
+const applyTransactionDelete = (transaction) => {
+  if (!transaction.length)
+    return
+  const remove = gridApi.value.api.applyTransaction({
+    remove: transaction
+  }).remove
+  const rowIndex = remove[0].childIndex
+  const rowLast = gridApi.value.api.getLastDisplayedRowIndex()
+  const nodeToSelect = gridApi.value.api.getDisplayedRowAtIndex(rowIndex > rowLast ? rowLast : rowIndex)
+  if (nodeToSelect) {
+    nodeToSelect.setSelected(true, true)
+  }
+}
+
+const getSelectedNodes = () => {
+  return gridApi.value.api.getSelectedNodes()
+}
+
 defineExpose({
+  applyFilterChanged,
+  applyTransaction,
+  applyTransactionDelete,
+  getSelectedNodes,
   gridApi
 })
 
 const colorMode = useColorMode()
 const color = ref(null)
 const getColor = () => {
-  return colorMode.value === 'dark' ? 'ag-theme-quartz-auto-dark' : 'ag-theme-quartz'
+  return colorMode.value === 'dark' ? 'ag-theme-quartz-dark' : 'ag-theme-quartz'
 }
 watch(colorMode, () => {
   color.value = getColor()
@@ -36,12 +80,6 @@ onMounted(() => {
   color.value = getColor()
 })
 
-// const gridSideBar = ref(true)
-const rowSelection = ref('multiple')
-
-// const computedSideBar = computed(() => {
-//   return gridSideBar.value ? toolPanel.value : null
-// })
 const defaultGridOptions: GridOptions = {
   suppressHorizontalScroll: false,
   alwaysShowVerticalScroll: false,
@@ -59,12 +97,6 @@ const defaultColDef = ref({
   enableCellChangeFlash: true
 })
 
-// const isFirstColumn = (params) => {
-//   const displayedColumns = params.api.getAllDisplayedColumns()
-//   const thisIsFirstColumn = displayedColumns[0] === params.column
-//   return thisIsFirstColumn
-// }
-
 const getRowId = ({ data }) => Object.values(data)[0]
 
 const onGridReady = () => {
@@ -72,20 +104,19 @@ const onGridReady = () => {
   restoreColumnState()
 }
 const onFirstDataRendered = () => {
-
 }
 const onRowDataUpdated = ({ api }) => {
   api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
 }
 const saveColumnState = () => {
   const state = gridApi.value.api.getColumnState()
-  props.http.gridState(state)
+  props.http.getState(state)
 }
 const restoreColumnState = async () => {
-  const savedState = await props.http.gridState()
+  const savedState = await props.http.getState()
   if (savedState) {
-    if (!gridApi.value.api) {
-      useToast().add({ title: 'Grid não carregado', color: 'red' })
+    if (!gridApi.value?.api) {
+      useSystemStore().showError('Grid não carregado')
       return
     }
     gridApi.value.api?.applyColumnState({
@@ -106,7 +137,6 @@ const gridSizeColumn = () => {
 }
 const gridResetColumn = () => {
   gridApi.value.api.resetColumnState()
-  // gridApi.value.api.applyColumnState({ state: [] })
 }
 
 const getContextMenuItems = () => {
@@ -161,8 +191,16 @@ defineShortcuts({
   }
 })
 
-const menu = await props.http.menu()
 const toolPanel = ref(null)
+// const statusBar = {
+//   statusPanels: [
+//     {
+//       key: 'aUniqueString',
+//       statusPanel: 'agSelectedRowCountComponent',
+//       align: 'left'
+//     }
+//   ]
+// }
 
 toolPanel.value = {
   toolPanels: [
@@ -172,7 +210,7 @@ toolPanel.value = {
       labelKey: 'custom',
       iconKey: 'menu',
       toolPanel: 'gridToolPanel',
-      toolPanelParams: { menu }
+      toolPanelParams: { menu: props.menu }
     },
     {
       id: 'columns',
@@ -191,6 +229,69 @@ toolPanel.value = {
 
   ]
 }
+
+// const getRowStyle = props.getRowStyle || (({ data }) => {
+//   if (data && 'sn_ativo' in data)
+//     if (!data?.sn_ativo) {
+//       return { color: 'silver' }
+//     }
+//   return { color: 'black' }
+// })
+// const getRowClass = props.getRowClass || (({ data }) => {
+//   if (data && 'sn_ativo' in data)
+//     if (!data?.sn_ativo) {
+//       return { color: 'silver' }
+//     }
+//   return { color: 'black' }
+// })
+const rowClassRules = props.rowClassRules || {
+  'custom-row-disable': ({ data }) => ('sn_ativo' in data) && (!data?.sn_ativo)
+}
+
+function applyFilterChanged(payload: string) {
+  gridApi!.value.setGridOption(
+    'quickFilterText',
+    payload
+  )
+}
+
+function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | null {
+  const suggestedNextCell = params.nextCellPosition
+
+  const KEY_UP = 'ArrowUp'
+  const KEY_DOWN = 'ArrowDown'
+
+  const noUpOrDownKey = params.key !== KEY_DOWN && params.key !== KEY_UP
+  if (noUpOrDownKey || !suggestedNextCell) {
+    return suggestedNextCell
+  }
+
+  const nodeToSelect = params.api.getDisplayedRowAtIndex(suggestedNextCell.rowIndex)
+  if (nodeToSelect) {
+    nodeToSelect.setSelected(true, true)
+  }
+
+  return suggestedNextCell
+}
+// const onCellKeyDown = ({ event, api, rowIndex }) => {
+//   switch (event.key) {
+//     case 'PageUp':
+//     case 'PageDown':
+//       api.getDisplayedRowAtIndex(rowIndex)?.setSelected(true, true)
+//       break
+//     case 'a':
+//     case 'A':
+//       if (event.ctrlKey)
+//         api.selectAll()
+//       break
+//   }
+// }
+// function onCellFocused({ rowIndex }) {
+//   const node = gridApi.value.api.getDisplayedRowAtIndex(rowIndex)
+//   if (node) {
+//     node.setSelected(true, true)
+//   }
+// }
 </script>
 
 <template>
@@ -199,8 +300,10 @@ toolPanel.value = {
     style="height: 85vh; width: 100%"
     v-bind="$attrs"
     row-model-type="clientSide"
+    row-selection="multiple"
+    :navigate-to-next-cell="navigateToNextCell"
+    :row-class-rules
     :class="color"
-    :row-selection
     :get-context-menu-items
     :components="{ gridToolPanel }"
     :side-bar="toolPanel"
@@ -210,6 +313,7 @@ toolPanel.value = {
     :on-grid-ready="onGridReady"
     :on-first-data-rendered="onFirstDataRendered"
     :grid-options="defaultGridOptions"
+    :suppress-row-deselection="false"
     :suppress-row-click-selection="false"
     :suppress-cell-focus="false"
     :suppress-row-hover-highlight="true"
@@ -223,3 +327,16 @@ toolPanel.value = {
     @row-data-updated="onRowDataUpdated"
   />
 </template>
+
+<style>
+.custom-row-alert {
+  color: rgb(255, 150, 150);
+}
+.custom-row-disable {
+  color: rgb(150, 150, 150);
+}
+.ag-theme-quartz, .ag-theme-quartz-dark {
+    --ag-grid-size: 5px;
+    --ag-list-item-height: 20px;
+}
+</style>

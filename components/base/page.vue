@@ -1,176 +1,116 @@
 <script setup lang="ts">
-// import { FormKitSchema } from '@formkit/vue'
-import { useEmpresa } from '~/composables/gerencial/useEmpresa'
-import { BaseForm, ModalDelete } from '#components'
+import { ModalDelete } from '#components'
+import type { ActionMenuItem } from '~/types/grid'
 
 const props = defineProps({
   header: {
     type: Object,
     required: true
   },
-  endpoint: {
-    type: String,
-    required: true
+  controller: {
+    type: Object,
+    required: false
   },
-  schema: {
-    type: Array,
-    required: true
+  rowClassRules: {
+    type: Object,
+    default: null
+  },
+  actionMenu: {
+    type: Array as () => ActionMenuItem[],
+    required: false,
+    default: () => ([])
   }
 })
-defineEmits(['update:title', 'update:description'])
+
 defineExpose({
+  applyTransaction: (transaction) => {
+    apiGrid.value.applyTransaction(transaction)
+  }
 })
-const toast = useToast()
+
+const apiGrid = ref(null)
+const emit = defineEmits(['openForm'])
 const modal = useModal()
+const { showError, showMessage } = useSystemStore()
+const { api, items: rowData, grid: columnDefs, menu } = props.controller
 
-async function openCadastro() {
-  modal.open(BaseForm, {
-    title: props.header.title,
-    schema: props.schema,
-    data: rowForm.value,
-    async onSuccess(data) {
-      const novo = !rowForm.value
-      if (novo) {
-        await api.create(data)
-      } else {
-        await api.update(Object.values(rowForm.value)[0] as number, data)
-      }
-      if (api.status.value) {
-        modal.close()
-        toast.add({
-          title: 'Success !',
-          id: 'modal-success'
-        })
-        if (novo) {
-          handleGrid().applyTransaction({ add: [item.value] }).add.forEach(node => node.setSelected(true, true))
-        } else {
-          handleGrid().applyTransaction({ update: [item.value] }).update.forEach(node => node.setSelected(true, true))
-        }
-      } else {
-        toast.add({
-          title: 'Error !',
-          color: 'red',
-          description: JSON.stringify(api.errors.value.error)
-        })
-      }
-    },
-    onClose() {
-      console.log('Close')
-      modal.close()
-    }
-  })
-}
-const baseApi = ref(null)
-const columnDefs = ref(null)
-const rowData = ref(null)
-const rowForm = ref(null)
-const { api, item, items, grid } = useEmpresa()
-await api.getAll()
-await api.getGrid()
-// const menu = await api.menu()
+await Promise.all([
+  api.getAll(),
+  api.getGrid(),
+  api.getMenu()
+])
 
-rowData.value = items.value
-columnDefs.value = grid.value
-const handleGrid: any = () => baseApi.value?.gridApi.api
-const onSelectionChanged = () => {
-}
-function getFieldName(schema) {
-  return schema.map(item => item.name).join(',')
-}
-const onRowDoubleClicked = async params => actionEdit(params.node.id)
+menu.value = menu.value.map((item) => {
+  const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
+  if (actionItem) {
+    item.action = actionItem.action
+  }
+  return item
+})
 
+const buttonSearch = async () => {
+  await api.getAll()
+}
 const actionEdit = async (id: number) => {
-  await api.get(id, getFieldName(props.schema))
-  rowForm.value = { ...(item.value as object) }
-  if (rowForm.value)
-    openCadastro()
+  emit('openForm', id)
 }
 const buttonNew = () => {
-  rowForm.value = null
-  openCadastro()
+  emit('openForm', 0)
 }
 const buttonEdit = () => {
-  console.log('Edit', handleGrid().getSelectedRows()[0])
-  const id = handleGrid().getSelectedRows()[0]
-  if (id) {
-    actionEdit(id.cd_empresa)
+  const selectedNode = apiGrid.value.getSelectedNodes()[0]?.id
+  if (selectedNode) {
+    actionEdit(selectedNode)
   } else {
-    toast.add({
-      title: 'Error !',
-      color: 'red',
-      description: 'Nenhum registro selecionado'
-    })
+    showError('Nenhum registro selecionado')
   }
 }
 const buttonDelete = async () => {
-  if (!handleGrid()?.getSelectedNodes().length) {
-    toast.add({
-      title: 'Error !',
-      color: 'red',
-      description: 'Nenhum registro selecionado'
-    })
+  if (!apiGrid.value.getSelectedNodes().length) {
+    showError('Nenhum registro selecionado')
     return
   }
   modal.open(ModalDelete, {
-    count: handleGrid().getSelectedRows().length,
+    count: apiGrid.value.getSelectedNodes().length,
     async onSuccess() {
-      const selectedNodes = handleGrid().getSelectedNodes()
+      const selectedNodes = apiGrid.value.getSelectedNodes()
       const removedNodes = []
       await Promise.all(selectedNodes.map(async (node) => {
         await api.remove(node.id)
         if (api.status.value) {
           removedNodes.push(node.data)
-          toast.add({
-            title: 'Exclusão',
-            color: 'green',
-            description: `Registro [${node.id}] excluído com sucesso !`
-
-          })
+          showMessage(`Registro [${node.id}] excluído com sucesso !`)
         } else {
-          toast.add({
-            title: 'Erro ao excluir registro !',
-            color: 'red',
-            description: JSON.stringify(api.errors.value.error)
-          })
+          showError(JSON.stringify(api.errors.value.error))
         }
       }))
       modal.close()
-      if (removedNodes.length) {
-        const remove = handleGrid().applyTransaction({
-          remove: removedNodes
-        }).remove
-        const rowIndex = remove[0].childIndex
-        const rowLast = handleGrid().getLastDisplayedRowIndex()
-        const nodeToSelect = handleGrid().getDisplayedRowAtIndex(rowIndex > rowLast ? rowLast : rowIndex)
-        if (nodeToSelect) {
-          nodeToSelect.setSelected(true, true)
-          // handleGrid().ensureNodeVisible(nodeToSelect, 'middle')
-        }
-      }
+      apiGrid.value.applyTransactionDelete(removedNodes)
     }
   })
 }
-const buttonSearch = async () => {
-  await api.getAll()
-  rowData.value = items.value
-}
 
-defineShortcuts({
-  insert: {
-    handler: () => { buttonNew() }
-  },
-  delete: {
-    handler: () => { buttonDelete() }
-  }
-})
+const onRowDoubleClicked = async params => actionEdit(params.node.id)
+
+// defineShortcuts({
+//   insert: {
+//     handler: () => { buttonNew() }
+//   },
+//   delete: {
+//     handler: () => { buttonDelete() }
+//   },
+//   enter: {
+//     handler: () => { buttonEdit() }
+//   }
+// })
 </script>
 
 <template>
   <UPage class="mx-4">
     <UPageHeader
-      :title="props.header.title"
+      :title="header.title"
       headline=""
-      :icon="props.header.icon"
+      :icon="header.icon"
       :ui="{ strategy: 'override', wrapper: 'relative border-b border-gray-200 dark:border-gray-800 py-2' }"
       :links="[
         { label: 'Pesquisar', icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
@@ -179,18 +119,19 @@ defineShortcuts({
         { label: 'Apagar', icon: 'i-heroicons-trash-20-solid', click: buttonDelete }
       ]"
     >
-      <BaseFilter v-if="false" />
+      <div v-if="$slots.grid">
+        <slot name="filter" />
+      </div>
     </UPageHeader>
-
     <UPageBody class="mt-0">
       <BaseGrid
-        ref="baseApi"
-        :endpoint="props.endpoint"
-        :row-data="rowData"
-        :column-defs="columnDefs"
-        :on-selection-changed="onSelectionChanged"
+        ref="apiGrid"
+        :row-data
+        :column-defs
         :on-row-double-clicked="onRowDoubleClicked"
+        :row-class-rules
         :http="api"
+        :menu
       />
     </UPageBody>
   </UPage>
