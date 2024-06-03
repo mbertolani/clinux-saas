@@ -51,24 +51,6 @@ const onSubmit = async (_data: any) => {
       description: JSON.stringify(api.errors.value.error)
     })
   }
-  // if (api.status.value) {
-  //   emit('close')
-  //   toast.add({
-  //     title: 'Success !',
-  //     id: 'modal-success'
-  //   })
-  //   if (novo) {
-  //     handleGrid().applyTransaction({ add: [item.value] }).add.forEach(node => node.setSelected(true, true))
-  //   } else {
-  //     handleGrid().applyTransaction({ update: [item.value] }).update.forEach(node => node.setSelected(true, true))
-  //   }
-  // } else {
-  //   toast.add({
-  //     title: 'Error !',
-  //     color: 'red',
-  //     description: JSON.stringify(api.errors.value.error)
-  //   })
-  // }
 }
 const onClose = () => {
   // todo: verificar se dados foram modificados
@@ -96,6 +78,20 @@ if (props.id === 0) {
 // const clique = () => {
 //   incId()
 // }
+
+function setNode(node) {
+  // Wait until the form is mounted
+  node.on('mounted', () => {
+    // Now we can listen to form commit values and reasonably
+    // expect they come from user inputs.
+    node.on('commit', ({ payload }) => {
+      console.log('form values', payload)
+    })
+    node.on('change', ({ payload }) => {
+      console.log('form change', payload)
+    })
+  })
+}
 </script>
 
 <template>
@@ -103,10 +99,6 @@ if (props.id === 0) {
     title="Cadastro de Empresas"
     @close="onClose"
   >
-    <!-- <UButton
-      :label="getId.toString()"
-      @click="clique()"
-    /> -->
     <FormKit
       v-slot="{ state: { dirty } }"
       v-model="model"
@@ -114,6 +106,7 @@ if (props.id === 0) {
       type="form"
       :data="data"
       :actions="false"
+      :plugins="[setNode]"
       @submit="onSubmit"
       @close="onClose"
     >

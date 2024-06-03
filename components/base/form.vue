@@ -25,7 +25,12 @@ defineShortcuts({
 </script>
 
 <template>
-  <UModal prevent-close>
+  <UModal
+    prevent-close
+    :ui="{
+      width: 'w-full sm:max-w-xl md:max-w-2xl lg:max-w-6xl'
+    }"
+  >
     <UCard>
       <template #header>
         <div class="flex items-center justify-between">

@@ -107,6 +107,29 @@ const buttonLog = async () => {
 }
 const onRowDoubleClicked = async params => actionEdit(params.node.id)
 
+const onCellKeyDown = ({ event, api }) => {
+  switch (event.key) {
+    case 'Insert':
+      console.log('Insert')
+      buttonNew()
+      break
+    case 'Delete':
+      console.log('Delete')
+      buttonDelete()
+      break
+    case 'Enter':
+      console.log('Enter')
+      buttonEdit()
+      break
+    case 'a':
+    case 'A':
+      console.log('Ctrl + A')
+      if (event.ctrlKey)
+        api.selectAll()
+      break
+  }
+}
+
 // defineShortcuts({
 //   insert: {
 //     handler: () => { buttonNew() }
@@ -135,7 +158,10 @@ const onRowDoubleClicked = async params => actionEdit(params.node.id)
         { label: 'Log', icon: 'i-heroicons-question-mark-circle', click: buttonLog }
       ]"
     >
-      <div v-if="$slots.grid">
+      <div
+        v-if="$slots.filter"
+        class="pt-2"
+      >
         <slot name="filter" />
       </div>
     </UPageHeader>
@@ -145,6 +171,7 @@ const onRowDoubleClicked = async params => actionEdit(params.node.id)
         :row-data
         :column-defs
         :on-row-double-clicked="onRowDoubleClicked"
+        :on-cell-key-down="onCellKeyDown"
         :row-class-rules
         :http="api"
         :menu

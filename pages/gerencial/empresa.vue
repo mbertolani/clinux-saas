@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GerencialEmpresa } from '#components'
+import { GerencialEmpresa, GerencialEmpresaFiltro } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -54,8 +54,15 @@ const openForm = (codigo?: number) => {
   <BasePage
     ref="apiPage"
     :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
-    :controller="controller"
-    :action-menu="actionMenu"
+    :controller
+    :action-menu
     @open-form="openForm"
-  />
+  >
+    <template
+      v-if="true"
+      #filter
+    >
+      <GerencialEmpresaFiltro />
+    </template>
+  </BasePage>
 </template>
