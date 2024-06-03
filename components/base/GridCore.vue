@@ -33,9 +33,6 @@ const defaultGridOptions: GridOptions = {
     type: 'fitCellContents'
   }
 }
-const onRowDataUpdated = ({ api }) => {
-  api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
-}
 
 function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | null {
   const suggestedNextCell = params.nextCellPosition
@@ -55,10 +52,16 @@ function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | nu
 
   return suggestedNextCell
 }
+
+const coreApi = ref(null)
+defineExpose({
+  coreApi
+})
 </script>
 
 <template>
   <AgGridVue
+    ref="coreApi"
     row-model-type="clientSide"
     row-selection="multiple"
     :class="color"
@@ -76,7 +79,6 @@ function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | nu
     :pagination-page-size-selector="[10, 25, 50, 100, 1000]"
     :pagination-auto-page-size="false"
     :locale-text="AG_GRID_LOCALE_PT_BR"
-    @row-data-updated="onRowDataUpdated"
   />
 </template>
 
