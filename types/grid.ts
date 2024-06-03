@@ -1,4 +1,4 @@
-// export type TableColumnType = 'DATE' | 'DATETIME' | 'DATETIME_PRETTY' | 'CURRENCY' | 'PERCENT' | 'BOOLEAN'
+export type TableColumnType = 'DATE' | 'DATETIME' | 'DATETIME_PRETTY' | 'CURRENCY' | 'PERCENT' | 'BOOLEAN'
 
 export type ItemDataType = 'ftString' | 'ftInteger' | 'ftDate' | 'ftDateTime' | 'ftBoolean' | 'ftFloat' | 'ftCurrency'
 
@@ -17,16 +17,19 @@ export interface DbGridColumn {
   readOnly: boolean
 }
 
-// export interface AgGridColumn {
-//   field: string
-//   headerName: string
-//   type: string
-//   width: number
-//   valueFormatter?: string
-//   filter: string
-//   filterParams?: Record<string, unknown>
-//   cellClass: string
-// }
+export const translateDataType = (type: string): TableColumnType | undefined => {
+  const types: Record<string, TableColumnType | undefined> = {
+    ftInteger: undefined,
+    ftFloat: 'CURRENCY',
+    ftCurrency: 'CURRENCY',
+    ftDate: 'DATE',
+    ftTime: undefined,
+    ftDateTime: 'DATETIME',
+    ftBoolean: 'BOOLEAN',
+    ftString: undefined
+  }
+  return types[type]
+}
 export type ActionMenuItem = {
   name: string
   action: any

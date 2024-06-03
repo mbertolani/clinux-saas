@@ -1,24 +1,10 @@
 import type { ItemDataType, ItemAlignment, DbGridColumn } from '@/types/grid'
 
-export const useGrid = (url: string) => {
-  // const headerColumns: Ref<DbGridColumn[]> = ref([])
+export const useGrid = (url?: string) => {
   const gridFontSize = 12
   const DbGridColumns = ref<DbGridColumn[]>([])
   const AgGridColumns = ref([])
 
-  // const translateDataType = (type: string): TableColumnType | undefined => {
-  //   const types: Record<string, TableColumnType | undefined> = {
-  //     ftInteger: undefined,
-  //     ftFloat: 'CURRENCY',
-  //     ftCurrency: 'CURRENCY',
-  //     ftDate: 'DATE',
-  //     ftTime: undefined,
-  //     ftDateTime: 'DATETIME',
-  //     ftBoolean: 'BOOLEAN',
-  //     ftString: undefined
-  //   }
-  //   return types[type]
-  // }
   const currencyFormatter = p =>
     parseFloat(p.value).toLocaleString('pt-BR', {
       style: 'currency',
@@ -48,10 +34,23 @@ export const useGrid = (url: string) => {
     valueFormatter: p => formatCNPJ(p.value)
   }
 
+  // const columnTypes = {
+  //   currency: {
+  //     width: 150,
+  //     valueFormatter: currencyFormatter
+  //   },
+  //   ftFloat: fieldCurrency,
+  //   ftInteger: fieldNumber,
+  //   ftDate: fieldDate,
+  //   ftCnpj: fieldCnpj,
+  //   shaded: {
+  //     cellClass: 'shaded-class'
+  //   }
+  // }
   const dataTypeWidthMapping: Record<ItemDataType, number> = {
     ftBoolean: 8 * gridFontSize,
     ftDate: 8 * gridFontSize,
-    ftDateTime: 12 * gridFontSize,
+    ftDateTime: 14 * gridFontSize,
     ftInteger: 8 * gridFontSize,
     ftString: 0,
     ftFloat: 10 * gridFontSize,
@@ -71,8 +70,11 @@ export const useGrid = (url: string) => {
     taRightJustify: 'ag-right-aligned-cell',
     taCenter: 'ag-center-aligned-cell'
   }
+  const dataTypeWidth = (dataType: string, size?: number): number => {
+    return dataTypeWidthMapping[dataType] || size * 5
+  }
   const formatWidth = (item: DbGridColumn): number => {
-    const width = dataTypeWidthMapping[item.dataType] || item.size * 5
+    const width = dataTypeWidth(item.dataType, item.size)
     return width < dataTypeWidthMapping['ftBoolean'] ? dataTypeWidthMapping['ftBoolean'] : width
   }
   const formatCellClass = (item: DbGridColumn): string => {
@@ -109,41 +111,6 @@ export const useGrid = (url: string) => {
         return 'agTextColumnFilter'
     }
   }
-
-  // const data = [{
-  //   cd_empresa: 175,
-  //   nr_empresa: 175,
-  //   cd_estoque: null,
-  //   cd_banco: null,
-  //   cd_centro: null,
-  //   ds_empresa: 'TESTE 123 123',
-  //   ds_razao: null,
-  //   ds_cnpj: null,
-  //   sn_ativo: true,
-  //   ds_alerta: null,
-  //   sn_web: true,
-  //   ds_plano: null,
-  //   ds_estoque: null,
-  //   ds_centro: null,
-  //   ds_banco: null,
-  //   ds_cidade: null,
-  //   ds_estado: null
-  // }]
-
-  // const columns = [
-  //   {
-  //     alignment: 'taRightJustify',
-  //     fieldName: 'cd_empresa',
-  //     displayLabel: 'Empresa',
-  //     dataType: 'ftInteger',
-  //     size: 0,
-  //     origin: '',
-  //     key: false,
-  //     required: false,
-  //     visible: true,
-  //     readOnly: false
-  //   }
-  // ]
 
   // const convertToNativeDate = (inputDate) => {
   //   const parts = inputDate.split('/')
@@ -198,6 +165,7 @@ export const useGrid = (url: string) => {
 
   return {
     columns,
+    dataTypeWidth,
     getCols
   }
 }

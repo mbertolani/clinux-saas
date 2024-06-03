@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ModalDelete } from '#components'
+import { ModalDelete, ModalLog } from '#components'
 import type { ActionMenuItem } from '~/types/grid'
 
 const props = defineProps({
@@ -86,10 +86,25 @@ const buttonDelete = async () => {
       }))
       modal.close()
       apiGrid.value.applyTransactionDelete(removedNodes)
+    },
+    onClose() {
+      modal.close()
     }
   })
 }
-
+const buttonLog = async () => {
+  const selectedNode = apiGrid.value.getSelectedNodes()[0]
+  if (!selectedNode) {
+    showError('Nenhum registro selecionado')
+    return
+  }
+  modal.open(ModalLog, {
+    rowData: await api.getLog(selectedNode.id),
+    onClose() {
+      modal.close()
+    }
+  })
+}
 const onRowDoubleClicked = async params => actionEdit(params.node.id)
 
 // defineShortcuts({
@@ -116,7 +131,8 @@ const onRowDoubleClicked = async params => actionEdit(params.node.id)
         { label: 'Pesquisar', icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
         { label: 'Incluir', icon: 'i-heroicons-plus-20-solid', click: buttonNew },
         { label: 'Editar', icon: 'i-heroicons-pencil-20-solid', click: buttonEdit },
-        { label: 'Apagar', icon: 'i-heroicons-trash-20-solid', click: buttonDelete }
+        { label: 'Apagar', icon: 'i-heroicons-trash-20-solid', click: buttonDelete },
+        { label: 'Log', icon: 'i-heroicons-question-mark-circle', click: buttonLog }
       ]"
     >
       <div v-if="$slots.grid">

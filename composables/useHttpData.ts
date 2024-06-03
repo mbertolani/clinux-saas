@@ -208,8 +208,8 @@ export const useHttpData = (
     menu.value = await Get('menu')
   }
 
-  const log = async () => {
-    return await Get('log')
+  const getLog = async (id: number) => {
+    return await Get(`log/${id}`)
   }
 
   return {
@@ -221,7 +221,7 @@ export const useHttpData = (
     create,
     update,
     get,
-    log,
+    getLog,
     find,
     exec,
     getState,

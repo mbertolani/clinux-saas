@@ -6,6 +6,7 @@ import type { GridOptions, CellPosition, NavigateToNextCellParams } from 'ag-gri
 import { LicenseManager } from 'ag-grid-enterprise'
 import gridToolPanel from './gridToolPanel.vue'
 import { AG_GRID_LOCALE_PT_BR } from '@/locales/grid'
+// import { ModalLog } from '#components'
 
 LicenseManager.setLicenseKey(
   useRuntimeConfig().public.aggridKey
@@ -13,7 +14,7 @@ LicenseManager.setLicenseKey(
 const props = defineProps({
   http: {
     type: Object,
-    required: true
+    required: false
   },
   rowClassRules: {
     type: Object,
@@ -24,9 +25,22 @@ const props = defineProps({
     default: () => []
   }
 })
-
+// const modal = useModal()
 const gridApi = ref()
 
+// const showLog = async () => {
+//   if (!gridApi.value.api.getFocusedCell()) {
+//     return
+//   }
+//   const node = gridApi.value.api.getDisplayedRowAtIndex(gridApi.value.api.getFocusedCell().rowIndex)
+//   modal.open(ModalLog, {
+//     id: Number(node.id),
+//     rowData: await props.http.getLog(node.id),
+//     onClose() {
+//       modal.close()
+//     }
+//   })
+// }
 const gotoPage = (node) => {
   const pageSize = gridApi.value.api.paginationGetPageSize()
   const rowIndex = gridApi.value.api.getRowNode(node.id).rowIndex
@@ -103,17 +117,16 @@ const onGridReady = () => {
   gridApi.value.api.closeToolPanel()
   restoreColumnState()
 }
-const onFirstDataRendered = () => {
-}
+
 const onRowDataUpdated = ({ api }) => {
   api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
 }
 const saveColumnState = () => {
   const state = gridApi.value.api.getColumnState()
-  props.http.getState(state)
+  props.http?.getState(state)
 }
 const restoreColumnState = async () => {
-  const savedState = await props.http.getState()
+  const savedState = await props.http?.getState()
   if (savedState) {
     if (!gridApi.value?.api) {
       useSystemStore().showError('Grid não carregado')
@@ -185,11 +198,11 @@ const getContextMenuItems = () => {
   ]
   return [...builtItems, ...customItems]
 }
-defineShortcuts({
-  ctrl_a: {
-    handler: () => { gridApi.value.api.selectAll() }
-  }
-})
+// defineShortcuts({
+//   ctrl_a: {
+//     handler: () => { gridApi.value.api.selectAll() }
+//   }
+// })
 
 const toolPanel = ref(null)
 // const statusBar = {
@@ -311,7 +324,6 @@ function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | nu
     :default-col-def="defaultColDef"
     :get-row-id="getRowId"
     :on-grid-ready="onGridReady"
-    :on-first-data-rendered="onFirstDataRendered"
     :grid-options="defaultGridOptions"
     :suppress-row-deselection="false"
     :suppress-row-click-selection="false"
@@ -336,7 +348,7 @@ function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | nu
   color: rgb(150, 150, 150);
 }
 .ag-theme-quartz, .ag-theme-quartz-dark {
-    --ag-grid-size: 5px;
+    --ag-grid-size: 6px;
     --ag-list-item-height: 20px;
 }
 </style>

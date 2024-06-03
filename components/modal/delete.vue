@@ -9,7 +9,8 @@ defineProps({
     default: null
   }
 })
-const emit = defineEmits(['success'])
+const emit = defineEmits(['success', 'close'])
+const loading = ref(false)
 
 function onSuccess() {
   emit('success')
@@ -22,7 +23,7 @@ defineShortcuts({
 })
 </script>
 
-<template>
+<!-- <template>
   <UModal>
     <UCard>
       <template #header>
@@ -50,4 +51,31 @@ defineShortcuts({
       </template>
     </UCard>
   </UModal>
+</template> -->
+
+<template>
+  <UDashboardModal
+    title="Confirmar exclusão"
+    description="Tem certeza que deseja apagar este registro?"
+    icon="i-heroicons-exclamation-circle"
+    :ui="{
+      width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
+      icon: { base: 'text-red-500 dark:text-red-400' } as any,
+      footer: { base: 'ml-16' } as any
+    }"
+  >
+    <template #footer>
+      <UButton
+        color="red"
+        label="Apagar"
+        :loading="loading"
+        @click="onSuccess"
+      />
+      <UButton
+        color="white"
+        label="Cancelar"
+        @click="emit('close')"
+      />
+    </template>
+  </UDashboardModal>
 </template>

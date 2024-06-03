@@ -16,7 +16,7 @@ export const useSystemStore = defineStore('system', () => {
   const showError = (message: string) => {
     console.log('showError', message)
     toast.add({
-      title: 'Aviso de Erro',
+      title: 'Erro',
       color: 'red',
       description: message
     })
