@@ -18,8 +18,8 @@ dependencies:
     specifier: latest
     version: 1.6.5(esbuild@0.21.4)(tailwindcss@3.4.3)(unocss@0.60.4)(vite@5.2.12)(vue@3.4.27)(webpack@5.91.0)
   '@formkit/pro':
-    specifier: 0.126.3
-    version: 0.126.3(@formkit/core@1.6.5)(@formkit/inputs@1.6.5)
+    specifier: latest
+    version: 0.126.6(@formkit/core@1.6.5)(@formkit/inputs@1.6.5)
   '@formkit/themes':
     specifier: latest
     version: 1.6.5(tailwindcss@3.4.3)(unocss@0.60.4)
@@ -1300,16 +1300,16 @@ packages:
       '@formkit/utils': 1.6.5
     dev: false
 
-  /@formkit/pro@0.126.3(@formkit/core@1.6.5)(@formkit/inputs@1.6.5):
-    resolution: {integrity: sha512-Gyg2DTmq4hbiwHkvu+jRjPJNFhJsGTKgAZYHmnC9azRb6VARwaDWUqSsnnc38Hkn6xqaeE+aykQuiz88GLmPiQ==}
+  /@formkit/pro@0.126.6(@formkit/core@1.6.5)(@formkit/inputs@1.6.5):
+    resolution: {integrity: sha512-yxXIjsZAzMYIWlthHZootrih61IUp4f+AOc6KZ49oncO70R5puUBxLRx5H3l/QYOffDbqU5Gadex4TGwXoEiMw==}
     peerDependencies:
-      '@formkit/core': ^1.6.3
-      '@formkit/inputs': ^1.6.3
+      '@formkit/core': ^1.6.5
+      '@formkit/inputs': ^1.6.5
     dependencies:
       '@formkit/core': 1.6.5
       '@formkit/drag-and-drop': 0.0.38
       '@formkit/inputs': 1.6.5
-      '@formkit/tempo': 0.0.8
+      '@formkit/tempo': 0.1.1
     dev: false
 
   /@formkit/rules@1.6.5:
@@ -1320,8 +1320,8 @@ packages:
       '@formkit/validation': 1.6.5
     dev: false
 
-  /@formkit/tempo@0.0.8:
-    resolution: {integrity: sha512-q9Ch3Epjb5yFVNV2vAruHyPwcvZujiPcBQ7r6if+HmOciMhwkQccL9NOm9LNmN23hNk2y3+El/ygUH2/x539sg==}
+  /@formkit/tempo@0.1.1:
+    resolution: {integrity: sha512-nepRwKnCIjukLkblqh339sSXYI6P3cqktF/T7ECj3vURW+Pd+YzTv/I/lwjRqPGmlQJG93LORodIAkvgoExIAg==}
     dev: false
 
   /@formkit/themes@1.6.5(tailwindcss@3.4.3)(unocss@0.60.4):

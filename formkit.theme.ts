@@ -1205,7 +1205,7 @@ const classes: Record<string, Record<string, boolean>> = {
   },
   'colorpicker__outer': {
     'group': true,
-    'max-w-[20em]': true,
+    'max-w-[20em]': false,
     'min-w-0': true,
     'grow': true,
     'mb-4': true,

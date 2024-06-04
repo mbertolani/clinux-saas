@@ -17,7 +17,7 @@
     "@formkit/core": "latest",
     "@formkit/icons": "latest",
     "@formkit/nuxt": "latest",
-    "@formkit/pro": "0.126.3",
+    "@formkit/pro": "latest",
     "@formkit/themes": "latest",
     "@formkit/vue": "latest",
     "@iconify-json/heroicons": "^1.1.21",

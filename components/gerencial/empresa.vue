@@ -1,47 +1,54 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema, useFormKitNodeById } from '@formkit/vue'
+import { FormKitSchema } from '@formkit/vue'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 
 // function getFieldName(schema) {
 //   return schema.map(item => item.name).join(',')
 // }
-// useFormKitNodeById('schema-empresa', (node) => {
-//   // debugger
-//   console.log('schema', node)
-//   node.on('mounted', (context) => {
-//     console.log('schema mounted', context)
-//   })
-// })
-const listaBancos = ref()
-listaBancos.value = await useEmpresa().getBancos()
-console.log('banco', listaBancos.value)
-async function searchEstoque({ search }) {
-  if (!search) return []
-  console.log('search', search)
+function getFieldName(schema) {
+  return schema.reduce((acc, item) => {
+    if (item.name) {
+      acc.push(item.name)
+    }
+    if (item.children) {
+      acc.push(...getFieldName(item.children))
+    }
+    return acc
+  }, [])
+}
+
+const listaBancos = await useEmpresa().getBancos()
+
+async function searchEstoque() {
+  // if (!search) return []
+  // console.log('search', search)
   const response = await useEmpresa().getEstoques()
-  console.log('estoque', response)
   return response
 }
+
 // The function assigned to the `option-loader` prop will be called with the
 // value of the option as the first argument (in this case, the movie ID), and
 // the cached option as the second argument (if it exists).
-async function loadEstoque(id, cachedOption) {
+async function searchEstoqueId(id, cachedOption) {
   if (cachedOption) return cachedOption
   const response = useEmpresa().getEstoque(id)
   return response ? response : { label: 'Error loading' }
 }
-const customLine = 'flex flex-col sm:gap-4 sm:flex-row'
-const customCol = (width: string) => {
-  // return `w-${width} sm:w-1/1 max-w-none`
-  return `w-${width} sm:w-auto w-full`
-}
+
+// const customLine = 'flex flex-col sm:gap-4 sm:flex-row'
+// const customCol = (width: string) => {
+//   // return `w-${width} sm:w-1/1 max-w-none`
+//   return `w-${width} sm:w-auto w-full`
+// }
+
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
     name: 'cd_empresa',
     label: 'Código'
   },
+
   {
     $formkit: 'text',
     name: 'ds_empresa',
@@ -49,87 +56,95 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     autofocus: true,
     inputClass: 'uppercase',
-    bind: '$someAttributes',
-    outerClass: customCol('1/1')
+    // bind: '$someAttributes',
+    outerClass: 'md:col-span-12'
   },
   {
-    $el: 'div',
-    attrs: {
-      class: customLine
-    },
-    children: [
-      {
-        $formkit: 'text',
-        name: 'ds_razao',
-        id: 'ds_razao',
-        label: 'Razão Social',
-        validation: 'required',
-        outerClass: customCol('4/5')
-      },
-      {
-        $formkit: 'mask',
-        name: 'ds_cnpj',
-        id: 'ds_cnpj',
-        mask: '##.###.###/####-##',
-        label: 'Cnpj',
-        attrs: {
-          '@keydown.enter': 'keydownHandler'
-        },
-        unmaskValue: true,
-        outerClass: customCol('1/5')
-      }
-    ]
+    $formkit: 'text',
+    name: 'ds_razao',
+    id: 'ds_razao',
+    label: 'Razão Social',
+    validation: 'required',
+    outerClass: 'md:col-span-6'
   },
   {
-    $el: 'div',
-    attrs: {
-      class: customLine
-    },
-    children: [{
-      $formkit: 'mask',
-      name: 'ds_cpf_responsavel',
-      id: 'ds_cpf_responsavel',
-      mask: '###.###.###-##',
-      label: 'Cpf',
-      unmaskValue: true,
-      outerClass: customCol('1/2')
-    },
-    {
-      $formkit: 'mask',
-      name: 'ds_telefone',
-      id: 'ds_telefone',
-      mask: '+55 (##) #####-####',
-      label: 'Telefone',
-      unmaskValue: true,
-      outerClass: customCol('1/2')
-    }]
+    $formkit: 'mask',
+    name: 'ds_cnpj',
+    id: 'ds_cnpj',
+    mask: '##.###.###/####-##',
+    label: 'Cnpj',
+    outerClass: 'md:col-span-3',
+    // attrs: {
+    //   '@keydown.enter': 'keydownHandler'
+    // },
+    unmaskValue: true
+    // outerClass: customCol('1/5')
   },
   {
-    $formkit: 'autocomplete',
+    $formkit: 'mask',
+    name: 'ds_cpf_responsavel',
+    id: 'ds_cpf_responsavel',
+    mask: '###.###.###-##',
+    label: 'Cpf',
+    unmaskValue: true,
+    outerClass: 'md:col-span-3'
+  },
+  {
+    $formkit: 'dropdown',
     name: 'cd_banco',
     label: 'Banco',
     options: listaBancos,
-    selectionAppearance: 'option',
-    outerClass: 'max-w-none'
+    // selectionAppearance: 'option',
+    selectionRemovable: true,
+    openOnRemove: false,
+    popover: true,
+    outerClass: 'md:col-span-6'
   },
   {
-    $formkit: 'autocomplete',
+    $formkit: 'dropdown',
     name: 'cd_estoque',
     label: 'Estoque',
-    selectionAppearance: 'option',
+    // selectionAppearance: 'option',
     options: searchEstoque,
-    optionLoader: loadEstoque
+    optionLoader: searchEstoqueId,
+    outerClass: 'md:col-span-6'
   },
   {
     $formkit: 'email',
     name: 'ds_email',
     label: 'Email',
-    validation: 'email'
+    validation: 'email',
+    outerClass: 'md:col-span-8'
   },
   {
-    $formkit: 'colorpicker',
-    name: 'ds_cor',
-    label: 'Cor'
+    $formkit: 'mask',
+    name: 'ds_telefone',
+    id: 'ds_telefone',
+    mask: '+55 (##) #####-####',
+    label: 'Telefone',
+    unmaskValue: true,
+    outerClass: 'md:col-span-4'
+  },
+  // {
+  //   $formkit: 'colorpicker',
+  //   name: 'ds_cor',
+  //   label: 'Cor',
+  //   outerClass: 'md:col-span-1'
+  // },
+  {
+    $formkit: 'url',
+    name: 'ds_site',
+    label: 'Site',
+    placeholder: 'https://www.example.com...',
+    validation: 'url',
+    // help: 'website',
+    outerClass: 'md:col-span-12'
+  },
+  {
+    $formkit: 'textarea',
+    name: 'bb_portal_anexo',
+    label: 'Texto',
+    outerClass: 'md:col-span-12'
   },
   {
     $formkit: 'currency',
@@ -137,60 +152,45 @@ const schema: FormKitSchemaDefinition = [
     label: 'Iss (%)',
     currency: 'BRL',
     displayLocale: 'pt-BR',
-    valueFormat: 'number' // string
+    valueFormat: 'number',
+    outerClass: 'md:col-span-2'
   },
   {
-    $formkit: 'number',
+    $formkit: 'currency',
     name: 'nr_nfe_pis',
     label: 'Pis (%)',
-    number: 'float' // integer
+    decimals: 0,
+    // number: 'float', // integer
+    valueFormat: 'number', // string
+    outerClass: 'md:col-span-2'
   },
   {
-    $formkit: 'url',
-    name: 'ds_site',
-    label: 'Site',
-    placeholder: 'https://www.example.com...',
-    validation: 'url',
-    help: 'website'
+    $formkit: 'date',
+    name: 'dt_empresa',
+    id: 'dt_empresa',
+    // popover: true,
+    // value: new Date(),
+    format: 'DD/MM/YYYY',
+    // minDate: new Date(),
+    // validation: '(1000)date_format:DD/MM/YYYY',
+    valueFormat: 'YYYY-MM-DD',
+    label: 'Data',
+    outerClass: 'md:col-span-4'
   },
   {
-    $formkit: 'checkbox',
+    $formkit: 'toggle',
     name: 'sn_empresa',
-    label: 'Ativo ?'
+    label: 'Ativo ?',
+    outerClass: 'md:col-span-2 md:items-end inline-flex items-center'
   },
   {
     $formkit: 'toggle',
     name: 'sn_matriz',
     label: 'Matriz ?',
     onValue: true,
-    offValue: false
-  },
-  {
-    $formkit: 'textarea',
-    name: 'bb_portal_anexo',
-    label: 'Texto'
-  },
-  {
-    $formkit: 'datepicker',
-    name: 'dt_empresa',
-    id: 'dt_empresa',
-    popover: true,
-    // value: new Date(),
-    format: 'DD/MM/YYYY',
-    minDate: new Date(),
-    // validation: '(1000)date_format:DD/MM/YYYY',
-    // valueFormat: 'YYYY-MM-DD',
-    label: 'Data'
+    offValue: false,
+    outerClass: 'md:col-span-2 md:items-end inline-flex items-center'
   }
-  // {
-  //   $formkit: 'tel',
-  //   name: 'ds_telefone',
-  //   label: 'Telefone',
-  //   placeholder: '(xx)-xxxx-xxxx',
-  //   validation: 'matches:/^[0-9]{2}-[0-9]{4}-[0-9]{4}$/',
-  //   validationMessages: { matches: 'Phone number must be in the format xx-xxxx-xxxx' },
-  //   validationVisibility: 'dirty'
-  // }
 ]
 
 const onSubmit = async (_data: any) => {
@@ -223,16 +223,16 @@ const props = defineProps({
 const { api, item } = useEmpresa()
 const model = ref({})
 // const data = ref(null)
-const data = reactive({
-  someAttributes: {
-    onClick: () => {
-      console.log('clicked')
-    },
-    onKeyDown: (event: Event) => {
-      console.log('key up', event)
-    }
-  }
-})
+// const data = reactive({
+//   someAttributes: {
+//     onClick: () => {
+//       console.log('clicked')
+//     },
+//     onKeyDown: (event: Event) => {
+//       console.log('key up', event)
+//     }
+//   }
+// })
 
 // const { getId, incId } = useEmpresa()
 // const clique = () => {
@@ -241,53 +241,56 @@ const data = reactive({
 
 // function setNode(node) {
 //   // Wait until the form is mounted
-//   node.on('mounted', async (context) => {
-//     console.log('form mounted', context)
-//     const fields = context.origin.children.map((child) => {
-//       console.log('child', child)
-//       return child.name
-//     }).join(',')
-//     console.log('fields', fields)
-//     if (props.id === 0) {
-//       model.value = {}
-//     } else {
-//       await api.get(props.id, fields)
-//       model.value = item.value
-//     }
-
-//     // debugger
+//   node.on('mounted', async () => {
 //     // Now we can listen to form commit values and reasonably
 //     // expect they come from user inputs.
 //     node.on('commit', ({ payload }) => {
-//       console.log('form values', payload)
-//     })
-//     node.on('change', ({ payload }) => {
-//       console.log('form change', payload)
+//       console.log('form commit', payload)
 //     })
 //   })
 // }
-const cnpj = useFormKitNodeById('ds_cnpj', (node) => {
-  node.on('commit', ({ payload }) => {
-    console.log('commit', payload)
-  })
-  node.on('input', ({ payload }) => {
-    console.log('input', payload)
-  })
-  node.on('mounted', () => {
-    console.log('mounted')
-  })
-  node.on('created', () => {
-    console.log('created')
-  })
-})
-console.log('cnpj', cnpj)
-useFormKitNodeById('dt_empresa', (node) => {
-  node.on('commit', ({ payload }) => {
-    console.log('commit', payload)
-  })
-})
+// useFormKitNodeById('form-empresa', (node) => {
+//   // debugger
+//   node.on('mounted', async (context) => {
+//     console.log('schema mounted', context)
+//     // const fields = context.origin.children.map(child => child.name).join(',')
+//     // console.log('form fields', fields)
+//     // if (props.id === 0) {
+//     //   model.value = {}
+//     // } else {
+//     //   await api.get(props.id, fields)
+//     //   model.value = item.value
+//     // }
+//   })
+// })
+// const cnpj = useFormKitNodeById('ds_cnpj', (node) => {
+//   node.on('cnpj commit', ({ payload }) => {
+//     console.log('commit', payload)
+//   })
+//   node.on('cnpj input', ({ payload }) => {
+//     console.log('input', payload)
+//   })
+//   node.on('cnpj mounted', () => {
+//     console.log('mounted')
+//   })
+//   node.on('cnpj created', () => {
+//     console.log('created')
+//   })
+// })
+// console.log('cnpj node', cnpj.value)
+// useFormKitNodeById('dt_empresa', (node) => {
+//   node.on('commit', ({ payload }) => {
+//     console.log('commit', payload)
+//   })
+// })
 // @keydown.enter="keydownHandler"
 // const apiForm: typeof FormKitSchema = ref(null)
+if (props.id === 0) {
+  model.value = {}
+} else {
+  await api.get(props.id, getFieldName(schema))
+  model.value = item.value
+}
 </script>
 
 <template>
@@ -296,18 +299,25 @@ useFormKitNodeById('dt_empresa', (node) => {
     @close="onClose"
   >
     <FormKit
+      id="form-empresa"
       v-slot="{ state: { dirty } }"
       v-model="model"
       dirty-behavior="compare"
       type="form"
-      :data="data"
       :actions="false"
       @submit="onSubmit"
       @close="onClose"
     >
-      <FormKitSchema
-        :schema="schema"
-      />
+      <div class="flex items-center justify-center">
+        <div class="container max-w-screen-lg mx-auto">
+          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
+            <FormKitSchema
+              :schema="schema"
+            />
+          </div>
+        </div>
+      </div>
+
       <FormKit
         type="submit"
         label="Salvar"
