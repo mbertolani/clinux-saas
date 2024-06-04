@@ -56,7 +56,7 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     autofocus: true,
     inputClass: 'uppercase',
-    // bind: '$someAttributes',
+    bind: '$someAttributes',
     outerClass: 'md:col-span-12'
   },
   {
@@ -156,12 +156,10 @@ const schema: FormKitSchemaDefinition = [
     outerClass: 'md:col-span-2'
   },
   {
-    $formkit: 'currency',
+    $formkit: 'number',
     name: 'nr_nfe_pis',
     label: 'Pis (%)',
-    decimals: 0,
-    // number: 'float', // integer
-    valueFormat: 'number', // string
+    number: 'float', // integer
     outerClass: 'md:col-span-2'
   },
   {
@@ -223,16 +221,16 @@ const props = defineProps({
 const { api, item } = useEmpresa()
 const model = ref({})
 // const data = ref(null)
-// const data = reactive({
-//   someAttributes: {
-//     onClick: () => {
-//       console.log('clicked')
-//     },
-//     onKeyDown: (event: Event) => {
-//       console.log('key up', event)
-//     }
-//   }
-// })
+const data = reactive({
+  someAttributes: {
+    'onClick': () => {
+      console.log('clicked')
+    },
+    'onKeyDown.Enter': (event: Event) => {
+      console.log('key up', event)
+    }
+  }
+})
 
 // const { getId, incId } = useEmpresa()
 // const clique = () => {
@@ -313,6 +311,7 @@ if (props.id === 0) {
           <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
             <FormKitSchema
               :schema="schema"
+              :data="data"
             />
           </div>
         </div>
