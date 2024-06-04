@@ -141,6 +141,10 @@ const onCellKeyDown = ({ event, api }) => {
 //     handler: () => { buttonEdit() }
 //   }
 // })
+const inputSearch = ref('')
+watch(inputSearch, () => {
+  apiGrid.value?.applyFilterChanged(inputSearch.value)
+})
 </script>
 
 <template>
@@ -158,6 +162,26 @@ const onCellKeyDown = ({ event, api }) => {
         { label: 'Log', icon: 'i-heroicons-question-mark-circle', click: buttonLog }
       ]"
     >
+      <template #title>
+        <UInput
+          v-model="inputSearch"
+          placeholder="Pesquisa..."
+          icon="i-heroicons-magnifying-glass-20-solid"
+          autocomplete="off"
+          :ui="{ icon: { trailing: { pointer: '' } } }"
+        >
+          <template #trailing>
+            <UButton
+              v-show="inputSearch !== ''"
+              color="gray"
+              variant="link"
+              icon="i-heroicons-x-mark-20-solid"
+              :padded="false"
+              @click="inputSearch = ''"
+            />
+          </template>
+        </UInput>
+      </template>
       <div
         v-if="$slots.filter"
         class="pt-2"

@@ -13,6 +13,7 @@ import { createProPlugin, autocomplete,
   togglebuttons,
   transferlist,
   currency } from '@formkit/pro'
+import { pt } from '@formkit/i18n'
 import { rootClasses } from './formkit.theme'
 
 const proPlugin = createProPlugin('fk-5bd805bc8f', {
@@ -67,7 +68,9 @@ function scrollToErrors(node) {
 
     const onSubmitInvalid = node.props.onSubmitInvalid
     node.props.onSubmitInvalid = () => {
-      onSubmitInvalid(node)
+      if (onSubmitInvalid) {
+        onSubmitInvalid(node)
+      }
       scrollToErrors()
     }
     node.on('unsettled:errors', scrollToErrors)
@@ -78,5 +81,7 @@ function scrollToErrors(node) {
 export default defineFormKitConfig(() => ({
   plugins: [proPlugin, scrollToErrors, defaultToEmptyString],
   icons: { ...genesisIcons },
+  locales: { pt },
+  locale: 'pt',
   config: { rootClasses }
 }))

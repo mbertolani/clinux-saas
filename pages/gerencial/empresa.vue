@@ -59,7 +59,7 @@ const openForm = (codigo?: number) => {
     @open-form="openForm"
   >
     <template
-      v-if="true"
+      v-if="false"
       #filter
     >
       <GerencialEmpresaFiltro />

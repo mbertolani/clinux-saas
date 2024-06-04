@@ -212,6 +212,10 @@ export const useHttpData = (
     return await Get(`log/${id}`)
   }
 
+  const getList = async () => {
+    return await Get('list')
+  }
+
   return {
     status,
     errors,
@@ -225,6 +229,7 @@ export const useHttpData = (
     find,
     exec,
     getState,
+    getList,
     getMenu
   }
 }

@@ -222,10 +222,7 @@ const rowClassRules = props.rowClassRules || {
 }
 
 function applyFilterChanged(payload: string) {
-  gridApi!.value.setGridOption(
-    'quickFilterText',
-    payload
-  )
+  handleGrid().setGridOption('quickFilterText', payload)
 }
 
 // function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | null {
