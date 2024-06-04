@@ -168,6 +168,7 @@ watch(inputSearch, () => {
           placeholder="Pesquisa..."
           icon="i-heroicons-magnifying-glass-20-solid"
           autocomplete="off"
+          input-class="uppercase"
           :ui="{ icon: { trailing: { pointer: '' } } }"
         >
           <template #trailing>

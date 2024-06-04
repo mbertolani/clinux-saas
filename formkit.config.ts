@@ -38,7 +38,7 @@ const proPlugin = createProPlugin('fk-5bd805bc8f', {
 
 function defaultToEmptyString(node) {
   node.hook.input((value, next) => {
-    if (value === undefined) return next('')
+    if (value === undefined) return next(null)
     return next(value)
   })
 }

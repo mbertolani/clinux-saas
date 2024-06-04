@@ -138,7 +138,8 @@ const schema: FormKitSchemaDefinition = [
     placeholder: 'https://www.example.com...',
     validation: 'url',
     // help: 'website',
-    outerClass: 'md:col-span-12'
+    outerClass: 'md:col-span-12',
+    inputClass: '!lowercase'
   },
   {
     $formkit: 'textarea',
@@ -151,15 +152,20 @@ const schema: FormKitSchemaDefinition = [
     name: 'nr_nfe_iss',
     label: 'Iss (%)',
     currency: 'BRL',
+    decimals: 2,
+    min: 0,
+    // minDecimals: '2', // nao aceita null
     displayLocale: 'pt-BR',
-    valueFormat: 'number',
+    valueFormat: 'number', // string
     outerClass: 'md:col-span-2'
   },
   {
     $formkit: 'number',
     name: 'nr_nfe_pis',
     label: 'Pis (%)',
-    number: 'float', // integer
+    min: 0,
+    number: 'float', // number: integer
+    step: 'any',
     outerClass: 'md:col-span-2'
   },
   {
@@ -237,29 +243,28 @@ const data = reactive({
 //   incId()
 // }
 
-// function setNode(node) {
-//   // Wait until the form is mounted
-//   node.on('mounted', async () => {
-//     // Now we can listen to form commit values and reasonably
-//     // expect they come from user inputs.
-//     node.on('commit', ({ payload }) => {
-//       console.log('form commit', payload)
-//     })
-//   })
-// }
-// useFormKitNodeById('form-empresa', (node) => {
+function setNode(node) {
+  // Wait until the form is mounted
+  node.on('mounted', async () => {
+    // Now we can listen to form commit values and reasonably
+    // expect they come from user inputs.
+    node.on('commit', ({ payload }) => {
+      console.log('form commit', payload)
+    })
+    node.on('reset', ({ payload }) => {
+      console.log('form reset', payload)
+    })
+    node.on('input', ({ payload }) => {
+      console.log('form input', payload)
+    })
+  })
+}
+// const nodeForm = useFormKitNodeById('form-empresa', (node) => {
+//   console.log('node', node)
 //   // debugger
-//   node.on('mounted', async (context) => {
-//     console.log('schema mounted', context)
-//     // const fields = context.origin.children.map(child => child.name).join(',')
-//     // console.log('form fields', fields)
-//     // if (props.id === 0) {
-//     //   model.value = {}
-//     // } else {
-//     //   await api.get(props.id, fields)
-//     //   model.value = item.value
-//     // }
-//   })
+//   // node.on('mounted', async (context) => {
+//   //   console.log('schema mounted', context)
+//   // })
 // })
 // const cnpj = useFormKitNodeById('ds_cnpj', (node) => {
 //   node.on('cnpj commit', ({ payload }) => {
@@ -305,6 +310,7 @@ if (props.id === 0) {
       :actions="false"
       @submit="onSubmit"
       @close="onClose"
+      @node="setNode"
     >
       <div class="flex items-center justify-center">
         <div class="container max-w-screen-lg mx-auto">
@@ -313,15 +319,14 @@ if (props.id === 0) {
               :schema="schema"
               :data="data"
             />
+            <FormKit
+              type="submit"
+              label="Salvar"
+              :disabled="!dirty"
+            />
           </div>
         </div>
       </div>
-
-      <FormKit
-        type="submit"
-        label="Salvar"
-        :disabled="!dirty"
-      />
     </FormKit>
     <pre
       v-if="true"
