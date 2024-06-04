@@ -5,19 +5,15 @@ export const useEmpresa = () => {
   }
   async function getBancos() {
     const response = await useBaseStore('/financeiro/banco').api.getList()
-    // console.log(response)
-    const response_ = response.map((result) => {
+    return response.map((result) => {
       return {
-        label: result.ds_banco,
-        value: result.cd_banco
+        value: result.cd_banco,
+        label: result.ds_banco
       }
     })
-    console.log(response_)
-    return response_
   }
   async function getEstoques() {
     const response = await useBaseStore('/estoque/estoque').api.getList()
-    console.log(response)
     return response.map((result) => {
       return {
         label: result.ds_estoque,
