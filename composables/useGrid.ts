@@ -27,13 +27,22 @@ export const useGrid = (url?: string) => {
 
   const fieldDate = {
     filter: 'agDateColumnFilter',
-    valueFormatter: p => new Date(p.value).toLocaleDateString('pt-BR')
+    valueFormatter: p => formatDate(p.value)
+    // valueFormatter: d => d ? new Date(d.value).toLocaleDateString('pt-BR') : ''
   }
 
   const fieldCnpj = {
     valueFormatter: p => formatCNPJ(p.value)
   }
-
+  const fieldFone = {
+    valueFormatter: p => formatFone(p.value)
+  }
+  const fieldCel = {
+    valueFormatter: p => formatCel(p.value)
+  }
+  const fieldCpf = {
+    valueFormatter: p => formatCpf(p.value)
+  }
   // const columnTypes = {
   //   currency: {
   //     width: 150,
@@ -116,8 +125,20 @@ export const useGrid = (url?: string) => {
   //   const parts = inputDate.split('/')
   //   return new Date(parts[2], parts[1] - 1, parts[0])
   // }
-  function formatCNPJ(cnpj: string) {
-    return cnpj?.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  function formatDate(payload: string) {
+    return payload?.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3/$2/$1')
+  }
+  function formatCNPJ(payload: string) {
+    return payload?.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  }
+  function formatFone(payload: string) {
+    return payload?.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+  }
+  function formatCel(payload: string) {
+    return payload?.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4')
+  }
+  function formatCpf(payload: string) {
+    return payload?.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
   }
   // const getRows = async (data: any[]) => {
   //   const columns = await getCols()
@@ -147,6 +168,9 @@ export const useGrid = (url?: string) => {
       filter: formatFilter(item),
       cellClass: formatCellClass(item),
       ...(item.fieldName.includes('ds_cnpj') ? fieldCnpj : {}),
+      ...(item.fieldName.includes('ds_cpf') ? fieldCpf : {}),
+      ...(item.fieldName.includes('ds_celular') ? fieldCel : {}),
+      ...(item.fieldName.includes('ds_telefone') ? fieldFone : {}),
       ...(item.dataType === 'ftFloat' ? fieldCurrency : {}),
       ...(item.dataType === 'ftInteger' ? fieldNumber : {}),
       ...(item.dataType === 'ftDate' ? fieldDate : {})

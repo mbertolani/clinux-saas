@@ -6,15 +6,11 @@ defineProps({
   }
 })
 // const model = ref(props.data)
-const emit = defineEmits(['success', 'close'])
+const emit = defineEmits(['close'])
 
 function onClose() {
   emit('close')
 }
-
-// async function submitHandler(_data: any) {
-//   emit('success', model.value)
-// }
 
 defineShortcuts({
   escape: {

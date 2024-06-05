@@ -90,9 +90,10 @@ export const mainMenu = [
     label: 'Gerencial',
     children: [
       { label: 'Empresa', to: '/gerencial/empresa', icon: 'i-heroicons-building-office' },
-      { label: 'Funcionário', to: '/gerencial/funcionario' },
-      { label: 'Sala', to: '/' },
-      { label: 'Médico', to: '/' }
+      { label: 'Funcionário', to: '/gerencial/funcionario', icon: 'i-heroicons-identification' },
+      { label: 'Médico', to: '/gerencial/medico', icon: 'i-heroicons-user-group' },
+      { label: 'Procedimento', to: '/gerencial/procedimento', icon: 'i-heroicons-hashtag' },
+      { label: 'Modelo', to: '/gerencial/modelo', icon: 'i-heroicons-inbox' }
     ]
   },
   {

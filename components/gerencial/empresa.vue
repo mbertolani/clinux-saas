@@ -2,21 +2,7 @@
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
-
-// function getFieldName(schema) {
-//   return schema.map(item => item.name).join(',')
-// }
-function getFieldName(schema) {
-  return schema.reduce((acc, item) => {
-    if (item.name) {
-      acc.push(item.name)
-    }
-    if (item.children) {
-      acc.push(...getFieldName(item.children))
-    }
-    return acc
-  }, [])
-}
+import { getFieldName } from '~/utils/schema'
 
 const listaBancos = await useEmpresa().getBancos()
 
@@ -32,7 +18,8 @@ async function searchEstoque() {
 // the cached option as the second argument (if it exists).
 async function searchEstoqueId(id, cachedOption) {
   if (cachedOption) return cachedOption
-  const response = useEmpresa().getEstoque(id)
+  const response = await useEmpresa().getEstoque(id)
+  console.log('searchEstoqueId', response)
   return response ? response : { label: 'Error loading' }
 }
 
@@ -154,7 +141,7 @@ const schema: FormKitSchemaDefinition = [
     currency: 'BRL',
     decimals: 2,
     min: 0,
-    // minDecimals: '2', // nao aceita null
+    // minDecimals: '2', // nao aceita null, nao aceita digitacao de numero com 2 digitos
     displayLocale: 'pt-BR',
     valueFormat: 'number', // string
     outerClass: 'md:col-span-2'
@@ -206,17 +193,10 @@ const onSubmit = async (_data: any) => {
   if (api.status.value) {
     emit('submit', props.id, item.value)
   } else {
-    useToast().add({
-      title: 'Error !',
-      color: 'red',
-      description: JSON.stringify(api.errors.value.error)
-    })
+    useSystemStore().showError(JSON.stringify(api.errors.value.error))
   }
 }
-const onClose = () => {
-  // todo: verificar se dados foram modificados
-  emit('close')
-}
+
 const emit = defineEmits(['submit', 'close'])
 const props = defineProps({
   id: {
@@ -243,22 +223,22 @@ const data = reactive({
 //   incId()
 // }
 
-function setNode(node) {
-  // Wait until the form is mounted
-  node.on('mounted', async () => {
-    // Now we can listen to form commit values and reasonably
-    // expect they come from user inputs.
-    node.on('commit', ({ payload }) => {
-      console.log('form commit', payload)
-    })
-    node.on('reset', ({ payload }) => {
-      console.log('form reset', payload)
-    })
-    node.on('input', ({ payload }) => {
-      console.log('form input', payload)
-    })
-  })
-}
+// function setNode(node) {
+//   // Wait until the form is mounted
+//   node.on('mounted', async () => {
+//     // Now we can listen to form commit values and reasonably
+//     // expect they come from user inputs.
+//     node.on('commit', ({ payload }) => {
+//       console.log('form commit', payload)
+//     })
+//     node.on('reset', ({ payload }) => {
+//       console.log('form reset', payload)
+//     })
+//     node.on('input', ({ payload }) => {
+//       console.log('form input', payload)
+//     })
+//   })
+// }
 // const nodeForm = useFormKitNodeById('form-empresa', (node) => {
 //   console.log('node', node)
 //   // debugger
@@ -299,7 +279,7 @@ if (props.id === 0) {
 <template>
   <BaseForm
     title="Cadastro de Empresas"
-    @close="onClose"
+    @close="emit('close')"
   >
     <FormKit
       id="form-empresa"
@@ -309,15 +289,14 @@ if (props.id === 0) {
       type="form"
       :actions="false"
       @submit="onSubmit"
-      @close="onClose"
-      @node="setNode"
+      @close="emit('close')"
     >
       <div class="flex items-center justify-center">
         <div class="container max-w-screen-lg mx-auto">
           <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
             <FormKitSchema
               :schema="schema"
-              :data="data"
+              :data
             />
             <FormKit
               type="submit"

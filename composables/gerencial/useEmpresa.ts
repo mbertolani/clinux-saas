@@ -5,32 +5,17 @@ export const useEmpresa = () => {
   }
   async function getBancos() {
     const response = await useBaseStore('/financeiro/banco').api.getList()
-    return response.map((result) => {
-      return {
-        value: result.cd_banco,
-        label: result.ds_banco
-      }
-    })
+    return getFieldList(response)
   }
   async function getEstoques() {
     const response = await useBaseStore('/estoque/estoque').api.getList()
-    return response.map((result) => {
-      return {
-        label: result.ds_estoque,
-        value: result.cd_estoque
-      }
-    })
+    return getFieldList(response)
   }
 
   async function getEstoque(id: number) {
     const { item, api } = useBaseStore('/estoque/estoque')
     await api.get(id, 'cd_estoque,ds_estoque')
-    console.log('id', item.value)
-    const response = item.value as any
-    return {
-      label: response.ds_estoque,
-      value: response.cd_estoque
-    }
+    return getFieldItem(item.value)
   }
 
   const getId = computed(() => id.value)
