@@ -16,26 +16,29 @@ const model = ref(null)
 const { api, item, getGrupos, getGrupo } = useProcedimento()
 
 const data = reactive({
-  grupos: {
-    optionLoader: async () => {
-      console.log('grupo', model.value.cd_grupo)
-      if (!model.value.cd_grupo) return []
-      return await getGrupo(model.value.cd_grupo)
+  cd_modalidade: {
+    disabled: props.id > 0
+  },
+  cd_grupo: {
+    optionLoader: async (id, cachedOption) => {
+      if (cachedOption) return cachedOption
+      if (!id) return []
+      return await getGrupo(id)
     },
-    options: async () => {
-      console.log('modalidade', model.value.cd_modalidade)
+    options: async ({ search, options }) => {
+      if (!search) return []
+      if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
       if (!model.value.cd_modalidade) return []
       return await getGrupos(model.value.cd_modalidade)
     }
+
   }
 })
 
 useFormKitNodeById('cd_modalidade', (node) => {
-  console.log('node', node)
   node.on('commit', async (context) => {
-    console.log('commit', context.payload)
-    const items = await getGrupos(context.payload)
-    console.log(getNode('cd_grupo').props.options)
+    const items = context.payload ? await getGrupos(context.payload) : []
+    getNode('cd_grupo').input(null)
     getNode('cd_grupo').props.options = items
   })
 })
@@ -70,19 +73,22 @@ const schema: FormKitSchemaDefinition = [
     name: 'cd_modalidade',
     id: 'cd_modalidade',
     label: 'Modalidade',
+    validation: 'required',
+    bind: '$cd_modalidade',
     selectionRemovable: true,
     options: getFieldList(await useBaseStore('/gerencial/modalidade').api.getList()),
     outerClass: 'md:col-span-4'
   },
   {
-    $formkit: 'dropdown',
+    $formkit: 'autocomplete',
     name: 'cd_grupo',
     id: 'cd_grupo',
     label: 'Grupo',
     selectionRemovable: true,
-    // options: '$getGrupos($model.cd_modalidade)',
-    bind: '$grupos',
-    outerClass: 'md:col-span-6'
+    debounce: 500,
+    bind: '$cd_grupo',
+    outerClass: 'md:col-span-6',
+    emptyMessage: 'Nenhum registro encontrado !'
   },
 
   {
@@ -122,7 +128,7 @@ const onSubmit = async (_data: any) => {
 
 <template>
   <BaseForm
-    title="Cadastro de Médicos"
+    title="Cadastro de Procedimentos"
     @close="emit('close')"
   >
     <FormKit
