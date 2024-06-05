@@ -58,7 +58,7 @@ useSeoMeta({
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5); /* Fundo preto com 50% de opacidade */
-  backdrop-filter: blur(0.25px); /* Embarcado */
+  backdrop-filter: blur(0.15px); /* Embarcado */
   z-index: 9999; /* Garante que o loader esteja acima de outros elementos */
 }
 </style>

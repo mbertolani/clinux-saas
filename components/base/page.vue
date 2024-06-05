@@ -23,6 +23,9 @@ const props = defineProps({
 })
 
 defineExpose({
+  getSelectedNodes: () => {
+    return apiGrid.value.getSelectedNodes()
+  },
   applyTransaction: (transaction) => {
     apiGrid.value.applyTransaction(transaction)
   }
@@ -152,7 +155,6 @@ watch(inputSearch, () => {
     <UPageHeader
       :title="header.title"
       headline=""
-      :icon="header.icon"
       :ui="{ strategy: 'override', wrapper: 'relative border-b border-gray-200 dark:border-gray-800 py-2' }"
       :links="[
         { label: 'Pesquisar', icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
@@ -162,6 +164,12 @@ watch(inputSearch, () => {
         { label: 'Log', icon: 'i-heroicons-question-mark-circle', click: buttonLog }
       ]"
     >
+      <template #icon>
+        <icon
+          :name="header.icon"
+          size="36px"
+        />
+      </template>
       <template #title>
         <UInput
           v-model="inputSearch"

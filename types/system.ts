@@ -93,7 +93,7 @@ export const mainMenu = [
       { label: 'Funcionário', to: '/gerencial/funcionario', icon: 'i-heroicons-identification' },
       { label: 'Médico', to: '/gerencial/medico', icon: 'i-heroicons-user-group' },
       { label: 'Procedimento', to: '/gerencial/procedimento', icon: 'i-heroicons-hashtag' },
-      { label: 'Modelo', to: '/gerencial/modelo', icon: 'i-heroicons-inbox-newspaper' }
+      { label: 'Modelo', to: '/gerencial/modelo', icon: 'mdi:text-box-outline' }
     ]
   },
   {
@@ -102,7 +102,8 @@ export const mainMenu = [
       { label: 'Agendamento', to: '/login' },
       { label: 'Atendimento', to: '/login' },
       { label: 'Paciente', to: '/login' },
-      { label: 'Médico', to: '/login' }
+      { label: 'Médico', to: '/login' },
+      { label: 'Laudo', to: '/laudo/index' }
     ]
   },
   {

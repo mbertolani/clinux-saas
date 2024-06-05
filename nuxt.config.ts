@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@sidebase/nuxt-auth',
+    'nuxt-icon',
     'nuxt-og-image'
     // 'nuxt-security'
   ],
