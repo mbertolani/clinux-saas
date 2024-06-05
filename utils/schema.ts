@@ -11,13 +11,17 @@ export function getFieldName(schema) {
 }
 
 export function getFieldItem(item) {
-  return {
-    value: Object.values(item)[0],
-    label: Object.values(item)[1]
-  }
+  return item
+    ? {
+        value: Object.values(item)[0],
+        label: Object.values(item)[1]
+      }
+    : {}
 }
 export function getFieldList(list) {
-  return list.map((result) => {
-    return getFieldItem(result)
-  })
+  return list
+    ? list.map((result) => {
+      return getFieldItem(result)
+    })
+    : []
 }

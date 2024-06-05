@@ -68,6 +68,7 @@ export const useHttpData = (
     errors.value = error
     item.value = success ? data : null
     items.value.push(data)
+    return success ? data : error
   }
 
   /**
@@ -92,6 +93,7 @@ export const useHttpData = (
     errors.value = error
     // If the retrieval operation was successful, update the value of item with the response data
     item.value = success ? data : null
+    return success ? data : error
   }
 
   /**
@@ -110,6 +112,7 @@ export const useHttpData = (
     status.value = success
     errors.value = error
     item.value = success ? data : null
+    return success ? data : error
   }
 
   /**
@@ -132,6 +135,7 @@ export const useHttpData = (
     status.value = success
     errors.value = error
     item.value = success ? data : null
+    return success ? data : error
   }
 
   /**
@@ -191,8 +195,8 @@ export const useHttpData = (
     return sendHttp(payload, 'get', generateApiUrl(body))
   }
 
-  const find = async (body: any) => {
-    return await Post('find', body)
+  const find = async (payload: string, body: any) => {
+    return await Post(`find/${payload}`, body)
   }
 
   const exec = async (body: any) => {

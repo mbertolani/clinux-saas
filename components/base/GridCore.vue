@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import 'ag-grid-community/styles/ag-grid.css'
-import 'ag-grid-community/styles/ag-theme-quartz.min.css'
+// import 'ag-grid-community/styles/ag-grid.css'
+// import 'ag-grid-community/styles/ag-theme-quartz.min.css'
 import { AgGridVue } from 'ag-grid-vue3'
 import type { GridOptions, CellPosition, NavigateToNextCellParams } from 'ag-grid-community'
 import { LicenseManager } from 'ag-grid-enterprise'

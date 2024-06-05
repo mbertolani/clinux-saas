@@ -9,8 +9,7 @@ const listaBancos = await useEmpresa().getBancos()
 async function searchEstoque() {
   // if (!search) return []
   // console.log('search', search)
-  const response = await useEmpresa().getEstoques()
-  return response
+  return await useEmpresa().getEstoques()
 }
 
 // The function assigned to the `option-loader` prop will be called with the
