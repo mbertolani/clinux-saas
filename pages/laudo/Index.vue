@@ -175,13 +175,15 @@ const salvarModelo = async () => {
     useSystemStore().showError('Erro ao salvar modelo')
   }
 }
+const dataAtual = new Date()
+dataAtual.setDate(dataAtual.getDate() - 90)
 const modelFilter = ref({
-  dt_de: useDateFormat(useNow(), 'YYYY-MM-DD').value,
-  dt_ate: null,
-  nr_controle: null,
-  cd_modalidade: null,
-  cd_empresa: null,
-  cd_medico: null
+  'dt_de': useDateFormat(dataAtual, 'YYYY-MM-DD').value,
+  'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,
+  'ae.nr_controle': null,
+  'sa.cd_modalidade': null,
+  'sa.cd_empresa': null,
+  'ae.cd_medico': null
 })
 
 const apiFilter = ref(null)

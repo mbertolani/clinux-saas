@@ -31,6 +31,10 @@ export const useGrid = (url?: string) => {
     // valueFormatter: d => d ? new Date(d.value).toLocaleDateString('pt-BR') : ''
   }
 
+  const fieldTime = {
+    valueFormatter: p => formatTime(p.value)
+    // valueFormatter: d => d ? new Date(d.value).toLocaleDateString('pt-BR') : ''
+  }
   const fieldCnpj = {
     valueFormatter: p => formatCNPJ(p.value)
   }
@@ -59,6 +63,7 @@ export const useGrid = (url?: string) => {
   const dataTypeWidthMapping: Record<ItemDataType, number> = {
     ftBoolean: 8 * gridFontSize,
     ftDate: 8 * gridFontSize,
+    ftTime: 6 * gridFontSize,
     ftDateTime: 14 * gridFontSize,
     ftInteger: 8 * gridFontSize,
     ftString: 0,
@@ -69,6 +74,7 @@ export const useGrid = (url?: string) => {
     ftString: 'text',
     ftInteger: 'number',
     ftDate: 'date',
+    ftTime: 'text',
     ftDateTime: 'dateString',
     ftBoolean: 'boolean',
     ftFloat: 'number',
@@ -80,7 +86,7 @@ export const useGrid = (url?: string) => {
     taCenter: 'ag-center-aligned-cell'
   }
   const dataTypeWidth = (dataType: string, size?: number): number => {
-    return dataTypeWidthMapping[dataType] || size * 5
+    return dataTypeWidthMapping[dataType] || size * 6
   }
   const formatWidth = (item: DbGridColumn): number => {
     const width = dataTypeWidth(item.dataType, item.size)
@@ -125,6 +131,9 @@ export const useGrid = (url?: string) => {
   //   const parts = inputDate.split('/')
   //   return new Date(parts[2], parts[1] - 1, parts[0])
   // }
+  function formatTime(payload: string) {
+    return payload?.replace(/(\d{2}):(\d{2}):(\d{2})/, '$1:$2')
+  }
   function formatDate(payload: string) {
     return payload?.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3/$2/$1')
   }
@@ -173,7 +182,8 @@ export const useGrid = (url?: string) => {
       ...(item.fieldName.includes('ds_telefone') ? fieldFone : {}),
       ...(item.dataType === 'ftFloat' ? fieldCurrency : {}),
       ...(item.dataType === 'ftInteger' ? fieldNumber : {}),
-      ...(item.dataType === 'ftDate' ? fieldDate : {})
+      ...(item.dataType === 'ftDate' ? fieldDate : {}),
+      ...(item.dataType === 'ftTime' ? fieldTime : {})
     }))
     return AgGridColumns.value
   }

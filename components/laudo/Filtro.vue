@@ -93,14 +93,14 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'number',
     id: 'nr_controle',
-    name: 'nr_controle',
+    name: 'ae.nr_controle',
     label: 'Protocolo',
     outerClass
   },
   {
     $formkit: 'dropdown',
-    name: 'cd_modalidade',
     id: 'cd_modalidade',
+    name: 'sa.cd_modalidade',
     label: 'Modalidade',
     bind: '$cd_modalidade',
     selectionRemovable: true,
@@ -108,8 +108,8 @@ const schema: FormKitSchemaDefinition = [
   },
   {
     $formkit: 'dropdown',
-    name: 'cd_empresa',
     id: 'cd_empresa',
+    name: 'sa.cd_empresa',
     label: 'Empresa',
     bind: '$cd_empresa',
     selectionRemovable: true,
@@ -117,8 +117,8 @@ const schema: FormKitSchemaDefinition = [
   },
   {
     $formkit: 'dropdown',
-    name: 'cd_medico',
     id: 'cd_medico',
+    name: 'ae.cd_medico',
     label: 'Médico',
     bind: '$cd_medico',
     selectionRemovable: true,

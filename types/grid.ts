@@ -1,6 +1,6 @@
 export type TableColumnType = 'DATE' | 'DATETIME' | 'DATETIME_PRETTY' | 'CURRENCY' | 'PERCENT' | 'BOOLEAN'
 
-export type ItemDataType = 'ftString' | 'ftInteger' | 'ftDate' | 'ftDateTime' | 'ftBoolean' | 'ftFloat' | 'ftCurrency'
+export type ItemDataType = 'ftString' | 'ftInteger' | 'ftDate' | 'ftDateTime' | 'ftBoolean' | 'ftFloat' | 'ftCurrency' | 'ftTime'
 
 export type ItemAlignment = 'taLeftJustify' | 'taRightJustify' | 'taCenter'
 
