@@ -73,9 +73,10 @@ const defaultColDef = ref({
 
 const getRowId = ({ data }) => Object.values(data)[0]
 
-const onGridReady = () => {
+const onGridReady = async () => {
+  await restoreColumnState()
+  handleGrid().getDisplayedRowAtIndex(0)?.setSelected(true)
   handleGrid().closeToolPanel()
-  restoreColumnState()
 }
 
 const onRowDataUpdated = ({ api }) => {
