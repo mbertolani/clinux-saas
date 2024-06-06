@@ -1,7 +1,7 @@
 <script lang="ts">
-import type { DocumentEditor, DocumentEditorContainer } from '@syncfusion/ej2-vue-documenteditor'
-import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
+import type { DocumentEditor, DocumentEditorContainer } from '@syncfusion/ej2-vue-documenteditor' // CustomToolbarItemModel, ToolbarItem
 import { registerLicense } from '@syncfusion/ej2-base'
+import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
 import { ptBr } from '~/utils/editor'
 
 registerLicense(
@@ -24,12 +24,16 @@ export default {
     enableToolbar: {
       type: Boolean,
       default: true
+    },
+    toolBar: {
+      type: Object,
+      required: false
     }
   },
   emits: ['load', 'save', 'close'],
   data() {
     return {
-      toolBarItens: null,
+      // toolBarItens: Array<CustomToolbarItemModel>,
       serviceUrl: 'http://localhost:6002/api/documenteditor/'
       // serviceUrl: 'https://editor.telelaudo.com.br/api/documenteditor/'
       // https://github.com/SyncfusionExamples/EJ2-Document-Editor-Web-Services
@@ -98,9 +102,15 @@ export default {
       // - (document.getElementById('documenteditor_titlebar').offsetHeight + document.getElementById('documenteditor_toolbar').offsetHeight)
       console.log(containerPanel?.style.height)
     },
+    // setToolBar(): Array<CustomToolbarItemModel | ToolbarItem> {
     setToolBar() {
       // https://ej2.syncfusion.com/vue/documentation/appearance/icons#available-icons
-      this.toolBarItens = [
+      if (this.toolBar) {
+        this.container.toolbarItems = this.toolBar.items
+        this.container.toolbarClick = this.toolBar.click
+        return
+      }
+      this.container.toolbarItems = [
         {
           prefixIcon: 'e-arrow-left',
           tooltipText: 'Cancelar Edição',
@@ -139,24 +149,6 @@ export default {
         'FormFields',
         'UpdateFields'
       ]
-      // this.container.toolbarItems = [
-      //   'Open',
-      //   'New',
-      //   {
-      //     prefixIcon: 'e-de-ctnr-pagenumber',
-      //     tooltipText: 'Custom toolbar item',
-      //     text: 'Custom toolbar item',
-      //     id: 'Custom',
-      //     cssClass: 'e-de-toolbar-btn'
-      //   },
-      //   'Separator',
-      //   'Image',
-      //   'Break',
-      //   'Bookmark',
-      //   'Separator',
-      //   'Hyperlink',
-      //   'RestrictEditing'
-      // ]
       this.container.toolbarClick = (args) => {
         if (args.item.id === 'CustomSave') {
           console.log('CustomSave')
@@ -182,7 +174,6 @@ export default {
     :enable-toolbar="enableToolbar"
     :readonly="readOnly"
     :show-properties-pane="false"
-    :toolbar-items="toolBarItens"
     :enable-local-paste="true"
   />
 </template>
