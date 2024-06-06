@@ -29,9 +29,10 @@ export default {
   emits: ['load', 'save', 'close'],
   data() {
     return {
-      // documentEditor: null,
       toolBarItens: null,
-      serviceUrl: 'http://localhost:6002'// 'https://editor.telelaudo.com.br'
+      serviceUrl: 'http://localhost:6002/api/documenteditor/'
+      // serviceUrl: 'https://editor.telelaudo.com.br/api/documenteditor/'
+      // https://github.com/SyncfusionExamples/EJ2-Document-Editor-Web-Services
     }
   },
   computed: {
@@ -46,10 +47,13 @@ export default {
     console.log('mounted')
     this.editor.defaultLocale = ptBr
     this.editor.locale = 'pt-BR'
-    this.editor.enableLocalPaste = true
+    this.editor.enableLocalPaste = false
     this.$emit('load', this)
     this.setToolBar()
     window.addEventListener('resize', this.updateContainerSize)
+    setTimeout(() => {
+      this.updateContainerSize()
+    }, 100)
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.updateContainerSize)
@@ -63,7 +67,7 @@ export default {
       const formData = new FormData()
       formData.append('name', 'laudo.rtf')
       formData.append('contents', new Blob([payload], { type: 'application/rtf' }))
-      const response = await $fetch('api/documenteditor/Import', {
+      const response = await $fetch('Import', {
         baseURL: this.serviceUrl,
         method: 'POST',
         body: formData
@@ -78,7 +82,7 @@ export default {
       formData.append('name', 'laudo')
       formData.append('filename', 'laudo.rtf')
       formData.append('contents', payload)
-      const response = await $fetch('api/documenteditor/Export', {
+      const response = await $fetch('Export', {
         baseURL: this.serviceUrl,
         method: 'POST',
         body: formData
@@ -88,28 +92,27 @@ export default {
       return await convertToBase64Image(response as Blob)
     },
     updateContainerSize() {
-      console.log('updateContainerSize')
       const containerPanel = document.getElementById('documentEditorContainer')
-      console.log(window.innerHeight, containerPanel?.style.height)
       if (containerPanel)
         containerPanel.style.height = (window.innerHeight - 86) + 'px'
       // - (document.getElementById('documenteditor_titlebar').offsetHeight + document.getElementById('documenteditor_toolbar').offsetHeight)
-      console.log(containerPanel.style.height)
+      console.log(containerPanel?.style.height)
     },
     setToolBar() {
+      // https://ej2.syncfusion.com/vue/documentation/appearance/icons#available-icons
       this.toolBarItens = [
+        {
+          prefixIcon: 'e-arrow-left',
+          tooltipText: 'Cancelar Edição',
+          text: 'Sair',
+          id: 'CustomClose',
+          cssClass: 'e-de-toolbar-btn'
+        },
         {
           prefixIcon: 'e-save',
           tooltipText: 'Salvar Documento',
           text: 'Salvar',
           id: 'CustomSave',
-          cssClass: 'e-de-toolbar-btn'
-        },
-        {
-          prefixIcon: 'e-close',
-          tooltipText: 'Cancelar Edição',
-          text: 'Sair',
-          id: 'CustomClose',
           cssClass: 'e-de-toolbar-btn'
         },
         'Separator',
@@ -130,7 +133,7 @@ export default {
         'Separator',
         'Find',
         'Separator',
-        'LocalClipboard',
+        // 'LocalClipboard',
         'RestrictEditing',
         'Separator',
         'FormFields',
