@@ -17,8 +17,6 @@ export const useHttp = async (
     fileUpload?: boolean
   } = { method: 'get' }
 ) => {
-  console.log('useHttp', method, url)
-  // const config = useRuntimeConfig()
   const { token } = useAuth()
   let data: DataResponse = { data: null, meta: null }
   let error = null
@@ -47,26 +45,25 @@ export const useHttp = async (
     body: method.toUpperCase() === 'GET' ? undefined : params
   }
 
-  try {
-    useSystemStore()?.startLoading()
-    // await new Promise(r => setTimeout(r, 1000))
-    const response = await fetch(url, options)
-    // wait for the response to be parsed as JSON
-    if (response.ok) {
-      const res = await response.json()
-      data = res
-      success = true
-    } else {
-      // Throw an error with status code and message
-      const res = await response.json()
-      error = res
-      success = false
-    }
-  } catch (error) {
+  useSystemStore()?.startLoading()
+  // await new Promise(r => setTimeout(r, 1000))
+  const response = await fetch(url, options)
+  // wait for the response to be parsed as JSON
+  if (response.ok) {
+    const res = await response.json()
+    data = res
+    success = true
+  } else {
+    // Throw an error with status code and message
+    const res = await response.json()
+    error = res
     success = false
-  } finally {
-    useSystemStore()?.finishLoading()
   }
+  if (!success) {
+    useSystemStore()?.showError(error.error || 'Erro de conexão com o servidor')
+  }
+  useSystemStore()?.finishLoading()
+
   return {
     data,
     error,

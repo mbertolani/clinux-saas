@@ -89,7 +89,7 @@ onMounted(async () => {
       v-if="imageLogo"
       :src="imageLogo"
       alt="Nuxt UI Pro"
-      class="mx-auto mt-4 mb-4 rounded-full"
+      class="mx-auto mt-4 mb-4 opacity-1"
     />
     <UAuthForm
       ref="formRef"

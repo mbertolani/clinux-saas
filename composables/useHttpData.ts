@@ -20,7 +20,18 @@ export const useHttpData = (
    * The response from the request is awaited and then used to update the status.
    * If the retrieval operation was successful, the value of `items` and possibly `meta`
    * (if the query included pagination) is updated with the response data.
-   */
+  */
+  const getView = async (body: any) => {
+    const { data, error, success } = await useHttp(`${url}/view`,
+      {
+        method: 'post',
+        body
+      })
+    console.log(data, error, success)
+    status.value = success
+    errors.value = error
+    items.value = success ? data : null
+  }
   const getAll = async (query?: any, _url?: string) => {
     const { data, error, success } = await useHttp(generateApiUrl(query, _url), {
       method: 'get'
@@ -188,11 +199,11 @@ export const useHttpData = (
   }
 
   const Post = async (payload: string, body?: any) => {
-    return sendHttp(payload, 'post', body)
+    return await sendHttp(payload, 'post', body)
   }
 
   const Get = async (payload: string, body?: any) => {
-    return sendHttp(payload, 'get', generateApiUrl(body))
+    return await sendHttp(payload, 'get', generateApiUrl(body))
   }
 
   const find = async (payload: string, body: any) => {
@@ -234,6 +245,7 @@ export const useHttpData = (
     exec,
     getState,
     getList,
+    getView,
     getMenu
   }
 }

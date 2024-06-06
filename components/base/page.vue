@@ -19,6 +19,10 @@ const props = defineProps({
     type: Array as () => ActionMenuItem[],
     required: false,
     default: () => ([])
+  },
+  filter: {
+    type: Object,
+    required: false
   }
 })
 
@@ -28,6 +32,9 @@ defineExpose({
   },
   applyTransaction: (transaction) => {
     apiGrid.value.applyTransaction(transaction)
+  },
+  applyFilter: () => {
+    api.getView(props.filter)
   }
 })
 
@@ -37,11 +44,19 @@ const modal = useModal()
 const { showError, showMessage } = useSystemStore()
 const { api, items: rowData, grid: columnDefs, menu } = props.controller
 
-await Promise.all([
-  api.getAll(),
-  api.getGrid(),
-  api.getMenu()
-])
+if (!props.filter) {
+  await Promise.all([
+    api.getAll(),
+    api.getGrid(),
+    api.getMenu()
+  ])
+} else {
+  await Promise.all([
+    api.getView(props.filter),
+    api.getGrid(),
+    api.getMenu()
+  ])
+}
 
 menu.value = menu.value.map((item) => {
   const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
@@ -51,8 +66,8 @@ menu.value = menu.value.map((item) => {
   return item
 })
 
-const buttonSearch = async () => {
-  await api.getAll()
+const buttonSearch = () => {
+  !props.filter ? api.getAll() : api.getView(props.filter)
 }
 const actionEdit = async (id: number) => {
   emit('openForm', id)
@@ -191,12 +206,7 @@ watch(inputSearch, () => {
           </template>
         </UInput>
       </template>
-      <div
-        v-if="$slots.filter"
-        class="pt-2"
-      >
-        <slot name="filter" />
-      </div>
+      <slot name="filter" />
     </UPageHeader>
     <UPageBody class="mt-0">
       <BaseGrid

@@ -273,6 +273,7 @@ if (props.id === 0) {
   await api.get(props.id, getFieldName(schema))
   model.value = item.value
 }
+// getNode('form-empresa').context.state.dirty)
 </script>
 
 <template>
