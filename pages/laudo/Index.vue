@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoExame } from '#components'
+import { BaseEditor } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -8,14 +8,14 @@ const toolBarItens = [
     prefixIcon: 'e-arrow-left',
     tooltipText: 'Fechar Editor',
     text: 'Sair',
-    id: 'CustomClose',
+    id: 'close',
     cssClass: 'e-de-toolbar-btn'
   },
   {
     prefixIcon: 'e-save',
     tooltipText: 'Salvar Documento',
     text: 'Salvar',
-    id: 'CustomSave',
+    id: 'save',
     cssClass: 'e-de-toolbar-btn'
   },
   'Separator',
@@ -59,7 +59,7 @@ const toolBarItens = [
   {
     prefixIcon: 'e-warning',
     tooltipText: 'Informar Achado Crítico',
-    text: 'Achado Crítico',
+    text: 'A. Crítico',
     id: 'achado',
     cssClass: 'e-de-toolbar-btn'
   },
@@ -109,42 +109,31 @@ const toolBarItens = [
   }
 ]
 const toolBarClick = (args) => { // EmitType<(ClickEventArgs)>
-  if (args.item.id === 'CustomSave') {
-    console.log('XCustomSave')
-    // salvar()
-  } else if (args.item.id === 'CustomClose') {
-    console.log('XCustomClose')
-    // close()
+  if (args.item.id === 'close') {
+    closeEditor()
+  } else if (args.item.id === 'save') {
+    salvarLaudo()
   }
 }
 
 const actionMenu: ActionMenuItem[] = [
   {
-    name: 'miEditarArquivo',
-    action: () => abrirModelo()
+    name: 'acMedico',
+    action: () => { console.log('Rota') }
   },
   {
-    name: 'miEditarLayout',
-    action: () => {
-      console.log('Rota')
-    }
+    name: 'acRevisor',
+    action: () => { console.log('Rota') }
   }
 ]
 const idEditor = ref(0)
 const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
-const modal = useModal()
+const { userId } = useRouterStore()
+// const modal = useModal()
 const openForm = (codigo?: number) => {
-  modal.open(LaudoExame, {
-    id: Number(codigo),
-    onClose: () => modal.close(),
-    onSubmit: (id: number, data: any) => {
-      const nodes = id ? { update: [data] } : { add: [data] }
-      apiPage.value.applyTransaction(nodes)
-      modal.close()
-    }
-  })
+  abrirLaudo(codigo)
 }
 const loadEditor = (editor) => {
   apiEditor.value = editor
@@ -152,24 +141,23 @@ const loadEditor = (editor) => {
 const closeEditor = async () => {
   idEditor.value = 0
 }
-const abrirModelo = async () => {
-  idEditor.value = apiPage.value.getSelectedNodes()[0]?.id
-  if (!idEditor.value) {
-    useSystemStore().showError('Nenhum registro selecionado')
-    return
-  }
-  const response = await useLaudo().api.get(idEditor.value, 'bb_modelo')
-  if (response?.bb_modelo) {
-    apiEditor.value.load(atob(response.bb_modelo))
+const abrirLaudo = async (id: number) => {
+  idEditor.value = id // apiPage.value.getSelectedNodes()[0]?.id
+  if (!idEditor.value) return
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: idEditor.value, cd_medico: userId.id })
+  if (response) {
+    apiEditor.value.load(atob(response))
   } else {
     apiEditor.value.clear()
   }
 }
-const salvarModelo = async () => {
+const salvarLaudo = async () => {
   const payload = await apiEditor.value.save()
-  const response = await controller.api.update(idEditor.value, { bb_modelo: payload.split(',')[1] })
+  const laudo = payload.split(',')[1]
+  // const response = await controller.api.update(idEditor.value, { bb_laudo: payload.split(',')[1] })
+  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: userId.id, bb_html: laudo })
   if (response) {
-    useSystemStore().showMessage('Modelo salvo com sucesso')
+    useSystemStore().showMessage()
     closeEditor()
   } else {
     useSystemStore().showError('Erro ao salvar modelo')
@@ -201,8 +189,6 @@ const filtrar = async () => {
         click: toolBarClick
       }"
       @load="loadEditor($event)"
-      @close="closeEditor()"
-      @save="salvarModelo()"
     />
     <BasePage
       v-show="!idEditor"
