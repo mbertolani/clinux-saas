@@ -4,6 +4,7 @@ import { useEmpresa } from '../gerencial/useEmpresa'
 
 export const useLaudo = () => {
   const baseUrl = useRouterStore().apiUrl
+  const userId = useRouterStore().user
 
   async function getMedicos(id: number) {
     return getFieldList(await useMedico().api.find('modalidade', { cd_modalidade: id }))
@@ -23,7 +24,7 @@ export const useLaudo = () => {
   async function getModalidade(id: number) {
     return getFieldItem(await useModalidade().api.get(id, 'cd_modalidade,ds_modalidade'))
   }
-  function post(url: string, body: object) {
+  function post(url: string, body?: object) {
     return useHttp(`${baseUrl}/se1/${url}`, { method: 'post', body, fileUpload: true })
   }
   async function doLaudoAbrir(payload: object) {
@@ -41,6 +42,28 @@ export const useLaudo = () => {
     })
     return data
   }
+  async function doMedicoToken(): Promise<{ token: string, url: string }> {
+    const data = await post('doMedicoToken') as any
+    return {
+      token: data.token,
+      url: data.url
+    }
+  }
+  async function validarCertificado(payload: any) {
+    console.log(payload)
+    if (userId.certificado) {
+      const data = await doMedicoToken()
+      console.log(data)
+      if (data.token) {
+        if (data.url) {
+          window.open(data.url + '/autenticarmedico', '_blank', 'noreferrer')
+        } else {
+          useSystemStore().showError('Url do token não informada !')
+        }
+      }
+    }
+  }
+
   return {
     getModalidade,
     getEmpresa,
@@ -50,6 +73,7 @@ export const useLaudo = () => {
     getMedicos,
     doLaudoAbrir,
     doLaudoGravar,
+    validarCertificado,
     ...useBaseStore('/laudo/laudo')
   }
 }
