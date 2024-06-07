@@ -273,13 +273,25 @@ if (props.id === 0) {
   await api.get(props.id, getFieldName(schema))
   model.value = item.value
 }
-// getNode('form-empresa').context.state.dirty)
+//
+const onClose = () => {
+  console.log('FormEmpresa onClose')
+  if (getNode('form-empresa').context.state.dirty) {
+    useSystemStore().showDialog({
+      description: 'Deseja sair sem salvar ?',
+      okClick: () => { useSystemStore().closeDialog(), emit('close') },
+      noClick: () => { useSystemStore().closeDialog() }
+    })
+  } else {
+    emit('close')
+  }
+}
 </script>
 
 <template>
   <BaseForm
     title="Cadastro de Empresas"
-    @close="emit('close')"
+    @close="onClose()"
   >
     <FormKit
       id="form-empresa"
@@ -308,7 +320,7 @@ if (props.id === 0) {
       </div>
     </FormKit>
     <pre
-      v-if="true"
+      v-if="false"
       wrap
     >{{ model }}</pre>
   </BaseForm>

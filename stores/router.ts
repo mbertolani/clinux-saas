@@ -1,21 +1,27 @@
 import { defineStore } from 'pinia'
-import { ModuleType, type Client } from '~/types/system'
+import { ModuleType, type Client, type User } from '~/types/system'
 
 export const useRouterStore = defineStore({
   id: 'routerStore',
   state: () => ({
     clientId: ref(null),
     moduleId: ref<ModuleType>(),
-    client: ref<Client>()
+    client: ref<Client>(),
+    userId: ref<User>()
   }),
 
   getters: {
+    user: state => state.userId,
     apiUrl: state => state.client?.ds_portal_url,
     clientName: state => state.client?.ds_empresa
   },
 
   actions: {
-
+    async loadUser(): Promise<User | null> {
+      const { data } = await useHttp(this.apiUrl + '/login/user', { method: 'post' })
+      this.userId = data as any
+      return data as any
+    },
     async loadClient() {
       const router = useRoute()
       const aSystem = router.params.system as ModuleType

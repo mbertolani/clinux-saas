@@ -13,6 +13,17 @@ export const useSystemStore = defineStore('system', () => {
   const loading = ref(0)
   const toast = useToast()
 
+  const initDialog = {
+    title: 'Aviso',
+    description: 'Deseja confirmar a operação ?',
+    okButton: 'Confirmar',
+    noButton: 'Cancelar',
+    visible: false,
+    okClick: null,
+    noClick: null // () => { propsDialog.value.visible = false }
+  }
+  const propsDialog = ref(initDialog)
+
   const showError = (message: string) => {
     console.log('showError', message)
     toast.add({
@@ -21,12 +32,11 @@ export const useSystemStore = defineStore('system', () => {
       description: message
     })
   }
-  const showMessage = (message: string) => {
-    console.log('showMessage', message)
+  const showMessage = (message?: string) => {
     toast.add({
       title: 'Aviso',
       color: 'green',
-      description: message
+      description: message || 'Operação realizada com sucesso'
     })
   }
 
@@ -96,7 +106,14 @@ export const useSystemStore = defineStore('system', () => {
   function finishLoading() {
     loading.value--
   }
-
+  function showDialog(payload: any) {
+    propsDialog.value = { ...initDialog, ...payload }
+    propsDialog.value.visible = true
+  }
+  function closeDialog() {
+    propsDialog.value.visible = false
+  }
+  watch
   return {
     menu,
     setup,
@@ -111,7 +128,10 @@ export const useSystemStore = defineStore('system', () => {
     loadLogo,
     getAll,
     showError,
-    showMessage
+    showMessage,
+    showDialog,
+    closeDialog,
+    propsDialog
   }
 },
 { persist: true }

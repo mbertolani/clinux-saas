@@ -42,16 +42,19 @@ const apiGrid = ref(null)
 const emit = defineEmits(['openForm'])
 const modal = useModal()
 const { showError, showMessage } = useSystemStore()
+const { loadUser } = useRouterStore()
 const { api, items: rowData, grid: columnDefs, menu } = props.controller
 
 if (!props.filter) {
   await Promise.all([
+    loadUser(),
     api.getAll(),
     api.getGrid(),
     api.getMenu()
   ])
 } else {
   await Promise.all([
+    loadUser(),
     api.getView(props.filter),
     api.getGrid(),
     api.getMenu()

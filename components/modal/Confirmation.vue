@@ -1,25 +1,18 @@
 <script setup lang="ts">
-defineProps({
-  title: {
-    type: String,
-    default: 'Aviso'
-  },
-  description: {
-    type: String,
-    default: 'Deseja confirmar ?'
-  },
-  ok: {
-    type: String,
-    default: 'Sim'
-  },
-  cancel: {
-    type: String,
-    default: 'Não'
-  }
-})
+const system = useSystemStore()
+const { closeDialog } = system
+const { propsDialog } = storeToRefs(system)
 const emit = defineEmits(['yes', 'no'])
 const loading = ref(false)
-
+const okClick = () => {
+  propsDialog.value.okClick()
+  closeDialog()
+  emit('yes')
+}
+const noClick = () => {
+  propsDialog.value.noClick()
+  emit('no')
+}
 defineShortcuts({
   enter: {
     handler: () => { emit('yes') }
@@ -29,26 +22,24 @@ defineShortcuts({
 
 <template>
   <UDashboardModal
-    :title
-    :description
-    icon="i-heroicons-question-mark-circle"
-    :ui="{
-      width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
-      icon: { base: 'text-red-500 dark:text-red-400' } as any,
-      footer: { base: 'ml-16' } as any
-    }"
+    v-if="propsDialog.okClick"
+    v-model="propsDialog.visible"
+    prevent-close
+    :title="propsDialog.title"
+    :description="propsDialog.description"
+    icon="i-heroicons-exclamation-circle"
   >
     <template #footer>
       <UButton
         color="red"
-        :label="ok"
+        :label="propsDialog.okButton"
         :loading="loading"
-        @click="emit('yes')"
+        @click="okClick()"
       />
       <UButton
         color="white"
-        :label="cancel"
-        @click="emit('no')"
+        :label="propsDialog.noButton"
+        @click="noClick()"
       />
     </template>
   </UDashboardModal>

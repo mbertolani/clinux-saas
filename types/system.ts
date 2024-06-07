@@ -60,6 +60,12 @@ export interface Client {
   ds_portal_id: string
   ds_portal_url: string
 }
+export interface User {
+  id: number
+  name: string
+  email: string
+  role: string
+}
 export interface MainMenu {
   cd_form: number
   ds_form: string

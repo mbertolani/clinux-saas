@@ -44,6 +44,8 @@ useSeoMeta({
 
     <UNotifications />
     <UModals />
+    <!-- <ModalDelete /> -->
+    <ModalConfirmation />
   </div>
 </template>
 
