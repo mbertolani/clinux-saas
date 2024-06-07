@@ -54,6 +54,7 @@ export enum ModuleType {
   CLINUX = 'clinux',
   OTRS = 'otrs'
 }
+export type userType = 'funcionario' | 'medico' | 'paciente' | 'solicitante'
 export interface Client {
   cd_empresa: number
   ds_empresa: string
@@ -64,7 +65,8 @@ export interface User {
   id: number
   name: string
   email: string
-  role: string
+  role: userType
+  certificado: boolean
 }
 export interface MainMenu {
   cd_form: number

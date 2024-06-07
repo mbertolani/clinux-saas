@@ -63,11 +63,11 @@ import {
   DocumentEditorContainerComponent,
   Toolbar
 } from '@syncfusion/ej2-vue-documenteditor'
-import { registerLicense } from '@syncfusion/ej2-base'
+// import { registerLicense } from '@syncfusion/ej2-base'
 
-registerLicense(
-  useRuntimeConfig().public.syncfusionKey
-)
+// registerLicense(
+// useRuntimeConfig().public.syncfusionKey
+// )
 // https://ej2.syncfusion.com/vue/documentation/document-editor/how-to/enable-ruler-in-document-editor-component
 export default {
   components: {

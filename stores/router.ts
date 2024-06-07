@@ -18,7 +18,7 @@ export const useRouterStore = defineStore({
 
   actions: {
     async loadUser(): Promise<User | null> {
-      const { data } = await useHttp(this.apiUrl + '/login/user', { method: 'post' })
+      const { data } = await useHttp(this.apiUrl + '/auth/session', { method: 'post' })
       this.userId = data as any
       return data as any
     },

@@ -28,10 +28,14 @@ defineShortcuts({
     :title="propsDialog.title"
     :description="propsDialog.description"
     icon="i-heroicons-exclamation-circle"
+    :ui="{
+      // width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
+      // icon: { base: 'text-red-500 dark:text-red-400' },
+      footer: { base: 'ml-16' }
+    }"
   >
     <template #footer>
       <UButton
-        color="red"
         :label="propsDialog.okButton"
         :loading="loading"
         @click="okClick()"

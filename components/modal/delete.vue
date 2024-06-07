@@ -59,9 +59,9 @@ defineShortcuts({
     description="Tem certeza que deseja apagar este registro?"
     icon="i-heroicons-exclamation-circle"
     :ui="{
-      width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
-      icon: { base: 'text-red-500 dark:text-red-400' } as any,
-      footer: { base: 'ml-16' } as any
+      // width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
+      icon: { base: 'text-red-500 dark:text-red-400' },
+      footer: { base: 'ml-16' }
     }"
   >
     <template #footer>

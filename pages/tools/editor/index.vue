@@ -8,7 +8,7 @@ import {
   Toolbar
 } from '@syncfusion/ej2-vue-documenteditor'
 // import { showSpinner, hideSpinner } from '@syncfusion/ej2-popups';
-import { registerLicense } from '@syncfusion/ej2-base'
+// import { registerLicense } from '@syncfusion/ej2-base'
 
 const serviceUrl = computed(() => {
   return 'https://ej2services.syncfusion.com/production/web-services/api/documenteditor/'
@@ -58,9 +58,9 @@ const click = () => {
   myEditor.value.open(sfdt)
 }
 
-registerLicense(
-  useRuntimeConfig().public.syncfusionKey
-)
+// registerLicense(
+//   useRuntimeConfig().public.syncfusionKey
+// )
 
 export default {
   provide: {
