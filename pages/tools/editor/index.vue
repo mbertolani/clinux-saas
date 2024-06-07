@@ -39,21 +39,6 @@ const myEditor = computed(() => {
   return documentEditor.value?.ej2Instances.documentEditor
 })
 
-const colorMode = useColorMode()
-
-watch(
-  () => colorMode.value,
-  () => {
-    console.log('colorMode changed', myEditor)
-    // if (colorMode.value === "dark") {
-    //   myEditor.element.querySelector(".e-de-background").style.backgroundColor =
-    //     "rgb(127, 127, 127)";
-    // } else {
-    //   myEditor.element.querySelector(".e-de-background").style.backgroundColor =
-    //     "rgb(255, 255, 255)";
-    // }
-  }
-)
 const click = () => {
   myEditor.value.open(sfdt)
 }

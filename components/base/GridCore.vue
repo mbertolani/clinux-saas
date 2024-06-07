@@ -18,7 +18,7 @@ defineProps({
 const colorMode = useColorMode()
 const color = ref(null)
 const getColor = () => {
-  return colorMode.value === 'dark' ? 'ag-theme-quartz-dark' : 'ag-theme-quartz'
+  return colorMode.value === 'dark' ? 'ag-theme-quartz-auto-dark' : 'ag-theme-quartz'
 }
 watch(colorMode, () => {
   color.value = getColor()
@@ -89,7 +89,7 @@ defineExpose({
 .custom-row-disable {
   color: rgb(150, 150, 150);
 }
-.ag-theme-quartz, .ag-theme-quartz-dark {
+.ag-theme-quartz, .ag-theme-quartz-auto-dark {
     --ag-grid-size: 6px;
     --ag-list-item-height: 20px;
 }

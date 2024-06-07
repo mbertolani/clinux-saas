@@ -4,9 +4,8 @@ import { registerLicense } from '@syncfusion/ej2-base'
 import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
 import { ptBr } from '~/utils/editor'
 
-registerLicense(
-  useRuntimeConfig().public.syncfusionKey
-)
+registerLicense('Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM=')
+// useRuntimeConfig().public.syncfusionKey
 
 export default {
   name: 'BaseEditor',

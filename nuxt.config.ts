@@ -3,6 +3,10 @@ import { createResolver } from '@nuxt/kit'
 const { resolve } = createResolver(import.meta.url)
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // ssr: true,
+  build: {
+    transpile: process.env.NODE_ENV === 'production' ? ['@syncfusion'] : []
+  },
   extends: [process.env.NUXT_UI_PRO_PATH || '@nuxt/ui-pro'],
   plugins: [
     { src: '~/plugins/base64.ts' }
@@ -94,7 +98,7 @@ export default defineNuxtConfig({
     globalAppMiddleware: {
       isEnabled: true
     },
-    // baseURL: 'http://172.18.0.1:8082/login',
+    baseURL: 'http://172.18.0.1:8082/auth',
     provider: {
       type: 'local',
       // endpoints: {

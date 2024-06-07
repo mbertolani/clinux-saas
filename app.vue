@@ -1,11 +1,25 @@
 <script setup lang="ts">
+import 'ag-grid-community/styles/ag-grid.css'
+import 'ag-grid-community/styles/ag-theme-quartz.min.css'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
+// const colorMode = useColorMode()
+
+// const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
+
+// const { apiUrl } = useRouterStore()
+
 const colorMode = useColorMode()
-
-const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
-
-const { apiUrl } = useRouterStore()
+const color = ref(null)
+const getColor = () => {
+  return colorMode.value === 'dark' ? '#111827' : 'white'
+}
+watch(colorMode, () => {
+  color.value = getColor()
+})
+onMounted(() => {
+  color.value = getColor()
+})
 
 useHead({
   meta: [
@@ -13,11 +27,11 @@ useHead({
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { key: 'theme-color', name: 'theme-color', content: color }
   ],
-  link: [
-    { rel: 'icon', href: `${apiUrl}/setup/icon` }
-  ],
+  // link: [
+  //   { rel: 'icon', href: `${apiUrl}/setup/icon` }
+  // ],
   htmlAttrs: {
-    lang: 'en'
+    lang: 'pt-br'
   }
 })
 

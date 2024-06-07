@@ -18,11 +18,9 @@ const bottomData = ref(null)
 const columnDefs = ref(null)
 const rowStyle = { fontWeight: 'bold' }
 
-const colorMode = useColorMode()
-
-const color = computed(() =>
-  colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
-)
+// const color = computed(() =>
+//   colorMode.value === 'dark' ? 'ag-theme-balham-dark' : 'ag-theme-balham'
+// )
 
 // const { data } = await useFetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
 
