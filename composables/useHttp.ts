@@ -9,12 +9,14 @@ export const useHttp = async (
     method = 'get',
     body = {},
     headers = {},
-    fileUpload = false
+    fileUpload = false,
+    fileDownload = false
   }: {
     method?: string
     body?: object
     headers?: HeadersInit
     fileUpload?: boolean
+    fileDownload?: boolean
   } = { method: 'get' }
 ) => {
   const { token } = useAuth()
@@ -39,10 +41,13 @@ export const useHttp = async (
     Object.keys(body).forEach(key => formData.append(key, body[key]))
     params = formData
   }
-
+  if (fileDownload) {
+    initHeaders.set('Content-Type', 'application/octet-stream')
+  }
   const options = {
     method,
     headers: initHeaders,
+    responseType: fileDownload ? 'blob' : 'json',
     body: method.toUpperCase() === 'GET' ? undefined : params
   }
   useSystemStore()?.startLoading()
@@ -50,7 +55,7 @@ export const useHttp = async (
     const response = await fetch(url, options)
     // wait for the response to be parsed as JSON
     if (response.ok) {
-      const res = await response.json()
+      const res = !fileDownload ? await response.json() : await response.blob()
       data = res
       success = true
     } else {

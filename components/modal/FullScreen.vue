@@ -4,9 +4,9 @@ defineProps({
     type: String,
     required: true
   },
-  screen: {
+  fullscreen: {
     type: Boolean,
-    default: true
+    default: false
   }
 })
 const emit = defineEmits(['close'])
@@ -14,7 +14,7 @@ const emit = defineEmits(['close'])
 
 <template>
   <UModal
-    :fullscreen="screen"
+    :fullscreen
     :ui="{
       width: 'w-full sm:max-w-xl md:max-w-2xl lg:max-w-6xl'
     }"
@@ -43,10 +43,7 @@ const emit = defineEmits(['close'])
           />
         </div>
       </template>
-
-      <div>
-        <slot />
-      </div>
+      <slot />
     </UCard>
   </UModal>
 </template>

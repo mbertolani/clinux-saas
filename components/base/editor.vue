@@ -3,7 +3,6 @@ import type { DocumentEditor, DocumentEditorContainer } from '@syncfusion/ej2-vu
 import { registerLicense } from '@syncfusion/ej2-base'
 import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
 import { ptBr } from '~/utils/editor'
-// import { useLaudo } from '~/composables/laudo/useLaudo'
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM=')
 // useRuntimeConfig().public.syncfusionKey

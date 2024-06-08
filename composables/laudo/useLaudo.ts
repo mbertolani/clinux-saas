@@ -346,7 +346,11 @@ export const useLaudo = () => {
     const response = await post('doFuncionarioAcesso', { cd_funcionario: userId, ds_form: 'ATE_LAUDO_EXE_CABECALHO' })
     return response.data.length > 0
   }
+  function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_medico?: number, cd_paciente?: number }): Promise<responseType> {
+    return useHttp(`${baseUrl}/laudo/laudo?filename=laudo.pdf&cmd=acAssinado`, { method: 'post', body: payload, fileDownload: true })
+  }
   return {
+    laudoAssinado,
     bloquearLayout,
     execMedico,
     execRevisor,
