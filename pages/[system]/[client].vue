@@ -15,6 +15,7 @@ const route = useRoute()
 const routerStore = useRouterStore()
 
 onMounted(async () => {
+  console.log('client router onmounted', route.params.system, route.params.client)
   if (routerStore.apiUrl) {
     navigateTo('/login')
   } else {

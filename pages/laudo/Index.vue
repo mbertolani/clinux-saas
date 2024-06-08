@@ -142,25 +142,20 @@ const closeEditor = async () => {
   idEditor.value = 0
 }
 const abrirLaudo = async (id: number) => {
-  idEditor.value = id // apiPage.value.getSelectedNodes()[0]?.id
-  if (!idEditor.value) return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: idEditor.value, cd_medico: userId.id })
-  if (response) {
-    apiEditor.value.load(atob(response))
-  } else {
-    apiEditor.value.clear()
-  }
+  if (!id) return
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: userId.id }) as any
+  if (response.error) return
+  response.data
+    ? apiEditor.value.load(atob(response.data))
+    : apiEditor.value.clear()
+  idEditor.value = id
 }
 const salvarLaudo = async () => {
-  const payload = await apiEditor.value.save()
-  const laudo = payload.split(',')[1]
-  // const response = await controller.api.update(idEditor.value, { bb_laudo: payload.split(',')[1] })
-  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: userId.id, bb_html: laudo })
-  if (response) {
+  const texto = await apiEditor.value.save()
+  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: userId.id, bb_html: texto })
+  if (!response.error) {
     useSystemStore().showMessage()
     closeEditor()
-  } else {
-    useSystemStore().showError('Erro ao salvar modelo')
   }
 }
 const dataAtual = new Date()

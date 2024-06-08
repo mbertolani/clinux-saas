@@ -98,7 +98,7 @@ export default defineNuxtConfig({
     globalAppMiddleware: {
       isEnabled: true
     },
-    baseURL: 'http://172.18.0.1:8082/auth',
+    baseURL: process.env.NODE_ENV === 'production' ? 'https://pacstelelaudo.zapto.org/dwclinux/auth' : 'http://172.18.0.1:8082/auth',
     provider: {
       type: 'local',
       // endpoints: {

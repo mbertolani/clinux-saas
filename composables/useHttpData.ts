@@ -27,7 +27,7 @@ export const useHttpData = (
         method: 'post',
         body
       })
-    console.log(data, error, success)
+    // console.log(data, error, success)
     status.value = success
     errors.value = error
     items.value = success ? data : null

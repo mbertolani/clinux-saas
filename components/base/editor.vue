@@ -32,9 +32,8 @@ export default {
   emits: ['load', 'save', 'close'],
   data() {
     return {
-      // toolBarItens: Array<CustomToolbarItemModel>,
-      serviceUrl: 'http://localhost:6002/api/documenteditor/'
-      // serviceUrl: 'https://editor.telelaudo.com.br/api/documenteditor/'
+      // serviceUrl: 'http://localhost:6002/api/documenteditor/'
+      serviceUrl: 'https://editor.telelaudo.com.br/api/documenteditor/'
       // https://github.com/SyncfusionExamples/EJ2-Document-Editor-Web-Services
     }
   },
@@ -80,6 +79,14 @@ export default {
       this.editor.open(response as string)
     },
     async save() {
+      const response = await this.saveBase()
+      return response.split(',')[1]
+    },
+    async saveBase() {
+      const response = await this.saveBlob()
+      return await convertToBase64Image(response as Blob)
+    },
+    async saveBlob() {
       const payload = await this.editor.saveAsBlob('Docx')
       const formData = new FormData()
       formData.append('name', 'laudo')
@@ -92,7 +99,7 @@ export default {
       }).catch((e) => {
         console.error(e)
       })
-      return await convertToBase64Image(response as Blob)
+      return response as Blob
     },
     updateContainerSize() {
       const containerPanel = document.getElementById('documentEditorContainer')

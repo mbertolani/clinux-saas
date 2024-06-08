@@ -5,6 +5,7 @@ import { useEmpresa } from '../gerencial/useEmpresa'
 export const useLaudo = () => {
   const baseUrl = useRouterStore().apiUrl
   const userId = useRouterStore().user
+  const { token } = useAuth()
 
   async function getMedicos(id: number) {
     return getFieldList(await useMedico().api.find('modalidade', { cd_modalidade: id }))
@@ -24,44 +25,235 @@ export const useLaudo = () => {
   async function getModalidade(id: number) {
     return getFieldItem(await useModalidade().api.get(id, 'cd_modalidade,ds_modalidade'))
   }
-  function post(url: string, body?: object) {
-    return useHttp(`${baseUrl}/se1/${url}`, { method: 'post', body, fileUpload: true })
-  }
-  async function doLaudoAbrir(payload: object) {
-    const { data } = await post('doLaudoAbrir', payload)
-    return data ? data[0].bb_laudo : null
-  }
-  async function doLaudoGravar(payload: any) {
-    const { data } = await post('doLaudoGravar', {
-      cd_exame: payload.cd_exame,
-      cd_medico: payload.cd_medico,
-      bb_laudo: payload.bb_laudo,
-      bb_html: payload.bb_html,
-      ds_exame: payload.ds_exame,
-      sn_provisorio: payload.sn_provisorio
-    })
-    return data
-  }
-  async function doMedicoToken(): Promise<{ token: string, url: string }> {
-    const data = await post('doMedicoToken') as any
+  async function get(url: string, body?: object): Promise<responseType> {
+    const response = await useHttp(`${baseUrl}/${url}`, { method: 'get', body })
+    console.log('get', url, body, response)
     return {
-      token: data.token,
-      url: data.url
+      data: response.data,
+      error: response.error
     }
   }
-  async function validarCertificado(payload: any) {
-    console.log(payload)
+  async function post(url: string, body?: object): Promise<responseType> {
+    const response = await useHttp(`${baseUrl}/se1/${url}`, { method: 'post', body, fileUpload: true })
+    console.log('post', url, body, response)
+    return {
+      data: response.data,
+      error: response.error
+    }
+  }
+  type responseType = { data: any, error: string }
+  async function doLaudoAbrir(payload: { cd_exame: number, cd_medico: number }): Promise<{ data: string, error: string }> {
+    const response = await post('doLaudoAbrir', payload)
+    return {
+      data: response?.data[0]?.bb_laudo,
+      error: response.error
+    }
+  }
+  async function doLaudoGravar(payload: {
+    cd_exame: number
+    cd_medico: number
+    bb_laudo?: string
+    bb_html: string
+    ds_exame?: string
+    sn_provisorio?: boolean
+  }): Promise<{ data: { cd_exame: number, nr_laudo: number }, error: string }> {
+    const response = await post('doLaudoGravar', payload)
+    const { cd_exame, nr_laudo } = response.data[0]
+    return {
+      data: { cd_exame, nr_laudo },
+      error: response.error
+    }
+  }
+  async function doMedicoToken(): Promise<{ data: { token: string, url: string }, error: string }> {
+    const response = await post('doMedicoToken')
+    const { token, url } = response.data as any
+    return {
+      data: { token, url },
+      error: response.error
+    }
+  }
+  async function validarCertificado(): Promise<boolean> {
     if (userId.certificado) {
-      const data = await doMedicoToken()
-      console.log(data)
-      if (data.token) {
-        if (data.url) {
-          window.open(data.url + '/autenticarmedico', '_blank', 'noreferrer')
+      const response = await doMedicoToken()
+      if (!response.data.token) {
+        if (response.data.url) {
+          window.open(response.data.url + '/autenticarmedico', '_blank', 'noreferrer')
         } else {
           useSystemStore().showError('Url do token não informada !')
         }
       }
+      return response.data.token ? true : false
+    } else {
+      return true
     }
+  }
+  async function doLaudoDados(cd_exame: number): Promise<responseType> {
+    const response = await post('doLaudoDados', { cd_exame })
+    if (response.data[0]?.bb_dados)
+      response.data[0].bb_dados = Buffer.from(response.data[0].bb_dados, 'base64') // atob(response.data[0].bb_dados)
+    return {
+      data: response.data[0],
+      error: response.error
+    }
+  }
+  function doLaudoAgrupar(cd_exame: number): Promise<responseType> {
+    return post('doLaudoAgrupar', { cd_exame })
+  }
+  async function doLaudoRevisao(cd_atendimento: number): Promise<responseType> {
+    const response = await post('doLaudoRevisao', { cd_atendimento })
+    return {
+      data: response.data[0].cd_exame,
+      error: response.error
+    }
+  }
+  async function doLaudoSair(cd_exame: number): Promise<boolean> {
+    return !(await post('doLaudoSair', { cd_exame })).error
+  }
+  async function doLaudoCancelar(payload: { cd_exame: number, cd_motivo?: number, sn_assinatura?: boolean }): Promise<boolean> {
+    return !(await post('doLaudoCancelar', payload)).error
+  }
+  function doLaudoFiltroCancela(): Promise<responseType> {
+    return post('doLaudoFiltroCancela')
+  }
+  async function doLaudoAssinar(payload: {
+    cd_exame: number
+    cd_medico: number
+    cd_tipo?: number
+    ds_exame?: string
+    sn_remoto?: boolean
+    sn_provisorio?: boolean
+    bb_html: string
+    ds_revisao?: string
+    bb_revisao?: string
+  }): Promise<boolean> {
+    return !(await post('doLaudoAssinar', payload)).error
+  }
+  async function doLaudoAuditar(payload: {
+    cd_atendimento: number
+    cd_auditoria: number
+    bb_auditoria?: string | null
+  }): Promise<boolean> {
+    return !(await post('doLaudoAuditar', payload)).error
+  }
+  function doLaudoFiltroTipo(cd_modalidade: number): Promise<responseType> {
+    return post('doLaudoFiltroTipo', { cd_modalidade })
+  }
+  function doLaudoFiltroRevisao(): Promise<responseType> {
+    return post('doLaudoFiltroRevisao')
+  }
+  function doLaudoProximo(): Promise<responseType> {
+    return post('doLaudoProximo')
+  }
+  async function doModeloLayout(cd_exame: number): Promise<responseType> {
+    const response = await post('doModeloLayout', { cd_exame })
+    return {
+      data: response.data[0]?.bb_layout,
+      error: response.error
+    }
+  }
+  async function doModeloAbrir(cd_modelo: number): Promise<responseType> {
+    const response = await post('doModeloAbrir', { cd_modelo })
+    return {
+      data: response.data[0]?.bb_modelo,
+      error: response.error
+    }
+  }
+  async function carregarModelo(payload: {
+    cd_exame: number
+    cd_modelo: number
+  }): Promise<responseType> {
+    const [layout, modelo, chave] = await Promise.all([
+      doModeloLayout(payload.cd_exame),
+      doModeloAbrir(payload.cd_modelo),
+      doLaudoModeloChave(payload.cd_modelo, 'modelo')
+    ])
+    return {
+      data: { layout: layout.data, modelo: modelo.data, chave: chave.data },
+      error: layout.error || modelo.error || chave.error
+    }
+  }
+  function doModeloLista(payload: { cd_exame: number, sn_todos?: boolean, sn_html?: boolean }): Promise<responseType> {
+    return post('doModeloLista', payload)
+  }
+  function doAchadoLista(): Promise<responseType> {
+    return post('doAchadoLista')
+  }
+  function doComplementoLista(): Promise<responseType> {
+    return post('doComplementoLista')
+  }
+  function autoTexto(): Promise<responseType> {
+    return post('xxx')
+  }
+  function doLaudoFiltroTexto(payload: { cd_exame: number, cd_medico: number, ds_texto: string }): Promise<responseType> {
+    return post('doLaudoFiltroTexto', payload)
+  }
+  // Protocolo
+  async function doLaudoPesquisa(nr_controle: number): Promise<responseType> {
+    const response = await post('doLaudoLista', { nr_controle })
+    return {
+      data: response.data[0],
+      error: response.error
+    }
+  }
+  // Historico
+  function doLaudoLista(cd_paciente: number): Promise<responseType> {
+    return post('doLaudoLista', { cd_paciente, sn_assinado: true })
+  }
+  function doAchadoGravar(payload: { cd_atendimento: number, cd_exame: number, cd_achado: number, ds_descricao: string }): Promise<responseType> {
+    payload.ds_descricao = payload.ds_descricao ? btoa(payload.ds_descricao) : ''
+    return post('doAchadoGravar', payload)
+  }
+  function doComplementoGravar(payload: { cd_atendimento: number, cd_complemento: number, bb_complemento: string }): Promise<responseType> {
+    payload.bb_complemento = payload.bb_complemento ? btoa(payload.bb_complemento) : ''
+    return post('doComplementoGravar')
+  }
+  function doDicomCompressao(): Promise<responseType> {
+    return post('doDicomCompressao')
+  }
+  async function doLaudoVisualizar(cd_exame: number): Promise<responseType> {
+    const response = await post('doLaudoVisualizar', { cd_exame })
+    return {
+      data: response.data[0]?.bb_laudo ? atob(response.data[0]?.bb_laudo) : '',
+      error: response.error
+    }
+  }
+  function doDicomFilme(payload: { cd_atendimento: number, nr_controle?: number, cd_exame?: number }): Promise<responseType> {
+    return post('doDicomFilme', payload)
+  }
+  function doDicomDownloadLink(payload: { cd_atendimento: number, cd_exame: number, cd_filme: number, cd_compressao: number, nr_controle: number, token?: string }): Promise<responseType> {
+    payload.token = token.value
+    return get('www/doDicomDownloadLink', payload)
+  }
+  function carregarViewers(): any[] {
+    const setup = useSystemStore().setup
+    const snMacOs = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    return [
+      { icone: 'mdi-image-area', texto: 'Mobile', acao: 'mobile', exibir: setup.sn_dicomvix_mobile },
+      { icone: 'mdi-image-area-close', texto: 'Jpeg', acao: 'jpeg', exibir: setup.sn_dicomvix_filme },
+      { icone: 'mdi-image-area-close', texto: 'Dicom (Java)', acao: 'weasis', exibir: setup.sn_dicomvix_dicom },
+      { icone: 'mdi-image-area-close', texto: 'Dicom (Web)', acao: 'ohif', exibir: setup.sn_dicomvix_dicom },
+      { icone: 'mdi-image-area-close', texto: 'Dicom (Radiant)', acao: 'radiant', exibir: setup.sn_dicomvix_dicom },
+      { icone: 'mdi-image-area', texto: 'DicomVix Mac', acao: 'osirix', exibir: snMacOs && setup.sn_dicomvix_wado },
+      { icone: 'mdi-image-area', texto: 'DicomVix Mac Open', acao: 'osirix-open', exibir: snMacOs && setup.sn_dicomvix_wado },
+      { icone: 'mdi-image-area', texto: 'DicomVix Mac Click', acao: 'osirix-onclick', exibir: snMacOs && setup.sn_dicomvix_wado }
+    ]
+  }
+  async function doFuncionarioAcesso(payload: string): Promise<boolean> {
+    return (await (post('doFuncionarioAcesso', { cd_funcionario: userId.id, ds_form: payload }))).data.length
+  }
+  async function doLaudoModeloChave(cd_modelo: number, tipo?: string): Promise<responseType> {
+    const response = await post('doLaudoModeloChave', { cd_modelo })
+    if (response.data.length) {
+      return response
+    } else if (tipo === 'texto') {
+      useSystemStore().showError('Modelo sem texto chave !')
+    }
+  }
+  function doLaudoModeloChaveLista(cd_chave: number): Promise<responseType> {
+    return post('doLaudoModeloChaveLista', { cd_chave })
+  }
+  function doLaudoExternoLista(cd_exame: number): Promise<responseType> {
+    return post('doLaudoExternoLista', { cd_exame })
   }
 
   return {
@@ -71,9 +263,42 @@ export const useLaudo = () => {
     getModalidades,
     getEmpresas,
     getMedicos,
+    validarCertificado,
+    doMedicoToken,
     doLaudoAbrir,
     doLaudoGravar,
-    validarCertificado,
+    doLaudoDados,
+    doLaudoAgrupar,
+    doLaudoRevisao,
+    doLaudoSair,
+    doLaudoCancelar,
+    doLaudoFiltroCancela,
+    doLaudoAssinar,
+    doLaudoAuditar,
+    doLaudoFiltroTipo,
+    doLaudoFiltroRevisao,
+    doLaudoProximo,
+    doModeloLayout,
+    doModeloAbrir,
+    carregarModelo,
+    doModeloLista,
+    doAchadoLista,
+    doComplementoLista,
+    autoTexto,
+    doLaudoFiltroTexto,
+    doLaudoPesquisa,
+    doLaudoLista,
+    doAchadoGravar,
+    doComplementoGravar,
+    doDicomCompressao,
+    doLaudoVisualizar,
+    doDicomFilme,
+    doDicomDownloadLink,
+    carregarViewers,
+    doFuncionarioAcesso,
+    doLaudoModeloChave,
+    doLaudoModeloChaveLista,
+    doLaudoExternoLista,
     ...useBaseStore('/laudo/laudo')
   }
 }

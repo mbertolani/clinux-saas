@@ -7,14 +7,14 @@ definePageMeta({
 const fields = [{
   name: 'username',
   type: 'text',
-  value: 'root',
+  // value: 'root',
   label: 'Usuário',
   placeholder: 'Nome do Usuário',
   required: true
 }, {
   name: 'password',
   label: 'Senha',
-  value: '1523Be25',
+  // value: '1523Be25',
   type: 'password',
   placeholder: 'Digite sua senha',
   icon: 'i-heroicons-lock-closed',
@@ -28,27 +28,27 @@ const validate = (state: any) => {
   return errors
 }
 
-const socialAction = async (action: string) => {
-  console.log('action', action)
-  // await signIn(action, { redirect: false })
-}
+// const socialAction = async (action: string) => {
+//   console.log('action', action)
+//   await signIn(action, { redirect: false })
+// }
 
-const providers = [{
-  label: 'Continue with GitHub',
-  icon: 'i-simple-icons-github',
-  color: 'white' as const,
-  click: () => {
-    socialAction('github')
-  }
-},
-{
-  label: 'Continue with Google',
-  icon: 'i-simple-icons-google',
-  color: 'white' as const,
-  click: () => {
-    socialAction('google')
-  }
-}]
+// const providers = [{
+//   label: 'Continue with GitHub',
+//   icon: 'i-simple-icons-github',
+//   color: 'white' as const,
+//   click: () => {
+//     socialAction('github')
+//   }
+// },
+// {
+//   label: 'Continue with Google',
+//   icon: 'i-simple-icons-google',
+//   color: 'white' as const,
+//   click: () => {
+//     socialAction('google')
+//   }
+// }]
 
 const { signIn } = useAuth()
 const { apiUrl } = useRouterStore()
@@ -56,7 +56,6 @@ const system = useSystemStore()
 const { setup, logo } = storeToRefs(system)
 const { loadLogo, loadSetup } = system
 const loading = ref(false)
-await loadSetup()
 
 const onSubmit = async (form: any) => {
   try {
@@ -72,12 +71,17 @@ const onSubmit = async (form: any) => {
     loading.value = false
   }
 }
-const imageLogo = computed(() => {
-  return logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
-})
+const imageLogo = ref(null)
+// const imageLogo = computed(() => {
+//   return logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
+// })
+// console.log('login setup apiUrl', apiUrl)
 
 onMounted(async () => {
+  // console.log('login mounted apiUrl', apiUrl)
+  await loadSetup()
   await loadLogo()
+  imageLogo.value = logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
 })
 </script>
 
@@ -95,7 +99,6 @@ onMounted(async () => {
       ref="formRef"
       :fields="fields"
       :validate="validate"
-      :providers="providers"
       :title="setup?.ds_dicomvix_title"
       align="top"
       icon="i-heroicons-lock-closed"

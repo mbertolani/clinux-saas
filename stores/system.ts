@@ -25,40 +25,42 @@ export const useSystemStore = defineStore('system', () => {
   const propsDialog = ref(initDialog)
 
   const showError = (message: string) => {
-    console.log('showError', message)
     toast.add({
       title: 'Erro',
       color: 'red',
-      description: message
+      description: message,
+      icon: 'i-heroicons-exclamation-triangle'
     })
   }
   const showMessage = (message?: string) => {
     toast.add({
       title: 'Aviso',
       color: 'green',
-      description: message || 'Operação realizada com sucesso'
+      description: message || 'Operação realizada com sucesso',
+      icon: 'i-heroicons-check-circle'
     })
   }
 
-  const getAll = async () => {
-    await useAsyncData('system', async () => {
-      const [_setup, _logo, _icon] = await Promise.all([
-        useNuxtApp().$api('/setup/data'),
-        useNuxtApp().$api('/setup/logo'),
-        useNuxtApp().$api('/setup/icon')
-      ])
-      setup.value = _setup[0]
-      logo.value = _logo
-      icon.value = _icon
-      return { _setup, _logo, _icon }
-    })
-  }
+  // const getAll = async () => {
+  //   await useAsyncData('system', async () => {
+  //     const [_setup, _logo, _icon] = await Promise.all([
+  //       useNuxtApp().$api('/setup/data'),
+  //       useNuxtApp().$api('/setup/logo'),
+  //       useNuxtApp().$api('/setup/icon')
+  //     ])
+  //     setup.value = _setup[0]
+  //     logo.value = _logo
+  //     icon.value = _icon
+  //     return { _setup, _logo, _icon }
+  //   })
+  // }
 
   const loadLogo = async () => {
     try {
       // loading.value = true
       // const { data: response } = await useAPI('/setup/logo')
       const response = await useNuxtApp().$api('/setup/logo')
+      // const { data } = await useAPI('/setup/logo', { method: 'GET', default: () => null })
       logo.value = response
     } catch (error) {
       showError(error.response?._data.error || 'Não foi possível conectar ao servidor')
@@ -69,7 +71,7 @@ export const useSystemStore = defineStore('system', () => {
 
   const changeTheme = (primary, gray) => {
     // const config = useAppConfig()
-    console.log('config', primary, gray)
+    console.log('changeTheme', primary, gray)
     // config.ui.primary = primary
     // config.ui.gray = gray
   }
@@ -126,7 +128,7 @@ export const useSystemStore = defineStore('system', () => {
     loadSetup,
     loadMenu,
     loadLogo,
-    getAll,
+    // getAll,
     showError,
     showMessage,
     showDialog,
