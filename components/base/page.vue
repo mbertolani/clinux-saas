@@ -23,6 +23,11 @@ const props = defineProps({
   filter: {
     type: Object,
     required: false
+  },
+  appendColumnDefs: {
+    type: Array,
+    required: false,
+    default: () => []
   }
 })
 
@@ -60,7 +65,7 @@ if (!props.filter) {
     api.getMenu()
   ])
 }
-
+columnDefs.value = columnDefs.value.concat(props.appendColumnDefs)
 menu.value = menu.value.map((item) => {
   const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
   if (actionItem) {

@@ -63,8 +63,8 @@ export interface Client {
 }
 export interface User {
   id: number
-  idLeo: number
-  idMedico: number
+  idleo: number
+  idmedico: number
   name: string
   email: string
   role: userType

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor } from '#components'
+import { BaseEditor, LaudoAssinado } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -109,10 +109,46 @@ const toolBarItens = [
   }
 ]
 const toolBarClick = (args) => { // EmitType<(ClickEventArgs)>
-  if (args.item.id === 'close') {
-    closeEditor()
-  } else if (args.item.id === 'save') {
-    salvarLaudo()
+  switch (args.item.id) {
+    case 'close':
+      closeEditor()
+      break
+    case 'save':
+      salvarLaudo()
+      break
+    case 'Leo':
+      console.log('Leo')
+      break
+    case 'imagem':
+      console.log('imagem')
+      break
+    case 'modelo':
+      console.log('modelo')
+      break
+    case 'pendencia':
+      console.log('pendencia')
+      break
+    case 'achado':
+      console.log('achado')
+      break
+    case 'anexo':
+      console.log('anexo')
+      break
+    case 'dicionario':
+      console.log('dicionario')
+      break
+    case 'revisar':
+      console.log('revisar')
+      break
+    case 'assinar':
+      buttonAssinado()
+      break
+    case 'proximo':
+      console.log('proximo')
+      break
+    case 'imprimir':
+      console.log('imprimir')
+      break
   }
 }
 
@@ -130,8 +166,8 @@ const idEditor = ref(0)
 const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
-const { userId } = useRouterStore()
-// const modal = useModal()
+const { user } = useRouterStore()
+const modal = useModal()
 const openForm = (codigo?: number) => {
   abrirLaudo(codigo)
 }
@@ -143,7 +179,7 @@ const closeEditor = async () => {
 }
 const abrirLaudo = async (id: number) => {
   if (!id) return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: userId.id }) as any
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: user.idmedico }) as any
   if (response.error) return
   response.data
     ? apiEditor.value.load(atob(response.data))
@@ -152,7 +188,7 @@ const abrirLaudo = async (id: number) => {
 }
 const salvarLaudo = async () => {
   const texto = await apiEditor.value.save()
-  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: userId.id, bb_html: texto })
+  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: texto })
   if (!response.error) {
     useSystemStore().showMessage()
     closeEditor()
@@ -185,8 +221,39 @@ const autoTexto = (payload: any) => {
     useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
   }
 }
+const buttonAssinado = async () => {
+  const selectedNode = apiPage.value.getSelectedNodes()[0]
+  if (!selectedNode) {
+    showError('Nenhum registro selecionado')
+    return
+  }
+  const { cd_atendimento, cd_exame } = selectedNode.data
+  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico }) // cd_atendimento: 1723321, cd_exame: 12834
+  // const data = await convertToBase64Image(response.data as Blob)
+  if (response.data)
+    modal.open(LaudoAssinado, {
+      src: URL.createObjectURL(response.data),
+      onClose() {
+        modal.close()
+      }
+    })
+}
 // const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
 // console.log(response)
+const appendColumnDefs = [
+  {
+    field: 'Sinalizadores',
+    width: 200,
+    pinned: 'right',
+    cellRenderer: (params) => {
+      const achado = `<i class="i-heroicons-magnifying-glass-plus" style="color: ${params.data?.ds_achado ? 'orange' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Achado Crítico"></i>`
+      const urgencia = `<i class="i-heroicons-bell-alert" style="color: ${params.data?.sn_urgencia ? 'red' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Urgência"></i>`
+      const imagem = `<i class="i-heroicons-user" style="color: ${params.data?.sn_imagem ? 'green' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Imagem"></i>`
+      const complemento = `<i class="i-heroicons-receipt-refund" style="color: ${params.data?.ds_complemento ? 'cyan' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Complemento"></i>`
+      return achado + urgencia + imagem + complemento
+    }
+  }
+]
 </script>
 
 <template>
@@ -205,6 +272,7 @@ const autoTexto = (payload: any) => {
       ref="apiPage"
       :header="{ title: 'Laudos', icon: 'mdi:text-box-outline' }"
       :controller
+      :append-column-defs
       :action-menu
       :filter="modelFilter"
       @open-form="openForm"
