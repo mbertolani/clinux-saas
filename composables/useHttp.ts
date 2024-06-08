@@ -56,6 +56,7 @@ export const useHttp = async (
     } else {
       // Throw an error with status code and message
       const res = await response.json()
+      data = null
       error = res
       success = false
     }

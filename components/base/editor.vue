@@ -3,6 +3,7 @@ import type { DocumentEditor, DocumentEditorContainer } from '@syncfusion/ej2-vu
 import { registerLicense } from '@syncfusion/ej2-base'
 import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
 import { ptBr } from '~/utils/editor'
+// import { useLaudo } from '~/composables/laudo/useLaudo'
 
 registerLicense('Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM=')
 // useRuntimeConfig().public.syncfusionKey
@@ -29,7 +30,7 @@ export default {
       required: false
     }
   },
-  emits: ['load', 'save', 'close'],
+  emits: ['load', 'save', 'close', 'texto'],
   data() {
     return {
       // serviceUrl: 'http://localhost:6002/api/documenteditor/'
@@ -50,6 +51,7 @@ export default {
     this.editor.defaultLocale = ptBr
     this.editor.locale = 'pt-BR'
     this.editor.enableLocalPaste = false
+    this.editor.keyDown = this.keyDown
     this.$emit('load', this)
     this.setToolBar()
     window.addEventListener('resize', this.updateContainerSize)
@@ -164,6 +166,18 @@ export default {
           console.log('CustomClose')
           this.$emit('close', this)
         }
+      }
+    },
+    keyDown({ event, isHandled }) {
+      const keyActions = {
+        // å: () => event.altKey && dispatch('iniciarReconhecimento'),
+        // a: () => event.altKey && dispatch('iniciarReconhecimento'),
+        // f10: () => dispatch('iniciarReconhecimento'),
+        f3: () => this.$emit('texto', { event, isHandled })
+      }
+      const key = event.key.toLowerCase()
+      if (keyActions[key]) {
+        keyActions[key]()
       }
     }
   }

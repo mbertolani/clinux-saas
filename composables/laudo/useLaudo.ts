@@ -2,10 +2,13 @@ import { useModalidade } from '../gerencial/useModalidade'
 import { useMedico } from '../gerencial/useMedico'
 import { useEmpresa } from '../gerencial/useEmpresa'
 
+type responseType = { data: any, error: string }
 export const useLaudo = () => {
   const baseUrl = useRouterStore().apiUrl
   const userId = useRouterStore().user
   const { token } = useAuth()
+  const setup = useSystemStore().setup
+  const snMacOs = true
 
   async function getMedicos(id: number) {
     return getFieldList(await useMedico().api.find('modalidade', { cd_modalidade: id }))
@@ -41,7 +44,14 @@ export const useLaudo = () => {
       error: response.error
     }
   }
-  type responseType = { data: any, error: string }
+  async function Post(url: string, body?: object): Promise<responseType> {
+    const response = await useHttp(`${baseUrl}/${url}`, { method: 'post', body, fileUpload: false })
+    console.log('Post', url, body, response)
+    return {
+      data: response.data,
+      error: response.error
+    }
+  }
   async function doLaudoAbrir(payload: { cd_exame: number, cd_medico: number }): Promise<{ data: string, error: string }> {
     const response = await post('doLaudoAbrir', payload)
     return {
@@ -225,8 +235,6 @@ export const useLaudo = () => {
     return get('www/doDicomDownloadLink', payload)
   }
   function carregarViewers(): any[] {
-    const setup = useSystemStore().setup
-    const snMacOs = navigator.platform.toUpperCase().indexOf('MAC') >= 0
     return [
       { icone: 'mdi-image-area', texto: 'Mobile', acao: 'mobile', exibir: setup.sn_dicomvix_mobile },
       { icone: 'mdi-image-area-close', texto: 'Jpeg', acao: 'jpeg', exibir: setup.sn_dicomvix_filme },
@@ -236,7 +244,7 @@ export const useLaudo = () => {
       { icone: 'mdi-image-area', texto: 'DicomVix Mac', acao: 'osirix', exibir: snMacOs && setup.sn_dicomvix_wado },
       { icone: 'mdi-image-area', texto: 'DicomVix Mac Open', acao: 'osirix-open', exibir: snMacOs && setup.sn_dicomvix_wado },
       { icone: 'mdi-image-area', texto: 'DicomVix Mac Click', acao: 'osirix-onclick', exibir: snMacOs && setup.sn_dicomvix_wado }
-    ]
+    ].filter(item => item.exibir)
   }
   async function doFuncionarioAcesso(payload: string): Promise<boolean> {
     return (await (post('doFuncionarioAcesso', { cd_funcionario: userId.id, ds_form: payload }))).data.length
@@ -255,8 +263,112 @@ export const useLaudo = () => {
   function doLaudoExternoLista(cd_exame: number): Promise<responseType> {
     return post('doLaudoExternoLista', { cd_exame })
   }
-
+  // imagem.js
+  function carregarViewer(): any[] {
+    return [
+      { icone: 'mdi-image-area', texto: 'Mobile', acao: 'mobile', ativo: setup.sn_dicomvix_mobile },
+      { icone: 'mdi-image-area', texto: 'Osirix', acao: 'osirix', ativo: snMacOs && setup.sn_dicomvix_wado },
+      { icone: 'mdi-image-area', texto: 'Osirix Open', acao: 'osirix-open', ativo: snMacOs && setup.sn_dicomvix_wado },
+      { icone: 'mdi-image-area', texto: 'Osirix Click', acao: 'osirix-onclick', ativo: snMacOs && setup.sn_dicomvix_wado },
+      { icone: 'mdi-image-area-close', texto: 'Dicom (Java)', acao: 'weasis', ativo: setup.sn_agenda_dicom },
+      { icone: 'mdi-image-area-close', texto: 'Dicom (Web)', acao: 'ohif', ativo: setup.sn_agenda_dicom },
+      { icone: 'mdi-image-area-close', texto: 'Jpeg', acao: 'jpeg', ativo: setup.sn_agenda_imagem }
+    ].filter(item => item.ativo)
+  }
+  function downloadRadiant(cd_atendimento: number, cd_exame?: number): Promise<responseType> {
+    return post('doJsonRadiant', { cd_atendimento, cd_exame })
+  }
+  async function urlOhif(cd_atendimento: number, cd_exame?: number): Promise<string> {
+    const url = setup.ds_dicomvix_ohif || 'https://pacsviewer.clinux.com.br/local/?json='
+    const cgi = setup.sn_dicomvix_ohif ? 'doJsonDownload' : 'doDicomOhif'
+    const response = await post('doGetToken', { cd_atendimento, cd_exame })
+    return `${url}${baseUrl}/se1/${cgi}?token=${response.data[0]?.token}`
+  }
+  async function urlMobile(cd_atendimento: number, cd_exame?: number): Promise<string> {
+    const url = 'https://mobile.clinux.com.br/?json='
+    const response = await post('doGetToken', { cd_atendimento, cd_exame })
+    return `${url}${baseUrl}/se1/doDicomOhif?token=${response.data[0]?.token}`
+  }
+  async function openWado(): Promise<void> {
+    const response = await post('doWadoLink')
+    if (response.data.length) {
+      const downloadURL = `osirix://?methodName=downloadURL&display=true&URL=tmp/${response.data[0]?.url}`
+      window.open('osirix://?methodName=CloseAllWindows', '_blank')
+      window.open(downloadURL, '_blank')
+    }
+  }
+  function clickOsirix(): Promise<responseType> {
+    return post('')
+  }
+  function openOsirix(): Promise<responseType> {
+    return post('')
+  }
+  function openWeasis(): Promise<responseType> {
+    return post('')
+  }
+  function visualizadorDicom(): Promise<responseType> {
+    return post('')
+  }
+  function doDicomSerie(): Promise<responseType> {
+    return post('')
+  }
+  // editor.js
+  async function execMedico(payload: { cd_atendimento: number, cd_medico?: number, cd_sala?: number, cd_modalidade?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acMedico', payload)
+  }
+  async function execRevisor(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acRevisor', payload)
+  }
+  async function execAuditor(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acAuditor', payload)
+  }
+  async function execProcedimento(payload: { cd_exame: number, cd_procedimento?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acProcedimento', payload)
+  }
+  async function execCancelar(payload: { cd_exame: number, cd_motivo?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acCancelar', payload)
+  }
+  async function execAuditar(payload: { cd_atendimento: number, cd_auditoria?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acAuditar', payload)
+  }
+  async function execAchado(payload: { cd_exame: number, cd_achado?: number, bb_achado?: string }): Promise<responseType> {
+    payload.bb_achado = payload.bb_achado ? btoa(payload.bb_achado) : ''
+    return await Post('laudo/laudo/exec/acAchado', payload)
+  }
+  async function execPendencia(payload: { cd_atendimento: number, cd_complemento?: number, bb_complemento?: string }): Promise<responseType> {
+    payload.bb_complemento = payload.bb_complemento ? btoa(payload.bb_complemento) : ''
+    return await Post('laudo/laudo/exec/acPendencia', payload)
+  }
+  async function execUrgencia(payload: { cd_atendimento: number, cd_urgente?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acUrgencia', payload)
+  }
+  async function bloquearLayout(): Promise<boolean> {
+    const response = await post('doFuncionarioAcesso', { cd_funcionario: userId, ds_form: 'ATE_LAUDO_EXE_CABECALHO' })
+    return response.data.length > 0
+  }
   return {
+    bloquearLayout,
+    execMedico,
+    execRevisor,
+    execAuditor,
+    execProcedimento,
+    execCancelar,
+    execAuditar,
+    execAchado,
+    execPendencia,
+    execUrgencia,
+    //
+    carregarViewer,
+    downloadRadiant,
+    urlOhif,
+    urlMobile,
+    openWado,
+    clickOsirix,
+    openOsirix,
+    openWeasis,
+    visualizadorDicom,
+    doDicomSerie,
+    //
     getModalidade,
     getEmpresa,
     getMedico,

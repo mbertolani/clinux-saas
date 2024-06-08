@@ -173,6 +173,20 @@ const apiFilter = ref(null)
 const filtrar = async () => {
   apiPage.value.applyFilter()
 }
+
+const autoTexto = (payload: any) => {
+  payload.event.preventDefault()
+  // isHandled = true
+  apiEditor.value.editor().selection.moveToPreviousCharacter()
+  apiEditor.value.editor().selection.selectCurrentWord()
+  const texto = apiEditor.value.editor().selection.text
+  if (texto) {
+    apiEditor.value.editor().search.find(texto, 'WholeWord')
+    useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
+  }
+}
+// const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
+// console.log(response)
 </script>
 
 <template>
@@ -184,6 +198,7 @@ const filtrar = async () => {
         click: toolBarClick
       }"
       @load="loadEditor($event)"
+      @texto="autoTexto"
     />
     <BasePage
       v-show="!idEditor"
