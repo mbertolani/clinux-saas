@@ -25,6 +25,11 @@ export const useGrid = (url?: string) => {
     aggFunc: 'sum'
   }
 
+  const fieldDateTime = {
+    filter: 'agDateColumnFilter',
+    valueFormatter: p => formatDateTime(p.value)
+  }
+
   const fieldDate = {
     filter: 'agDateColumnFilter',
     valueFormatter: p => formatDate(p.value)
@@ -75,7 +80,8 @@ export const useGrid = (url?: string) => {
     ftInteger: 'number',
     ftDate: 'date',
     ftTime: 'text',
-    ftDateTime: 'dateString',
+    // ftDateTime: 'dateString',
+    ftDateTime: 'text',
     ftBoolean: 'boolean',
     ftFloat: 'number',
     ftCurrency: 'number'
@@ -131,6 +137,10 @@ export const useGrid = (url?: string) => {
   //   const parts = inputDate.split('/')
   //   return new Date(parts[2], parts[1] - 1, parts[0])
   // }
+  // 2024-06-08T21:57:41.262Z
+  function formatDateTime(payload: string) {
+    return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
+  }
   function formatTime(payload: string) {
     return payload?.replace(/(\d{2}):(\d{2}):(\d{2})/, '$1:$2')
   }
@@ -182,6 +192,7 @@ export const useGrid = (url?: string) => {
       ...(item.fieldName.includes('ds_telefone') ? fieldFone : {}),
       ...(item.dataType === 'ftFloat' ? fieldCurrency : {}),
       ...(item.dataType === 'ftInteger' ? fieldNumber : {}),
+      ...(item.dataType === 'ftDateTime' ? fieldDateTime : {}),
       ...(item.dataType === 'ftDate' ? fieldDate : {}),
       ...(item.dataType === 'ftTime' ? fieldTime : {})
     }))

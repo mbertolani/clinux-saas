@@ -168,18 +168,19 @@ export const useLaudo = () => {
       error: response.error
     }
   }
-  async function carregarModelo(payload: {
-    cd_exame: number
-    cd_modelo: number
-  }): Promise<responseType> {
+  async function carregarModelo(cd_exame: number, cd_modelo: number): Promise<responseType> {
     const [layout, modelo, chave] = await Promise.all([
-      doModeloLayout(payload.cd_exame),
-      doModeloAbrir(payload.cd_modelo),
-      doLaudoModeloChave(payload.cd_modelo, 'modelo')
+      doModeloLayout(cd_exame),
+      doModeloAbrir(cd_modelo),
+      doLaudoModeloChave(cd_modelo, 'modelo')
     ])
     return {
-      data: { layout: layout.data, modelo: modelo.data, chave: chave.data },
-      error: layout.error || modelo.error || chave.error
+      data: {
+        layout: layout?.data?.length ? layout?.data : null,
+        modelo: modelo?.data?.length ? modelo?.data : null,
+        chave: chave?.data?.length ? chave?.data : null
+      },
+      error: layout?.error || modelo?.error || chave?.error
     }
   }
   function doModeloLista(payload: { cd_exame: number, sn_todos?: boolean, sn_html?: boolean }): Promise<responseType> {

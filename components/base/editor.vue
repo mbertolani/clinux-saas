@@ -67,17 +67,19 @@ export default {
     },
     async load(payload) {
       this.updateContainerSize()
-      const formData = new FormData()
-      formData.append('name', 'laudo.rtf')
-      formData.append('contents', new Blob([payload], { type: 'application/rtf' }))
-      const response = await $fetch('Import', {
-        baseURL: this.serviceUrl,
-        method: 'POST',
-        body: formData
-      }).catch((e) => {
-        console.error(e)
-      })
-      this.editor.open(response as string)
+      // const formData = new FormData()
+      // formData.append('name', 'laudo.rtf')
+      // formData.append('contents', new Blob([payload], { type: 'application/rtf' }))
+      // const response = await $fetch('Import', {
+      //   baseURL: this.serviceUrl,
+      //   method: 'POST',
+      //   body: formData
+      // }).catch((e) => {
+      //   console.error(e)
+      // })
+      const response = await useUseEditor().Import(payload)
+      this.editor.open(response)
+      this.editor.selection.moveToDocumentEnd()
     },
     async save() {
       const response = await this.saveBase()

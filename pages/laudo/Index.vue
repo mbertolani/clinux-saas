@@ -123,14 +123,25 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       console.log('imagem')
       break
     case 'modelo': {
-      console.log('modelo')
       const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value })
-      console.log(response)
       if (!response.error)
         modal.open(ModalSearch, {
           title: 'Modelos de Laudo',
           data: response.data,
-          onClose() {
+          async onSubmit(id) {
+            const response = await useLaudo().carregarModelo(idEditor.value, id)
+            if (!response.error) {
+              apiEditor.value.clear()
+              if (response.data.layout)
+                await apiEditor.value.load(atob(response.data.layout))
+              if (response.data.modelo) {
+                const sfdt = await useUseEditor().Import(atob(response.data.modelo))
+                apiEditor.value.editor.editor.paste(sfdt)
+              }
+            }
+            modal.close()
+          },
+          onCancel() {
             modal.close()
           }
         })
@@ -176,6 +187,10 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'acRevisor',
     action: () => { console.log('Rota') }
+  },
+  {
+    name: 'acAssinado',
+    action: () => { laudoAssinado() }
   }
 ]
 const idEditor = ref(0)
@@ -237,7 +252,7 @@ const autoTexto = (payload: any) => {
     useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
   }
 }
-const buttonAssinado = async () => {
+const laudoAssinado = async () => {
   const selectedNode = apiPage.value.getSelectedNodes()[0]
   if (!selectedNode) {
     showError('Nenhum registro selecionado')
@@ -268,6 +283,11 @@ const appendColumnDefs = [
       const complemento = `<i class="i-heroicons-receipt-refund" style="color: ${params.data?.ds_complemento ? 'cyan' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Complemento"></i>`
       return achado + urgencia + imagem + complemento
     }
+  },
+  {
+    field: 'Laudo',
+    width: 200,
+    pinned: 'left'
   }
 ]
 

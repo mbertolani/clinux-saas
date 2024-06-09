@@ -52,7 +52,7 @@ const abrirModelo = async () => {
 }
 const salvarModelo = async () => {
   const payload = await apiEditor.value.save()
-  const response = await controller.api.update(idEditor.value, { bb_modelo: payload.split(',')[1] })
+  const response = await controller.api.update(idEditor.value, { bb_modelo: payload }) // payload.split(',')[1]
   if (response) {
     useSystemStore().showMessage('Modelo salvo com sucesso')
     closeEditor()
