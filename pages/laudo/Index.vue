@@ -122,30 +122,8 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
     case 'imagem':
       console.log('imagem')
       break
-    case 'modelo': {
-      const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value })
-      if (!response.error)
-        modal.open(ModalSearch, {
-          title: 'Modelos de Laudo',
-          data: response.data,
-          async onSubmit(id) {
-            const response = await useLaudo().carregarModelo(idEditor.value, id)
-            if (!response.error) {
-              apiEditor.value.clear()
-              if (response.data.layout)
-                await apiEditor.value.load(atob(response.data.layout))
-              if (response.data.modelo) {
-                const sfdt = await useUseEditor().Import(atob(response.data.modelo))
-                apiEditor.value.editor.editor.paste(sfdt)
-              }
-            }
-            modal.close()
-          },
-          onCancel() {
-            modal.close()
-          }
-        })
-    }
+    case 'modelo':
+      selecionarModelo()
       break
     case 'pendencia':
       console.log('pendencia')
@@ -191,6 +169,10 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'acAssinado',
     action: () => { laudoAssinado() }
+  },
+  {
+    name: 'acProcedimento',
+    action: () => { editarProcedimento() }
   }
 ]
 const idEditor = ref(0)
@@ -252,13 +234,21 @@ const autoTexto = (payload: any) => {
     useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
   }
 }
-const laudoAssinado = async () => {
+const selectedNode = () => {
   const selectedNode = apiPage.value.getSelectedNodes()[0]
   if (!selectedNode) {
-    showError('Nenhum registro selecionado')
+    showError('Nenhum registro selecionado !')
     return
   }
-  const { cd_atendimento, cd_exame } = selectedNode.data
+  return selectedNode
+}
+const selectedNodeId = () => {
+  return selectedNode()?.id
+}
+const laudoAssinado = async () => {
+  if (!selectedNode())
+    return
+  const { cd_atendimento, cd_exame } = selectedNode().data
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico }) // cd_atendimento: 1723321, cd_exame: 12834
   // const data = await convertToBase64Image(response.data as Blob)
   if (response.data)
@@ -268,6 +258,55 @@ const laudoAssinado = async () => {
         modal.close()
       }
     })
+}
+const selecionarModelo = async () => {
+  if (!selectedNode())
+    return
+  const response = await useLaudo().doModeloLista({ cd_exame: selectedNodeId() })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Modelos de Laudo',
+    data: response.data,
+    async onSubmit(id) {
+      const response = await useLaudo().carregarModelo(idEditor.value, id)
+      if (!response.error) {
+        apiEditor.value.clear()
+        if (response.data.layout)
+          await apiEditor.value.load(atob(response.data.layout))
+        if (response.data.modelo) {
+          const sfdt = await useUseEditor().Import(atob(response.data.modelo))
+          apiEditor.value.editor.editor.paste(sfdt)
+        }
+      }
+      modal.close()
+    },
+    onCancel() {
+      modal.close()
+    }
+  })
+}
+const editarProcedimento = async () => {
+  if (!selectedNode())
+    return
+  const idExame = selectedNodeId()
+  const response = await useLaudo().execProcedimento(idExame)
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Procedimento',
+    data: response.data,
+    async onSubmit(id) {
+      const response = await useLaudo().execProcedimento(idExame, id)
+      if (!response.error) {
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+    // onCancel() {
+    //   modal.close()
+    // }
+  })
 }
 // const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
 // console.log(response)
@@ -283,12 +322,12 @@ const appendColumnDefs = [
       const complemento = `<i class="i-heroicons-receipt-refund" style="color: ${params.data?.ds_complemento ? 'cyan' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Complemento"></i>`
       return achado + urgencia + imagem + complemento
     }
-  },
-  {
-    field: 'Laudo',
-    width: 200,
-    pinned: 'left'
   }
+  // {
+  //   field: 'Laudo',
+  //   width: 200,
+  //   pinned: 'left'
+  // }
 ]
 
 const colorDark = ref()

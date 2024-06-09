@@ -323,8 +323,8 @@ export const useLaudo = () => {
   async function execAuditor(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acAuditor', payload)
   }
-  async function execProcedimento(payload: { cd_exame: number, cd_procedimento?: number }): Promise<responseType> {
-    return await Post('laudo/laudo/exec/acProcedimento', payload)
+  async function execProcedimento(cd_exame: number, cd_procedimento?: number): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acProcedimento', { cd_exame, cd_procedimento })
   }
   async function execCancelar(payload: { cd_exame: number, cd_motivo?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acCancelar', payload)
