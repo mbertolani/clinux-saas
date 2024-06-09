@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAssinado } from '#components'
+import { BaseEditor, LaudoAssinado, ModalSearch } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -108,7 +108,7 @@ const toolBarItens = [
     cssClass: 'e-de-toolbar-btn'
   }
 ]
-const toolBarClick = (args) => { // EmitType<(ClickEventArgs)>
+const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
   switch (args.item.id) {
     case 'close':
       closeEditor()
@@ -122,8 +122,19 @@ const toolBarClick = (args) => { // EmitType<(ClickEventArgs)>
     case 'imagem':
       console.log('imagem')
       break
-    case 'modelo':
+    case 'modelo': {
       console.log('modelo')
+      const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value })
+      console.log(response)
+      if (!response.error)
+        modal.open(ModalSearch, {
+          title: 'Modelos de Laudo',
+          data: response.data,
+          onClose() {
+            modal.close()
+          }
+        })
+    }
       break
     case 'pendencia':
       console.log('pendencia')
@@ -140,8 +151,13 @@ const toolBarClick = (args) => { // EmitType<(ClickEventArgs)>
     case 'revisar':
       console.log('revisar')
       break
-    case 'assinar':
-      buttonAssinado()
+    case 'assinar': {
+      const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: await apiEditor.value.save() })
+      if (response) {
+        useSystemStore().showMessage()
+        closeEditor()
+      }
+    }
       break
     case 'proximo':
       console.log('proximo')

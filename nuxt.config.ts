@@ -111,7 +111,7 @@ export default defineNuxtConfig({
       pages: {
         login: '/login'
       },
-      sessionDataType: { id: 'string', email: 'string', name: 'string', role: 'admin | guest | account' }
+      sessionDataType: { id: 'string', email: 'string', name: 'string', role: 'admin | guest | account', idmedico: 'number', idleo: 'number', certificado: 'boolean' }
     },
     session: {
       // Whether to refresh the session every time the browser window is refocused.
