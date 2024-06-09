@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAssinado, ModalSearch } from '#components'
+import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoPendencia, ModalSearch } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -126,10 +126,10 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       selecionarModelo()
       break
     case 'pendencia':
-      console.log('pendencia')
+      editarPendencia(selectedData()?.cd_atendimento)
       break
     case 'achado':
-      console.log('achado')
+      editarAchado(Number(idEditor.value))
       break
     case 'anexo':
       console.log('anexo')
@@ -179,11 +179,11 @@ const actionMenu: ActionMenuItem[] = [
   },
   {
     name: 'acPendencia',
-    action: () => { editarPendencia() }
+    action: () => { editarPendencia(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acAchado',
-    action: () => { editarAchado() }
+    action: () => { editarAchado(selectedNodeId()) }
   },
   {
     name: 'acAuditar',
@@ -198,7 +198,7 @@ const actionMenu: ActionMenuItem[] = [
     action: () => { laudoAssinado() }
   }
 ]
-const idEditor = ref(0)
+const idEditor = ref<number>(0)
 const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
@@ -267,8 +267,8 @@ const autoTexto = (payload: any) => {
     useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
   }
 }
-const selectedNodeId = () => {
-  return selectedNode()?.id
+const selectedNodeId = (): number => {
+  return Number(selectedNode()?.id)
 }
 const selectedData = () => {
   return selectedNode()?.data
@@ -439,9 +439,31 @@ const cancelarLaudo = async () => {
     }
   })
 }
-const editarPendencia = async () => {
+const editarPendencia = async (id: number) => {
+  if (id)
+    modal.open(LaudoPendencia, {
+      id,
+      async onSubmit(data) {
+        apiPage.value.applyTransaction({ update: data })
+        modal.close()
+      },
+      onClose() {
+        modal.close()
+      }
+    })
 }
-const editarAchado = async () => {
+const editarAchado = async (id: number) => {
+  if (id)
+    modal.open(LaudoAchado, {
+      id,
+      async onSubmit(data) {
+        apiPage.value.applyTransaction({ update: data })
+        modal.close()
+      },
+      onClose() {
+        modal.close()
+      }
+    })
 }
 const editarAuditoria = async () => {
 }
