@@ -32,19 +32,18 @@ const onSubmit = () => {
     ? emit('submit', selected.value.id)
     : emit('cancel')
 }
-// const isSelected = computed(() => {
-//   return selected.value !== 0
-// })
-// defineShortcuts({
-//   enter: {
-//     usingInput: true,
-//     whenever: [isSelected],
-//     handler: () => {
-//       console.log('selected', selected.value)
-//       if (selected.value) emit('submit', selected.value)
-//     }
-//   }
-// })
+const isSelected = computed(() => {
+  return selected.value !== 0
+})
+defineShortcuts({
+  enter: {
+    usingInput: true,
+    whenever: [isSelected],
+    handler: () => {
+      emit('submit', selected.value.id)
+    }
+  }
+})
 const commandPaletteRef = ref()
 </script>
 
@@ -60,7 +59,6 @@ const commandPaletteRef = ref()
       :nullable="false"
       :autoselect="false"
       :groups="[{ key: 'items', commands: commands }]"
-      :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link', padded: false }"
       placeholder="Pesquisar..."
       :empty-state="{ icon: 'i-heroicons-magnifying-glass-20-solid', label: 'Nenhum registro encontrado !', queryLabel: 'Resultado da pesquisa não encontrado !' }"
       :ui="{

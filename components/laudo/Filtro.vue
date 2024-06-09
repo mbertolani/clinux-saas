@@ -20,7 +20,7 @@ defineProps({
   }
 })
 // const { filtro: model } = toRefs(props)
-const { getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useLaudo()
+const { getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades, api } = useLaudo()
 
 const data = reactive({
   cd_modalidade: {
@@ -59,9 +59,31 @@ const data = reactive({
       // if (!search) return []
       // if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
       const id = getNode('cd_modalidade').value
-      if (!id) return []
-      return await getMedicos(Number(id))
+      return id
+        ? await getMedicos(Number(id))
+        : await api.find('medico')
     }
+  },
+  nr_aviso: {
+    options: async () => getFieldList(await api.find('aviso'))
+  },
+  nr_urgente: {
+    options: async () => getFieldList(await api.find('urgente'))
+  },
+  nr_periodo: {
+    options: async () => getFieldList(await api.find('periodo'))
+  },
+  nr_status: {
+    options: async () => getFieldList(await api.find('status'))
+  },
+  nr_fluxo: {
+    options: async () => getFieldList(await api.find('fluxo'))
+  },
+  cd_fila: {
+    options: async () => getFieldList(await api.find('fila'))
+  },
+  nr_edicao: {
+    options: async () => getFieldList(await api.find('edicao'))
   }
 })
 
@@ -72,8 +94,17 @@ const data = reactive({
 //     getNode('cd_medico').props.options = items
 //   })
 // })
-const outerClass = 'md:col-span-2 !mb-0'
+const outerClass = 'md:col-span-2 !mb-2 lg:!mb-0'
+const outerClassTree = 'md:col-span-3 !mb-2 lg:!mb-0'
 const schema: FormKitSchemaDefinition = [
+  {
+    $formkit: 'dropdown',
+    id: 'nr_periodo',
+    name: 'nr_periodo',
+    label: 'Período',
+    bind: '$nr_periodo',
+    outerClass
+  },
   {
     $formkit: 'date',
     name: 'dt_de',
@@ -112,6 +143,7 @@ const schema: FormKitSchemaDefinition = [
     name: 'sa.cd_empresa',
     label: 'Empresa',
     bind: '$cd_empresa',
+    if: 'false',
     selectionRemovable: true,
     outerClass
   },
@@ -123,6 +155,52 @@ const schema: FormKitSchemaDefinition = [
     bind: '$cd_medico',
     selectionRemovable: true,
     outerClass
+  },
+  {
+    $formkit: 'dropdown',
+    id: 'nr_aviso',
+    name: 'ae.nr_aviso',
+    label: 'Aviso',
+    bind: '$nr_aviso',
+    selectionRemovable: true,
+    outerClass
+  },
+  {
+    $formkit: 'dropdown',
+    id: 'nr_urgente',
+    name: 'ae.nr_urgente',
+    label: 'Urgente',
+    bind: '$nr_urgente',
+    selectionRemovable: true,
+    outerClass
+  },
+  {
+    $formkit: 'dropdown',
+    id: 'nr_status',
+    name: 'ae.nr_status',
+    label: 'Status',
+    if: 'true',
+    bind: '$nr_status',
+    selectionRemovable: true,
+    outerClass
+  },
+  {
+    $formkit: 'dropdown',
+    id: 'nr_edicao',
+    name: 'nr_edicao',
+    label: 'Laudo',
+    bind: '$nr_edicao',
+    selectionRemovable: true,
+    outerClass: outerClassTree
+  },
+  {
+    $formkit: 'dropdown',
+    id: 'cd_fila',
+    name: 'cd_fila',
+    label: 'Fila',
+    bind: '$cd_fila',
+    selectionRemovable: true,
+    outerClass: outerClassTree
   }
 ]
 
@@ -155,14 +233,12 @@ const schema: FormKitSchemaDefinition = [
     :actions="false"
     @submit="emit('submit')"
   >
-    <div class="flex items-center justify-left pt-2">
-      <div class="container max-w-screen-lg">
-        <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-          <FormKitSchema
-            :schema
-            :data
-          />
-        </div>
+    <div class="flex justify-left pt-2">
+      <div class="grid gap-x-4 grid-cols-1 lg:grid-cols-12 w-full">
+        <FormKitSchema
+          :schema
+          :data
+        />
       </div>
     </div>
   </FormKit>

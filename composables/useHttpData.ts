@@ -206,7 +206,7 @@ export const useHttpData = (
     return await sendHttp(payload, 'get', generateApiUrl(body))
   }
 
-  const find = async (payload: string, body: any) => {
+  const find = async (payload: string, body?: any) => {
     return await Post(`find/${payload}`, body)
   }
 

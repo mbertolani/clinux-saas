@@ -66,13 +66,13 @@ export const useLaudo = () => {
     bb_html: string
     ds_exame?: string
     sn_provisorio?: boolean
-  }): Promise<{ data: { cd_exame: number, nr_laudo: number }, error: string }> {
-    const response = await post('doLaudoGravar', payload)
-    const { cd_exame, nr_laudo } = response.data[0]
-    return {
-      data: { cd_exame, nr_laudo },
-      error: response.error
-    }
+  }): Promise<responseType> {
+    return await post('doLaudoGravar', payload)
+    // const { cd_exame, nr_laudo } = response.data[0]
+    // return {
+    //   data: { cd_exame, nr_laudo },
+    //   error: response.error
+    // }
   }
   async function doMedicoToken(): Promise<{ data: { token: string, url: string }, error: string }> {
     const response = await post('doMedicoToken')
@@ -135,8 +135,8 @@ export const useLaudo = () => {
     bb_html: string
     ds_revisao?: string
     bb_revisao?: string
-  }): Promise<boolean> {
-    return !(await post('doLaudoAssinar', payload)).error
+  }): Promise<responseType> {
+    return await post('doLaudoAssinar', payload)
   }
   async function doLaudoAuditar(payload: {
     cd_atendimento: number
@@ -323,8 +323,8 @@ export const useLaudo = () => {
   async function execAuditor(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acAuditor', payload)
   }
-  async function execProcedimento(cd_exame: number, cd_procedimento?: number): Promise<responseType> {
-    return await Post('laudo/laudo/exec/acProcedimento', { cd_exame, cd_procedimento })
+  async function execProcedimento(payload: { cd_exame: number, cd_procedimento?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acProcedimento', payload)
   }
   async function execCancelar(payload: { cd_exame: number, cd_motivo?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acCancelar', payload)

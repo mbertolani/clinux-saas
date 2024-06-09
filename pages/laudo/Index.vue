@@ -140,13 +140,8 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
     case 'revisar':
       console.log('revisar')
       break
-    case 'assinar': {
-      const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: await apiEditor.value.save() })
-      if (response) {
-        useSystemStore().showMessage()
-        closeEditor()
-      }
-    }
+    case 'assinar':
+      assinarLaudo()
       break
     case 'proximo':
       console.log('proximo')
@@ -159,20 +154,48 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
 
 const actionMenu: ActionMenuItem[] = [
   {
+    name: 'acProcedimento',
+    action: () => { editarProcedimento() }
+  },
+  {
     name: 'acMedico',
-    action: () => { console.log('Rota') }
+    action: () => { editarMedico() }
   },
   {
     name: 'acRevisor',
-    action: () => { console.log('Rota') }
+    action: () => { editarRevisor() }
+  },
+  {
+    name: 'acAuditor',
+    action: () => { editarAuditor() }
+  },
+  {
+    name: 'acUrgencia',
+    action: () => { editarUrgencia() }
+  },
+  {
+    name: 'acCancelar',
+    action: () => { cancelarLaudo() }
+  },
+  {
+    name: 'acPendencia',
+    action: () => { editarPendencia() }
+  },
+  {
+    name: 'acAchado',
+    action: () => { editarAchado() }
+  },
+  {
+    name: 'acAuditar',
+    action: () => { editarAuditoria() }
   },
   {
     name: 'acAssinado',
     action: () => { laudoAssinado() }
   },
   {
-    name: 'acProcedimento',
-    action: () => { editarProcedimento() }
+    name: 'acDigitado',
+    action: () => { laudoAssinado() }
   }
 ]
 const idEditor = ref(0)
@@ -205,6 +228,15 @@ const salvarLaudo = async () => {
   if (!response.error) {
     useSystemStore().showMessage()
     closeEditor()
+    apiPage.value.applyTransaction({ update: response.data })
+  }
+}
+const assinarLaudo = async () => {
+  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: await apiEditor.value.save() })
+  if (response) {
+    useSystemStore().showMessage()
+    closeEditor()
+    apiPage.value.applyTransaction({ update: response.data })
   }
 }
 const dataAtual = new Date()
@@ -212,6 +244,7 @@ dataAtual.setDate(dataAtual.getDate() - 90)
 const modelFilter = ref({
   'dt_de': useDateFormat(dataAtual, 'YYYY-MM-DD').value,
   'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,
+  'nr_periodo': 1,
   'ae.nr_controle': null,
   'sa.cd_modalidade': null,
   'sa.cd_empresa': null,
@@ -234,6 +267,12 @@ const autoTexto = (payload: any) => {
     useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
   }
 }
+const selectedNodeId = () => {
+  return selectedNode()?.id
+}
+const selectedData = () => {
+  return selectedNode()?.data
+}
 const selectedNode = () => {
   const selectedNode = apiPage.value.getSelectedNodes()[0]
   if (!selectedNode) {
@@ -241,9 +280,6 @@ const selectedNode = () => {
     return
   }
   return selectedNode
-}
-const selectedNodeId = () => {
-  return selectedNode()?.id
 }
 const laudoAssinado = async () => {
   if (!selectedNode())
@@ -262,7 +298,7 @@ const laudoAssinado = async () => {
 const selecionarModelo = async () => {
   if (!selectedNode())
     return
-  const response = await useLaudo().doModeloLista({ cd_exame: selectedNodeId() })
+  const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value })
   if (response.error)
     return
   modal.open(ModalSearch, {
@@ -289,15 +325,15 @@ const selecionarModelo = async () => {
 const editarProcedimento = async () => {
   if (!selectedNode())
     return
-  const idExame = selectedNodeId()
-  const response = await useLaudo().execProcedimento(idExame)
+  const cd_exame = selectedNodeId()
+  const response = await useLaudo().execProcedimento({ cd_exame })
   if (response.error)
     return
   modal.open(ModalSearch, {
     title: 'Alterar Procedimento',
     data: response.data,
-    async onSubmit(id) {
-      const response = await useLaudo().execProcedimento(idExame, id)
+    async onSubmit(cd_procedimento) {
+      const response = await useLaudo().execProcedimento({ cd_exame, cd_procedimento })
       if (!response.error) {
         apiPage.value.applyTransaction({ update: response.data })
         modal.close()
@@ -308,6 +344,108 @@ const editarProcedimento = async () => {
     // }
   })
 }
+const editarMedico = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execMedico({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Médico',
+    data: response.data,
+    async onSubmit(cd_medico) {
+      const response = await useLaudo().execMedico({ cd_atendimento, cd_medico })
+      if (!response.error) {
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+  })
+}
+const editarRevisor = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execRevisor({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Revisor',
+    data: response.data,
+    async onSubmit(cd_medico) {
+      const response = await useLaudo().execRevisor({ cd_atendimento, cd_medico })
+      if (!response.error) {
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+  })
+}
+const editarAuditor = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execAuditor({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Revisor',
+    data: response.data,
+    async onSubmit(cd_medico) {
+      const response = await useLaudo().execAuditor({ cd_atendimento, cd_medico })
+      if (!response.error) {
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+  })
+}
+const editarUrgencia = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execUrgencia({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Revisor',
+    data: response.data,
+    async onSubmit(cd_urgente) {
+      const response = await useLaudo().execUrgencia({ cd_atendimento, cd_urgente })
+      if (!response.error) {
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+  })
+}
+const cancelarLaudo = async () => {
+  if (!selectedNode())
+    return
+  const cd_exame = selectedData().cd_exame
+  const response = await useLaudo().execCancelar({ cd_exame })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Revisor',
+    data: response.data,
+    async onSubmit(cd_motivo) {
+      const response = await useLaudo().execCancelar({ cd_exame, cd_motivo })
+      if (!response.error) {
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+  })
+}
+const editarPendencia = async () => {
+}
+const editarAchado = async () => {
+}
+const editarAuditoria = async () => {
+}
+
 // const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
 // console.log(response)
 const appendColumnDefs = [
@@ -366,7 +504,7 @@ const mergeColumnDefs = {
   ds_urgente: {
     cellStyle: ({ data }) => {
       return {
-        'background-color': data.ds_urgente ? 'yellow' : 'red',
+        'background-color': data.ds_urgente ? '#ff0000' : 'undefined',
         'color': colorDark
       }
     }
