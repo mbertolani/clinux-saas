@@ -28,6 +28,11 @@ const props = defineProps({
     type: Array,
     required: false,
     default: () => []
+  },
+  mergeColumnDefs: {
+    type: Object,
+    required: false,
+    default: () => ({})
   }
 })
 
@@ -66,6 +71,9 @@ if (!props.filter) {
   ])
 }
 columnDefs.value = columnDefs.value.concat(props.appendColumnDefs)
+columnDefs.value = columnDefs.value.map((column) => {
+  return (props.mergeColumnDefs[column.field]) ? Object.assign(column, props.mergeColumnDefs[column.field]) : column
+})
 menu.value = menu.value.map((item) => {
   const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
   if (actionItem) {

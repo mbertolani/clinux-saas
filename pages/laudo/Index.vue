@@ -254,6 +254,71 @@ const appendColumnDefs = [
     }
   }
 ]
+
+const colorDark = ref()
+watch(() => useColorMode().value, (value) => {
+  colorDark.value = value === 'dark' ? 'white' : '#111827'
+})
+
+const mergeColumnDefs = {
+  sn_atrasado: {
+    cellRenderer: (params) => {
+      if (params.data.nr_entrega) {
+        if (params.data.nr_entrega > params.data.nr_atendimento_entrega) {
+          return `<div class="i-heroicons-face-smile" style="color: green; font-size: 24px; margin-top: 4px" title="Sem prazo definido"/>`
+        } else if (
+          params.data.nr_entrega === params.data.nr_atendimento_entrega
+        ) {
+          return `<div class="i-heroicons-face-smile" style="color: yellow; font-size: 24px; margin-top: 4px" title="Sem prazo definido"/>`
+        } else if (params.data.sn_atrasado) {
+          return `<div class="i-heroicons-face-frown" style="color: red; font-size: 24px; margin-top: 4px" title="Sem prazo definido"/>`
+        } else {
+          return `<div class="i-heroicons-clock" style="color: gray; font-size: 24px; margin-top: 4px" title="Sem atraso"/>`
+        }
+      } else {
+        return `<div class="i-heroicons-clock" style="color: gray; font-size: 24px; margin-top: 4px" title="Sem prazo definido"/>`
+      }
+    }
+  },
+  nr_controle: {
+    cellStyle: ({ data }) => {
+      return {
+        'background-color': data?.ds_sla ? '#' + data.ds_sla : 'undefined',
+        'color': colorDark.value
+      }
+    }
+  },
+  ds_urgente: {
+    cellStyle: ({ data }) => {
+      return {
+        'background-color': data.ds_urgente ? 'yellow' : 'red',
+        'color': colorDark
+      }
+    }
+  },
+  nr_entrega: {
+    cellRenderer: (params) => {
+      if (params.data.nr_entrega < 0) {
+        return `${params.data.nr_entrega} dia(s)`
+      } else if ((params.data.nr_entrega || 0) === 0) {
+        return 'Hoje'
+      } else {
+        return params.data.nr_entrega + ' dia(s)'
+      }
+    }
+  },
+  nr_entrega_laudo: {
+    cellRenderer: (params) => {
+      if (params.data.nr_entrega_laudo < 0) {
+        return `${params.data.nr_entrega_laudo} dia(s)`
+      } else if ((params.data.nr_entrega_laudo || 0) === 0) {
+        return 'Imediato'
+      } else {
+        return params.data.nr_entrega_laudo + ' dia(s)'
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -273,6 +338,7 @@ const appendColumnDefs = [
       :header="{ title: 'Laudos', icon: 'mdi:text-box-outline' }"
       :controller
       :append-column-defs
+      :merge-column-defs
       :action-menu
       :filter="modelFilter"
       @open-form="openForm"
