@@ -24,11 +24,11 @@ export const useSystemStore = defineStore('system', () => {
   }
   const propsDialog = ref(initDialog)
 
-  const showError = (message: string) => {
+  const showError = (message?: string) => {
     toast.add({
       title: 'Erro',
       color: 'red',
-      description: message,
+      description: message || 'Nenhum registro selecionado',
       icon: 'i-heroicons-exclamation-triangle'
     })
   }

@@ -230,6 +230,22 @@ export const useHttpData = (
   const getList = async () => {
     return await Get('list')
   }
+  const download = async (id: number, fieldname: string, filename: string) => {
+    const { data, error, success } = await useHttp(`${url}/${id}?fieldname=${fieldname}&filename=${filename}`, {
+      method: 'PUT',
+      fileDownload: true,
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      }
+    })
+
+    // Update the value of status based on the success of the response
+    status.value = success
+    errors.value = error
+    // If the retrieval operation was successful, update the value of item with the response data
+    item.value = success ? data : null
+    return success ? data : error
+  }
 
   return {
     status,
@@ -246,6 +262,7 @@ export const useHttpData = (
     getState,
     getList,
     getView,
-    getMenu
+    getMenu,
+    download
   }
 }

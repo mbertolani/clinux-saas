@@ -350,6 +350,9 @@ export const useLaudo = () => {
   async function execUrgencia(payload: { cd_atendimento: number, cd_urgente?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acUrgencia', payload)
   }
+  async function execProcedencia(payload: { cd_atendimento: number, cd_procedencia?: number }): Promise<responseType> {
+    return await Post('laudo/laudo/exec/acProcedencia', payload)
+  }
   async function bloquearLayout(): Promise<boolean> {
     const response = await post('doFuncionarioAcesso', { cd_funcionario: userId, ds_form: 'ATE_LAUDO_EXE_CABECALHO' })
     return response.data.length > 0
@@ -369,6 +372,7 @@ export const useLaudo = () => {
     execAchado,
     execPendencia,
     execUrgencia,
+    execProcedencia,
     //
     carregarViewer,
     downloadRadiant,

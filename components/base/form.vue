@@ -13,12 +13,12 @@ function onClose() {
   emit('close')
 }
 
-defineShortcuts({
-  escape: {
-    usingInput: true,
-    handler: () => { onClose() }
-  }
-})
+// defineShortcuts({
+//   escape: {
+//     usingInput: true,
+//     handler: () => { onClose() }
+//   }
+// })
 </script>
 
 <template>

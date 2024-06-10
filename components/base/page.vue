@@ -53,6 +53,7 @@ defineExpose({
   },
   applyFilter: () => {
     api.getView(replaceEmptyStringWithNull(props.filter))
+    apiGrid.value?.selectFirst()
   }
 })
 
@@ -90,8 +91,9 @@ menu.value = menu.value.map((item) => {
   return item
 })
 
-const buttonSearch = () => {
-  !props.filter ? api.getAll() : api.getView(replaceEmptyStringWithNull(props.filter))
+const buttonSearch = async () => {
+  !props.filter ? await api.getAll() : await api.getView(replaceEmptyStringWithNull(props.filter))
+  apiGrid.value?.selectFirst()
 }
 const actionEdit = async (id: number) => {
   emit('openForm', id)

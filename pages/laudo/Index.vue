@@ -132,7 +132,7 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       editarAchado(Number(idEditor.value))
       break
     case 'anexo':
-      editarAnexo(Number(idEditor.value))
+      editarAnexo(Number(selectedData()?.cd_atendimento))
       break
     case 'dicionario':
       console.log('dicionario')
@@ -164,6 +164,10 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'acProcedimento',
     action: () => { editarProcedimento() }
+  },
+  {
+    name: 'acProcedencia',
+    action: () => { editarProcedencia() }
   },
   {
     name: 'acMedico',
@@ -293,7 +297,7 @@ const selectedData = () => {
 const selectedNode = () => {
   const selectedNode = apiPage.value.getSelectedNodes()[0]
   if (!selectedNode) {
-    showError('Nenhum registro selecionado !')
+    useSystemStore().showError()
     return
   }
   return selectedNode
@@ -339,6 +343,16 @@ const selecionarModelo = async () => {
     }
   })
 }
+
+const updateNodes = (responses) => {
+  let nodes = []
+  responses.forEach((response) => {
+    if (!response.error)
+      nodes = nodes.concat(response.data)
+  })
+  apiPage.value.applyTransaction({ update: nodes })
+  modal.close()
+}
 const editarProcedimento = async () => {
   if (!selectedNode())
     return
@@ -350,15 +364,10 @@ const editarProcedimento = async () => {
     title: 'Alterar Procedimento',
     data: response.data,
     async onSubmit(cd_procedimento) {
-      const response = await useLaudo().execProcedimento({ cd_exame, cd_procedimento })
-      if (!response.error) {
-        apiPage.value.applyTransaction({ update: response.data })
-        modal.close()
-      }
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execProcedimento({ cd_exame: node.id, cd_procedimento })
+      })))
     }
-    // onCancel() {
-    //   modal.close()
-    // }
   })
 }
 const editarMedico = async () => {
@@ -372,11 +381,14 @@ const editarMedico = async () => {
     title: 'Alterar Médico',
     data: response.data,
     async onSubmit(cd_medico) {
-      const response = await useLaudo().execMedico({ cd_atendimento, cd_medico })
-      if (!response.error) {
-        apiPage.value.applyTransaction({ update: response.data })
-        modal.close()
-      }
+      // const response = await useLaudo().execMedico({ cd_atendimento, cd_medico })
+      // if (!response.error) {
+      //   apiPage.value.applyTransaction({ update: response.data })
+      //   modal.close()
+      // }
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execMedico({ cd_atendimento: node.data.cd_atendimento, cd_medico })
+      })))
     }
   })
 }
@@ -391,11 +403,14 @@ const editarRevisor = async () => {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_medico) {
-      const response = await useLaudo().execRevisor({ cd_atendimento, cd_medico })
-      if (!response.error) {
-        apiPage.value.applyTransaction({ update: response.data })
-        modal.close()
-      }
+      // const response = await useLaudo().execRevisor({ cd_atendimento, cd_medico })
+      // if (!response.error) {
+      //   apiPage.value.applyTransaction({ update: response.data })
+      //   modal.close()
+      // }
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execRevisor({ cd_atendimento: node.data.cd_atendimento, cd_medico })
+      })))
     }
   })
 }
@@ -407,14 +422,17 @@ const editarAuditor = async () => {
   if (response.error)
     return
   modal.open(ModalSearch, {
-    title: 'Alterar Revisor',
+    title: 'Alterar Auditor',
     data: response.data,
     async onSubmit(cd_medico) {
-      const response = await useLaudo().execAuditor({ cd_atendimento, cd_medico })
-      if (!response.error) {
-        apiPage.value.applyTransaction({ update: response.data })
-        modal.close()
-      }
+      // const response = await useLaudo().execAuditor({ cd_atendimento, cd_medico })
+      // if (!response.error) {
+      //   apiPage.value.applyTransaction({ update: response.data })
+      //   modal.close()
+      // }
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execAuditor({ cd_atendimento: node.data.cd_atendimento, cd_medico })
+      })))
     }
   })
 }
@@ -429,11 +447,31 @@ const editarUrgencia = async () => {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_urgente) {
-      const response = await useLaudo().execUrgencia({ cd_atendimento, cd_urgente })
-      if (!response.error) {
-        apiPage.value.applyTransaction({ update: response.data })
-        modal.close()
-      }
+      // const response = await useLaudo().execUrgencia({ cd_atendimento, cd_urgente })
+      // if (!response.error) {
+      //   apiPage.value.applyTransaction({ update: response.data })
+      //   modal.close()
+      // }
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execUrgencia({ cd_atendimento: node.data.cd_atendimento, cd_urgente })
+      })))
+    }
+  })
+}
+const editarProcedencia = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execProcedencia({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalSearch, {
+    title: 'Alterar Procedência',
+    data: response.data,
+    async onSubmit(cd_procedencia) {
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execProcedencia({ cd_atendimento: node.data.cd_atendimento, cd_procedencia })
+      })))
     }
   })
 }
@@ -448,11 +486,14 @@ const cancelarLaudo = async () => {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_motivo) {
-      const response = await useLaudo().execCancelar({ cd_exame, cd_motivo })
-      if (!response.error) {
-        apiPage.value.applyTransaction({ update: response.data })
-        modal.close()
-      }
+      // const response = await useLaudo().execCancelar({ cd_exame, cd_motivo })
+      // if (!response.error) {
+      //   apiPage.value.applyTransaction({ update: response.data })
+      //   modal.close()
+      // }
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
+      })))
     }
   })
 }
@@ -497,12 +538,7 @@ const editarAuditoria = async (id: number) => {
 }
 const editarAnexo = async (id: number) => {
   if (id)
-    modal.open(LaudoAnexo, {
-      id,
-      onClose() {
-        modal.close()
-      }
-    })
+    modal.open(LaudoAnexo, { id })
 }
 const editarChat = async (id: number) => {
   if (id)

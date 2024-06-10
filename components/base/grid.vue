@@ -54,8 +54,12 @@ const applyTransactionDelete = (transaction) => {
 const getSelectedNodes = () => {
   return handleGrid().getSelectedNodes()
 }
+const selectFirst = () => {
+  handleGrid().getDisplayedRowAtIndex(0)?.setSelected(true)
+}
 
 defineExpose({
+  selectFirst,
   applyFilterChanged,
   applyTransaction,
   applyTransactionDelete,
@@ -75,7 +79,7 @@ const getRowId = ({ data }) => Object.values(data)[0]
 
 const onGridReady = async () => {
   await restoreColumnState()
-  handleGrid().getDisplayedRowAtIndex(0)?.setSelected(true)
+  selectFirst()
   handleGrid().closeToolPanel()
 }
 

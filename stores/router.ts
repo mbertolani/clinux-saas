@@ -24,15 +24,16 @@ export const useRouterStore = defineStore({
     },
     async loadClient() {
       const router = useRoute()
+      const client = router.params.client || router.query.id || 'localhost'
 
-      if (this.client && router.params.client === this.clientId)
+      if (this.client && client === this.clientId)
         return this.client?.ds_portal_url
 
-      if (!router.params.client)
+      if (!client)
         return
 
       this.moduleId = router.params.system as ModuleType
-      this.clientId = router.params.client as string
+      this.clientId = client as string
 
       if (this.clientId === 'localhost') {
         this.moduleId = ModuleType.CLINUX
@@ -53,6 +54,11 @@ export const useRouterStore = defineStore({
           console.error(error)
         }
       }
+
+      const config = useRuntimeConfig()
+      // config.public.BaseUrl = this.client?.ds_portal_url
+      config.public.auth.computed.fullBaseUrl = config.public.BaseUrl + '/auth'
+
       return this.client?.ds_portal_url
     }
   },

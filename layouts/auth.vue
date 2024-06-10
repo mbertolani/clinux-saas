@@ -4,7 +4,7 @@ useHead({
     class: 'dark:bg-gray-950'
   }
 })
-const { moduleId } = useRouterStore()
+const { clientId } = useRouterStore()
 </script>
 
 <template>
@@ -15,8 +15,8 @@ const { moduleId } = useRouterStore()
       class="absolute top-16"
     />
     <UBadge
-      v-if="moduleId"
-      :label="moduleId"
+      v-if="clientId"
+      :label="clientId"
       variant="subtle"
       class="absolute top-8"
     />
