@@ -360,7 +360,24 @@ export const useLaudo = () => {
   function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_medico?: number, cd_paciente?: number }): Promise<responseType> {
     return useHttp(`${baseUrl}/laudo/laudo?filename=laudo.pdf&cmd=acAssinado`, { method: 'post', body: payload, fileDownload: true })
   }
+  function doChatLista(payload: { cd_atendimento: number, sn_medico?: boolean }): Promise<responseType> {
+    return post('doChatLista', payload)
+  }
+  function doChatApagar(payload: { cd_codigo: number }): Promise<responseType> {
+    return post('doChatApagar', payload)
+  }
+  async function doChatGravar(payload: { cd_atendimento: number, ds_mensagem: string, sn_medico: boolean }): Promise<responseType> {
+    return await post('doChatGravar', { js_tabela: btoa(JSON.stringify(payload)) })
+  }
+  function doComplementoFim(payload: { cd_atendimento: number, bb_complemento: string }): Promise<responseType> {
+    return post('doComplementoFim', payload)
+  }
   return {
+    doChatLista,
+    doChatGravar,
+    doChatApagar,
+    doComplementoFim,
+    //
     laudoAssinado,
     bloquearLayout,
     execMedico,
