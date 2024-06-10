@@ -24,21 +24,23 @@ export const useRouterStore = defineStore({
     },
     async loadClient() {
       const router = useRoute()
-      const aSystem = router.params.system as ModuleType
-      const aClient = router.params.client as string
 
-      if (this.client && aClient === this.clientId) return this.client?.ds_portal_url
+      if (this.client && router.params.client === this.clientId)
+        return this.client?.ds_portal_url
 
-      this.moduleId = aSystem as ModuleType
-      this.clientId = aClient as string
+      if (!router.params.client)
+        return
 
-      if (!this.clientId || this.clientId === 'localhost') {
+      this.moduleId = router.params.system as ModuleType
+      this.clientId = router.params.client as string
+
+      if (this.clientId === 'localhost') {
         this.moduleId = ModuleType.CLINUX
         this.clientId = 'localhost'
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'FujiFilm',
-          ds_portal_url: process.env.NODE_ENV === 'production' ? 'https://sedi2.zapto.org/dwcluster' : 'https://sedi2.zapto.org/dwcluster',
+          ds_portal_url: 'http://localhost:8082',
           ds_portal_id: 'localhost'
         }
       } else {

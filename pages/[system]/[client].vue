@@ -1,25 +1,16 @@
-<template>
-  <div>
-    {{ status }}
-  </div>
-</template>
-
-<script lang="ts" setup>
+<script setup lang="ts">
 definePageMeta({
   auth: false,
   layout: 'auth'
 })
-
-const status = ref('Carregando...')
-const route = useRoute()
-const routerStore = useRouterStore()
-
-onMounted(async () => {
-  console.log('client router onmounted', route.params.system, route.params.client)
-  if (routerStore.apiUrl) {
-    navigateTo('/login')
-  } else {
-    status.value = `Client ${route.params.client} not found in system ${route.params.system}`
-  }
-})
+const router = useRoute()
+const { loadClient, apiUrl } = useRouterStore()
+await loadClient()
+const config = useRuntimeConfig()
+config.public.auth.computed.fullBaseUrl = apiUrl + '/auth'
+console.log(apiUrl, router.params, config.public.auth)
 </script>
+
+<template>
+  <AppLogin />
+</template>

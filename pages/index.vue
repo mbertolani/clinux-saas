@@ -8,16 +8,9 @@ const page = ref({
     title: 'Synapse EIS/RIS',
     description: 'Enterprise Imaging'
     // links: [
-    //   { label: 'Learn more', href: '/about' }
+    //   { label: 'Learn more', href: '/' }
     // ]
   }
-})
-useSeoMeta({
-  titleTemplate: '',
-  title: page.value.hero.title,
-  ogTitle: page.value.hero.title,
-  description: page.value.hero.description,
-  ogDescription: page.value.hero.description
 })
 definePageMeta({
   auth: true

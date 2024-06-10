@@ -5,8 +5,10 @@ const { signOut, token } = useAuth()
 const logout = () => {
   signOut({ callbackUrl: '/signout' })
 }
-const { moduleId, clientName, user } = useRouterStore()
-const userMedico = computed(() => user.idmedico ? 'primary' : 'secondary')
+const { moduleId, clientId, clientName, user } = useRouterStore()
+const userColor = computed(() => user?.idmedico > 0 ? 'primary' : 'primary')
+const userName = computed(() => user?.name)
+const homeUrl = computed(() => `/${moduleId}/${clientId}`)
 </script>
 
 <template>
@@ -23,15 +25,15 @@ const userMedico = computed(() => user.idmedico ? 'primary' : 'secondary')
 
     <template #right>
       <UAvatar
-        :alt="user.name"
-        :chip-color="userMedico"
+        :alt="userName"
+        :chip-color="userColor"
       />
       <UColorModeButton size="sm" />
       <UButton
         v-if="!token"
         label="Login"
         color="gray"
-        to="/login"
+        :to="homeUrl"
       />
       <UButton
         v-if="token"

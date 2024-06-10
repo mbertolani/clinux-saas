@@ -18,8 +18,8 @@ dependencies:
     specifier: latest
     version: 1.6.5(esbuild@0.21.4)(tailwindcss@3.4.3)(unocss@0.60.4)(vite@5.2.12)(vue@3.4.27)(webpack@5.91.0)
   '@formkit/pro':
-    specifier: latest
-    version: 0.126.6(@formkit/core@1.6.5)(@formkit/inputs@1.6.5)
+    specifier: ^0.126.10
+    version: 0.126.10(@formkit/core@1.6.5)(@formkit/inputs@1.6.5)
   '@formkit/themes':
     specifier: latest
     version: 1.6.5(tailwindcss@3.4.3)(unocss@0.60.4)
@@ -1312,8 +1312,8 @@ packages:
       '@formkit/utils': 1.6.5
     dev: false
 
-  /@formkit/pro@0.126.6(@formkit/core@1.6.5)(@formkit/inputs@1.6.5):
-    resolution: {integrity: sha512-yxXIjsZAzMYIWlthHZootrih61IUp4f+AOc6KZ49oncO70R5puUBxLRx5H3l/QYOffDbqU5Gadex4TGwXoEiMw==}
+  /@formkit/pro@0.126.10(@formkit/core@1.6.5)(@formkit/inputs@1.6.5):
+    resolution: {integrity: sha512-Slegb1LBFCg5MgTWZe4qY75JsJ69YyhSksHH2kX67HqhUYvwzWjDx/Z4iVKIyYJxngY4rXNnu7YZtftb1bMs3w==}
     peerDependencies:
       '@formkit/core': ^1.6.5
       '@formkit/inputs': ^1.6.5

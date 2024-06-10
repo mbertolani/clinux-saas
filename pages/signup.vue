@@ -1,10 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
+  auth: false,
   layout: 'auth'
-})
-
-useSeoMeta({
-  title: 'Sign up'
 })
 
 const fields = [{

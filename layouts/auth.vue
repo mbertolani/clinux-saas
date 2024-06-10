@@ -15,6 +15,7 @@ const { moduleId } = useRouterStore()
       class="absolute top-16"
     />
     <UBadge
+      v-if="moduleId"
       :label="moduleId"
       variant="subtle"
       class="absolute top-8"

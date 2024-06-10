@@ -8,7 +8,8 @@ import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 // const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 
 // const { apiUrl } = useRouterStore()
-
+const route = useRoute()
+console.log('router', route)
 const colorMode = useColorMode()
 const color = ref(null)
 const getColor = () => {
@@ -36,7 +37,7 @@ useHead({
 })
 
 useSeoMeta({
-  titleTemplate: '%s - Nuxt UI Pro - SaaS template',
+  titleTemplate: 'Synapse EIS/RIS - Enterprise Imaging',
   ogImage: 'https://saas-template.nuxt.dev/social-card.png',
   twitterImage: 'https://saas-template.nuxt.dev/social-card.png',
   twitterCard: 'summary_large_image'
