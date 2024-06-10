@@ -102,27 +102,33 @@ export const mainMenu = [
       { label: 'Empresa', to: '/gerencial/empresa', icon: 'i-heroicons-building-office' },
       { label: 'Funcionário', to: '/gerencial/funcionario', icon: 'i-heroicons-identification' },
       { label: 'Médico', to: '/gerencial/medico', icon: 'i-heroicons-user-group' },
-      { label: 'Procedimento', to: '/gerencial/procedimento', icon: 'i-heroicons-hashtag' },
-      { label: 'Modelo', to: '/gerencial/modelo', icon: 'mdi:text-box-outline' }
+      { label: 'Procedimento', to: '/gerencial/procedimento', icon: 'i-heroicons-queue-list' },
+      { label: 'Modelo', to: '/gerencial/modelo', icon: 'i-heroicons-film' }
     ]
   },
   {
     label: 'Atendimento',
     children: [
-      { label: 'Agendamento', to: '/login' },
-      { label: 'Atendimento', to: '/login' },
-      { label: 'Paciente', to: '/login' },
-      { label: 'Médico', to: '/login' },
-      { label: 'Laudo', to: '/laudo/index' }
+      { label: 'Agendamento', to: '/login', disabled: true },
+      { label: 'Atendimento', to: '/login', disabled: true },
+      { label: 'Paciente', to: '/login', disabled: true },
+      { label: 'Médico', to: '/login', disabled: true }
+    ]
+  },
+  {
+    label: 'Laudo',
+    children: [
+      { label: 'Gestão Médica', to: '/laudo/index', icon: 'i-heroicons-document-text' },
+      { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' }
     ]
   },
   {
     label: 'Estoque',
     children: [
-      { label: 'Estoque', to: '/login' },
-      { label: 'Material', to: '/login' },
-      { label: 'Unidade', to: '/login' },
-      { label: 'Compras', to: '/login' }
+      { label: 'Estoque', to: '/login', disabled: true },
+      { label: 'Material', to: '/login', disabled: true },
+      { label: 'Unidade', to: '/login', disabled: true },
+      { label: 'Compras', to: '/login', disabled: true }
     ]
   },
   {

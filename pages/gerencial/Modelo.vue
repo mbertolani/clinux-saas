@@ -60,6 +60,7 @@ const salvarModelo = async () => {
     useSystemStore().showError('Erro ao salvar modelo')
   }
 }
+// mdi:text-box-outline
 </script>
 
 <template>
@@ -73,7 +74,7 @@ const salvarModelo = async () => {
     <BasePage
       v-show="!idEditor"
       ref="apiPage"
-      :header="{ title: 'Modelos', icon: 'mdi:text-box-outline' }"
+      :header="{ title: 'Modelos', icon: 'i-heroicons-film' }"
       :controller
       :action-menu
       @open-form="openForm"

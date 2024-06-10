@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalSearch } from '#components'
+import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalSearch, LaudoAnexo, LaudoChat } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -132,7 +132,7 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       editarAchado(Number(idEditor.value))
       break
     case 'anexo':
-      console.log('anexo')
+      editarAnexo(Number(idEditor.value))
       break
     case 'dicionario':
       console.log('dicionario')
@@ -153,6 +153,14 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
 }
 
 const actionMenu: ActionMenuItem[] = [
+  {
+    name: 'acAnexo',
+    action: () => { editarAnexo(selectedData()?.cd_atendimento) }
+  },
+  {
+    name: 'acChat',
+    action: () => { editarChat(selectedData()?.cd_atendimento) }
+  },
   {
     name: 'acProcedimento',
     action: () => { editarProcedimento() }
@@ -211,11 +219,12 @@ const loadEditor = (editor) => {
   apiEditor.value = editor
 }
 const closeEditor = async () => {
+  useLaudo().doLaudoSair(idEditor.value)
   idEditor.value = 0
 }
 const abrirLaudo = async (id: number) => {
   if (!id) return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: user.idmedico }) as any
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: user.idmedico, cd_fila: modelFilter.value.cd_fila }) as any
   if (response.error) return
   response.data
     ? apiEditor.value.load(atob(response.data))
@@ -248,14 +257,17 @@ const modelFilter = ref({
   'ae.nr_controle': null,
   'sa.cd_modalidade': null,
   'sa.cd_empresa': null,
-  'ae.cd_medico': null
+  'ae.cd_medico': null,
+  'cd_fila': null
 })
 
 const apiFilter = ref(null)
 const filtrar = async () => {
   apiPage.value.applyFilter()
 }
-
+watch(() => modelFilter.value.cd_fila, async () => {
+  apiPage.value.applyFilter()
+})
 const autoTexto = (payload: any) => {
   payload.event.preventDefault()
   // isHandled = true
@@ -478,6 +490,24 @@ const editarAuditoria = async (id: number) => {
       }
     })
 }
+const editarAnexo = async (id: number) => {
+  if (id)
+    modal.open(LaudoAnexo, {
+      id,
+      onClose() {
+        modal.close()
+      }
+    })
+}
+const editarChat = async (id: number) => {
+  if (id)
+    modal.open(LaudoChat, {
+      id,
+      onClose() {
+        modal.close()
+      }
+    })
+}
 
 // const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
 // console.log(response)
@@ -602,7 +632,7 @@ const openImagem = async () => {
     <BasePage
       v-show="!idEditor"
       ref="apiPage"
-      :header="{ title: 'Laudos', icon: 'mdi:text-box-outline' }"
+      :header="{ title: 'Laudos', icon: 'i-heroicons-document-text' }"
       :controller
       :append-column-defs
       :merge-column-defs

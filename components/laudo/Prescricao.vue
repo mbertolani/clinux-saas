@@ -26,7 +26,7 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'dropdown',
     name: 'cd_paciente',
-    label: 'Nome',
+    label: 'Paciente',
     validation: 'required',
     outerClass: 'md:col-span-8'
   },
@@ -35,7 +35,26 @@ const schema: FormKitSchemaDefinition = [
     name: 'bb_observacao',
     label: 'Observação',
     outerClass: 'md:col-span-12'
+  },
+  {
+    $formkit: 'dropdown',
+    name: 'cd_material',
+    label: 'Material',
+    outerClass: 'md:col-span-12'
+  },
+  {
+    $formkit: 'number',
+    name: 'nr_quantidade',
+    label: 'Quantidade',
+    outerClass: 'md:col-span-2'
+  },
+  {
+    $formkit: 'dropdown',
+    name: 'cd_unidade',
+    label: 'Unidade',
+    outerClass: 'md:col-span-10'
   }
+
 ]
 const model = ref({})
 const { api, item } = usePrescricao()
@@ -58,6 +77,12 @@ const onSubmit = async (_data: any) => {
     useSystemStore().showError(JSON.stringify(api.errors.value.error))
   }
 }
+const rowData = ref([])
+const columnDefs = [
+  { field: 'ds_material', headerName: 'Material', width: useGrid().dataTypeWidth('ftString', 64) },
+  { field: 'nr_quantidade', headerName: 'Qte', width: useGrid().dataTypeWidth('ftInteger') },
+  { field: 'ds_unidade', headerName: 'Unidade', width: useGrid().dataTypeWidth('ftString', 32) }
+]
 </script>
 
 <template>
@@ -65,29 +90,38 @@ const onSubmit = async (_data: any) => {
     title="Prescrição"
     @close="emit('close')"
   >
-    <FormKit
-      v-slot="{ state: { dirty } }"
-      v-model="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
-      @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema="schema"
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
+    <template #default>
+      <FormKit
+        v-slot="{ state: { dirty } }"
+        v-model="model"
+        dirty-behavior="compare"
+        type="form"
+        :actions="false"
+        @submit="onSubmit"
+      >
+        <div class="flex items-center justify-center">
+          <div class="container max-w-screen-lg mx-auto">
+            <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
+              <FormKitSchema
+                :schema="schema"
+              />
+              <FormKit
+                type="submit"
+                label="Salvar"
+                :disabled="!dirty"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </FormKit>
+      </FormKit>
+    </template>
+    <template #grade>
+      <BaseGridCore
+        style="height: 200px; width: 100%;"
+        :column-defs
+        :row-data
+      />
+    </template>
   </BaseForm>
 </template>
 

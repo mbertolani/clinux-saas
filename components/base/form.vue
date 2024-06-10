@@ -46,6 +46,9 @@ defineShortcuts({
       </template>
 
       <slot />
+      <div v-if="$slots.grade">
+        <slot name="grade" />
+      </div>
     </UCard>
   </UModal>
 </template>

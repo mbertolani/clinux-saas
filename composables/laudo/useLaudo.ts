@@ -52,7 +52,7 @@ export const useLaudo = () => {
       error: response.error
     }
   }
-  async function doLaudoAbrir(payload: { cd_exame: number, cd_medico: number }): Promise<{ data: string, error: string }> {
+  async function doLaudoAbrir(payload: { cd_exame: number, cd_medico: number, cd_fila: number }): Promise<{ data: string, error: string }> {
     const response = await post('doLaudoAbrir', payload)
     return {
       data: response?.data[0]?.bb_laudo,

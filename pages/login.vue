@@ -7,14 +7,14 @@ definePageMeta({
 const fields = [{
   name: 'username',
   type: 'text',
-  value: 'root',
+  // value: 'root',
   label: 'Usuário',
   placeholder: 'Nome do Usuário',
   required: true
 }, {
   name: 'password',
   label: 'Senha',
-  value: '1523Be25',
+  // value: '1523Be25',
   type: 'password',
   placeholder: 'Digite sua senha',
   icon: 'i-heroicons-lock-closed',

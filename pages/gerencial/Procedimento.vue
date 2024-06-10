@@ -23,7 +23,7 @@ const openForm = (codigo?: number) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title: 'Procedimentos', icon: 'i-heroicons-hashtag' }"
+    :header="{ title: 'Procedimentos', icon: 'i-heroicons-queue-list' }"
     :controller
     :action-menu
     @open-form="openForm"
