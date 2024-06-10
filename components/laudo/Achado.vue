@@ -19,7 +19,7 @@ const response = await useLaudo().execAchado({ cd_exame: props.id })
 const options = getFieldList(response.data)
 const onSubmit = async (_data: any) => {
   // _data.bb_achado = _data.bb_achado ? atob(_data.bb_achado) : null
-  const response = await useLaudo().execAchado({ cd_exame: props.id, cd_achado: _data.cd_achado, bb_achado: _data.bb_achado })
+  const response = await useLaudo().execAchado(_data)
   if (!response.error)
     emit('submit', response.data)
 }
@@ -38,7 +38,7 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'dropdown',
     name: 'cd_achado',
-    label: 'Descrição',
+    label: 'Classificação',
     options: options,
     validation: 'required',
     outerClass: 'md:col-span-4'

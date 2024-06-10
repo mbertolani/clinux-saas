@@ -36,6 +36,14 @@ const props = defineProps({
   }
 })
 
+function replaceEmptyStringWithNull(obj) {
+  for (const key in obj) {
+    if (obj[key] === '') {
+      obj[key] = null
+    }
+  }
+  return obj
+}
 defineExpose({
   getSelectedNodes: () => {
     return apiGrid.value.getSelectedNodes()
@@ -44,7 +52,7 @@ defineExpose({
     apiGrid.value.applyTransaction(transaction)
   },
   applyFilter: () => {
-    api.getView(props.filter)
+    api.getView(replaceEmptyStringWithNull(props.filter))
   }
 })
 
@@ -65,7 +73,7 @@ if (!props.filter) {
 } else {
   await Promise.all([
     loadUser(),
-    api.getView(props.filter),
+    api.getView(replaceEmptyStringWithNull(props.filter)),
     api.getGrid(),
     api.getMenu()
   ])
@@ -83,7 +91,7 @@ menu.value = menu.value.map((item) => {
 })
 
 const buttonSearch = () => {
-  !props.filter ? api.getAll() : api.getView(props.filter)
+  !props.filter ? api.getAll() : api.getView(replaceEmptyStringWithNull(props.filter))
 }
 const actionEdit = async (id: number) => {
   emit('openForm', id)

@@ -103,6 +103,7 @@ export default {
         console.error(e)
       })
       return response as Blob
+      // await useUseEditor().Export(payload as any)
     },
     updateContainerSize() {
       const containerPanel = document.getElementById('documentEditorContainer')
@@ -179,6 +180,28 @@ export default {
       const key = event.key.toLowerCase()
       if (keyActions[key]) {
         keyActions[key]()
+      }
+    },
+    async appendHtml({ state }, payload) {
+      const bb_rtf = window.btoa(payload)
+      try {
+        const sanitizedHtml = await useUseEditor().RtfToHtml({ bb_rtf })
+        console.log('RtfToHtml', sanitizedHtml)
+
+        // if (!sanitizedHtml)         return false
+
+        const sfd = await useUseEditor().SystemClipboard(sanitizedHtml)
+        console.log('SystemClipboard', sfd)
+        return
+
+        state.editor.editor.paste(JSON.stringify(sfd.data))
+        state.editor.selection.selectAll()
+        state.editor.selection.characterFormat.fontColor = '#000000'
+        state.editor.editor.selection.moveToDocumentEnd()
+
+        return true
+      } catch (e) {
+        console.error(e)
       }
     }
   }

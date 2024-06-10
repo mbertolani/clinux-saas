@@ -177,7 +177,7 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'dropdown',
     id: 'nr_status',
-    name: 'ae.nr_status',
+    name: 'nr_status',
     label: 'Status',
     if: 'true',
     bind: '$nr_status',

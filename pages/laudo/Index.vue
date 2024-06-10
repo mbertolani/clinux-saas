@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoPendencia, ModalSearch } from '#components'
+import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalSearch } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -117,10 +117,10 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       salvarLaudo()
       break
     case 'Leo':
-      console.log('Leo')
+      openLeo.value = true
       break
     case 'imagem':
-      console.log('imagem')
+      openImagem()
       break
     case 'modelo':
       selecionarModelo()
@@ -187,7 +187,7 @@ const actionMenu: ActionMenuItem[] = [
   },
   {
     name: 'acAuditar',
-    action: () => { editarAuditoria() }
+    action: () => { editarAuditoria(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acAssinado',
@@ -465,7 +465,18 @@ const editarAchado = async (id: number) => {
       }
     })
 }
-const editarAuditoria = async () => {
+const editarAuditoria = async (id: number) => {
+  if (id)
+    modal.open(LaudoAuditoria, {
+      id,
+      async onSubmit(data) {
+        apiPage.value.applyTransaction({ update: data })
+        modal.close()
+      },
+      onClose() {
+        modal.close()
+      }
+    })
 }
 
 // const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
@@ -554,18 +565,39 @@ const mergeColumnDefs = {
     }
   }
 }
+const openLeo = ref(false)
+const capturarLeo = async (texto) => {
+  // console.log('capturarLeo', texto)
+  const Html = await useUseEditor().RtfToHtml({ bb_rtf: btoa(texto) }) as any
+  // console.log('RtfToHtml', Html)
+  const sfdt = await useUseEditor().Import(Html)
+  // console.log('Import', sfdt)
+  apiEditor.value.editor.editor.paste(sfdt)
+  openLeo.value = false
+}
+const openImagem = async () => {
+  // console.log('openImagem')
+  // https://pacs.sedi2.org.br/explore_v5.asp?path=/All%20Studies/AccessionNumber=$ds_studyuid
+  const response = await useLaudo().doDicomViewer({ cd_exame: idEditor.value })
+  window.open(response.data, '_blank')
+}
 </script>
 
 <template>
   <div>
     <BaseEditor
-      v-show="idEditor"
+      v-show="idEditor && !openLeo"
       :tool-bar="{
         items: toolBarItens,
         click: toolBarClick
       }"
       @load="loadEditor($event)"
       @texto="autoTexto"
+    />
+    <LaudoLeo
+      v-if="openLeo"
+      :token="user.idleo"
+      @laudo-capturado="capturarLeo"
     />
     <BasePage
       v-show="!idEditor"

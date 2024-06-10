@@ -313,6 +313,13 @@ export const useLaudo = () => {
   function doDicomSerie(): Promise<responseType> {
     return post('')
   }
+  async function doDicomViewer(payload: { cd_exame: number }): Promise<responseType> {
+    const response = await post('doDicomViewer', payload) as any
+    return {
+      data: response?.data?.arquivo,
+      error: response.error
+    }
+  }
   // editor.js
   async function execMedico(payload: { cd_atendimento: number, cd_medico?: number, cd_sala?: number, cd_modalidade?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acMedico', payload)
@@ -329,7 +336,7 @@ export const useLaudo = () => {
   async function execCancelar(payload: { cd_exame: number, cd_motivo?: number }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acCancelar', payload)
   }
-  async function execAuditar(payload: { cd_atendimento: number, cd_auditoria?: number }): Promise<responseType> {
+  async function execAuditar(payload: { cd_atendimento: number, cd_auditoria?: number, bb_auditado?: string }): Promise<responseType> {
     return await Post('laudo/laudo/exec/acAuditar', payload)
   }
   async function execAchado(payload: { cd_exame: number, cd_achado?: number, bb_achado?: string }): Promise<responseType> {
@@ -373,6 +380,7 @@ export const useLaudo = () => {
     openWeasis,
     visualizadorDicom,
     doDicomSerie,
+    doDicomViewer,
     //
     getModalidade,
     getEmpresa,

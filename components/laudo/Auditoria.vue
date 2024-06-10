@@ -12,18 +12,18 @@ const props = defineProps({
     required: true
   }
 })
-const response = await useLaudo().execPendencia({ cd_atendimento: props.id })
+const response = await useLaudo().execAuditar({ cd_atendimento: props.id })
 const options = getFieldList(response.data)
 const onSubmit = async (_data: any) => {
-  // _data.bb_complemento = _data.bb_complemento ? atob(_data.bb_complemento) : null
-  const response = await useLaudo().execPendencia(_data)
+  // _data.bb_auditado = _data.bb_auditado ? atob(_data.bb_auditado) : null
+  const response = await useLaudo().execAuditar(_data)
   if (!response.error)
     emit('submit', response.data)
 }
 
 const data = reactive({
-  // cd_complemento: {
-  //   disabled: '$cd_complemento > 0'
+  // cd_auditoria: {
+  //   disabled: '$cd_auditoria > 0'
   // }
 })
 
@@ -34,7 +34,7 @@ const schema: FormKitSchemaDefinition = [
   },
   {
     $formkit: 'dropdown',
-    name: 'cd_complemento',
+    name: 'cd_auditoria',
     label: 'Classificação',
     options: options,
     validation: 'required',
@@ -42,7 +42,7 @@ const schema: FormKitSchemaDefinition = [
   },
   {
     $formkit: 'textarea',
-    name: 'bb_complemento',
+    name: 'bb_auditado',
     label: 'Observação',
     outerClass: 'md:col-span-12'
   }
@@ -52,7 +52,7 @@ const { api, item } = useAtendimento()
 const model = ref(null)
 await api.get(props.id, getFieldName(schema))
 model.value = item.value
-model.value.bb_complemento = model.value.bb_complemento ? atob(model.value.bb_complemento) : null
+model.value.bb_auditado = model.value.bb_auditado ? atob(model.value.bb_auditado) : null
 </script>
 
 <template>
