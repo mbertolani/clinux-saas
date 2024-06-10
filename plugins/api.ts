@@ -3,7 +3,7 @@ export default defineNuxtPlugin(async () => {
   const { loadClient, apiUrl } = useRouterStore()
   await loadClient()
   const api = $fetch.create({
-    baseURL: apiUrl || 'http://localhost:8082',
+    baseURL: apiUrl || 'https://sedi2.zapto.org/dwcluster',
     onRequest({ options }) {
       if (token) {
         const headers = options.headers ||= {}

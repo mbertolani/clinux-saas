@@ -226,9 +226,14 @@ const abrirLaudo = async (id: number) => {
   if (!id) return
   const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: user.idmedico, cd_fila: modelFilter.value.cd_fila }) as any
   if (response.error) return
-  response.data
-    ? apiEditor.value.load(atob(response.data))
-    : apiEditor.value.clear()
+  apiEditor.value.clear()
+  if (response.data) {
+    apiEditor.value.load(atob(response.data))
+  } else {
+    const response = await useLaudo().carregarModelo(id, 0)
+    if (response.data.layout)
+      await apiEditor.value.load(atob(response.data.layout))
+  }
   idEditor.value = id
 }
 const salvarLaudo = async () => {
@@ -607,7 +612,6 @@ const capturarLeo = async (texto) => {
 }
 const openImagem = async () => {
   // console.log('openImagem')
-  // https://pacs.sedi2.org.br/explore_v5.asp?path=/All%20Studies/AccessionNumber=$ds_studyuid
   const response = await useLaudo().doDicomViewer({ cd_exame: idEditor.value })
   window.open(response.data, '_blank')
 }

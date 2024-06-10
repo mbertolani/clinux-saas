@@ -37,8 +37,8 @@ export const useRouterStore = defineStore({
         this.clientId = 'localhost'
         this.client = {
           cd_empresa: 1,
-          ds_empresa: 'Genesis',
-          ds_portal_url: process.env.NODE_ENV === 'production' ? 'https://pacstelelaudo.zapto.org/dwclinux' : 'http://172.18.0.1:8082',
+          ds_empresa: 'FujiFilm',
+          ds_portal_url: process.env.NODE_ENV === 'production' ? 'https://sedi2.zapto.org/dwcluster' : 'https://sedi2.zapto.org/dwcluster',
           ds_portal_id: 'localhost'
         }
       } else {

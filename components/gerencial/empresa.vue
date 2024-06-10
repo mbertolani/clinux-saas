@@ -154,19 +154,19 @@ const schema: FormKitSchemaDefinition = [
     step: 'any',
     outerClass: 'md:col-span-2'
   },
-  {
-    $formkit: 'date',
-    name: 'dt_empresa',
-    id: 'dt_empresa',
-    // popover: true,
-    // value: new Date(),
-    format: 'DD/MM/YYYY',
-    // minDate: new Date(),
-    // validation: '(1000)date_format:DD/MM/YYYY',
-    valueFormat: 'YYYY-MM-DD',
-    label: 'Data',
-    outerClass: 'md:col-span-4'
-  },
+  // {
+  //   $formkit: 'date',
+  //   name: 'dt_empresa',
+  //   id: 'dt_empresa',
+  //   // popover: true,
+  //   // value: new Date(),
+  //   format: 'DD/MM/YYYY',
+  //   // minDate: new Date(),
+  //   // validation: '(1000)date_format:DD/MM/YYYY',
+  //   valueFormat: 'YYYY-MM-DD',
+  //   label: 'Data',
+  //   outerClass: 'md:col-span-4'
+  // },
   {
     $formkit: 'toggle',
     name: 'sn_empresa',

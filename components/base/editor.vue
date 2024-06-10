@@ -64,6 +64,7 @@ export default {
   methods: {
     clear() {
       this.editor.openBlank()
+      this.updateContainerSize()
     },
     async load(payload) {
       this.updateContainerSize()
@@ -181,29 +182,29 @@ export default {
       if (keyActions[key]) {
         keyActions[key]()
       }
-    },
-    async appendHtml({ state }, payload) {
-      const bb_rtf = window.btoa(payload)
-      try {
-        const sanitizedHtml = await useUseEditor().RtfToHtml({ bb_rtf })
-        console.log('RtfToHtml', sanitizedHtml)
-
-        // if (!sanitizedHtml)         return false
-
-        const sfd = await useUseEditor().SystemClipboard(sanitizedHtml)
-        console.log('SystemClipboard', sfd)
-        return
-
-        state.editor.editor.paste(JSON.stringify(sfd.data))
-        state.editor.selection.selectAll()
-        state.editor.selection.characterFormat.fontColor = '#000000'
-        state.editor.editor.selection.moveToDocumentEnd()
-
-        return true
-      } catch (e) {
-        console.error(e)
-      }
     }
+    // async appendHtml({ state }, payload) {
+    //   const bb_rtf = window.btoa(payload)
+    //   try {
+    //     const sanitizedHtml = await useUseEditor().RtfToHtml({ bb_rtf })
+    //     console.log('RtfToHtml', sanitizedHtml)
+
+    //     // if (!sanitizedHtml)         return false
+
+    //     const sfd = await useUseEditor().SystemClipboard(sanitizedHtml)
+    //     console.log('SystemClipboard', sfd)
+    //     return
+
+    //     state.editor.editor.paste(JSON.stringify(sfd.data))
+    //     state.editor.selection.selectAll()
+    //     state.editor.selection.characterFormat.fontColor = '#000000'
+    //     state.editor.editor.selection.moveToDocumentEnd()
+
+    //     return true
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }
   }
 }
 </script>
