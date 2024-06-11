@@ -33,6 +33,10 @@ const props = defineProps({
     type: Object,
     required: false,
     default: () => ({})
+  },
+  actionDelete: {
+    type: Function,
+    required: false
   }
 })
 
@@ -113,6 +117,9 @@ const buttonDelete = async () => {
   if (!apiGrid.value.getSelectedNodes().length) {
     showError('Nenhum registro selecionado')
     return
+  }
+  if (props.actionDelete) {
+    return await props.actionDelete()
   }
   modal.open(ModalDelete, {
     count: apiGrid.value.getSelectedNodes().length,

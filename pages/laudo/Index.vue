@@ -241,7 +241,7 @@ const abrirLaudo = async (id: number) => {
 }
 const salvarLaudo = async () => {
   const texto = await apiEditor.value.save()
-  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: texto })
+  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: texto, ds_exame: selectedNodeIds().join(',') })
   if (!response.error) {
     useSystemStore().showMessage()
     closeEditor()
@@ -285,6 +285,9 @@ const autoTexto = (payload: any) => {
     apiEditor.value.editor().search.find(texto, 'WholeWord')
     useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
   }
+}
+const selectedNodeIds = (): number[] => {
+  return apiPage.value.getSelectedNodes().map(node => Number(node.id))
 }
 const selectedNodeId = (): number => {
   return Number(selectedNode()?.id)
@@ -670,6 +673,7 @@ const openImagem = async () => {
       :merge-column-defs
       :action-menu
       :filter="modelFilter"
+      :action-delete="cancelarLaudo"
       @open-form="openForm"
     >
       <template #filter>

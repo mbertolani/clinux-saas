@@ -41,7 +41,8 @@ export const useRouterStore = defineStore({
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'FujiFilm',
-          ds_portal_url: 'http://192.168.56.1:8282',
+          // ds_portal_url: 'http://192.168.56.1:8282',
+          ds_portal_url: 'http://127.0.0.1:8082',
           ds_portal_id: 'localhost'
         }
       } else {
