@@ -31,15 +31,14 @@ export const useAuthStore = defineStore('auth', {
         const token = useCookie('token') // useCookie new hook in nuxt 3
         token.value = 'Bearer ' + data?.token.bearer // set token to cookie `Bearer ${token}`
         this.authenticated = true // set authenticated  state value to true
-        navigateTo('/')
+        await navigateTo('/')
       }
-      return data
     },
-    signOut() {
+    async signOut() {
       const token = useCookie('token') // useCookie new hook in nuxt 3
       this.authenticated = false // set authenticated  state value to false
       token.value = null // clear the token cookie
-      navigateTo('/signout')
+      await navigateTo('/signout')
     },
     getSession() {
       const { data, success }: any = useHttp('/auth/login', {

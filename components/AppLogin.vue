@@ -55,14 +55,11 @@ const loading = ref(false)
 const onSubmit = async (form: any) => {
   try {
     loading.value = true
-    const response = await signIn(form)
+    await signIn(form)
     // await signIn(
     //   { ...form, api: apiUrl },
     //   { callbackUrl: '/' } // Where the user will be redirected after a successiful login
     // )
-    if (response) {
-      useSystemStore().showMessage('Login efetuado com sucesso')
-    }
   } finally {
     loading.value = false
   }
