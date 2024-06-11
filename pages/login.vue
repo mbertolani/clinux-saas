@@ -1,6 +1,5 @@
 <script setup lang="ts">
 definePageMeta({
-  auth: false,
   layout: 'auth'
 })
 
@@ -50,8 +49,8 @@ const validate = (state: any) => {
 //   }
 // }]
 
-const { signIn } = useAuth()
-const { apiUrl } = useRouterStore()
+const { signIn } = useAuthStore()
+// const { apiUrl } = useRouterStore()
 const system = useSystemStore()
 const { setup, logo } = storeToRefs(system)
 const { loadLogo, loadSetup } = system
@@ -60,10 +59,11 @@ const loading = ref(false)
 const onSubmit = async (form: any) => {
   try {
     loading.value = true
-    await signIn(
-      { ...form, api: apiUrl },
-      { callbackUrl: '/' } // Where the user will be redirected after a successiful login
-    )
+    // await signIn(
+    //   { ...form, api: apiUrl },
+    //   { callbackUrl: '/' } // Where the user will be redirected after a successiful login
+    // )
+    await signIn(form)
     useSystemStore().showMessage('Login efetuado com sucesso')
   } catch (error) {
     useSystemStore().showError(error.response?._data.error)
@@ -88,7 +88,10 @@ onMounted(async () => {
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
 <!-- eslint-disable vue/singleline-html-element-content-newline -->
 <template>
-  <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
+  <UCard
+    v-if="false"
+    class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur"
+  >
     <NuxtImg
       v-if="imageLogo"
       :src="imageLogo"

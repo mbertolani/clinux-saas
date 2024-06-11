@@ -19,7 +19,7 @@ export const useHttp = async (
     fileDownload?: boolean
   } = { method: 'get' }
 ) => {
-  const { token } = useAuth()
+  const { token } = useAuthStore()
   let data: DataResponse = { data: null, meta: null }
   let error = null
   let success = false
@@ -54,13 +54,13 @@ export const useHttp = async (
   try {
     const response = await fetch(url, options)
     // wait for the response to be parsed as JSON
-    if (response.ok) {
+    if (response?.ok) {
       const res = !fileDownload ? await response.json() : await response.blob()
       data = res
       success = true
     } else {
       // Throw an error with status code and message
-      const res = await response.json()
+      const res = response ? await response.json() : { error: 'Erro de conexão com o servidor' }
       data = null
       error = res
       success = false

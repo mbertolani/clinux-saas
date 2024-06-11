@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { mainMenu } from '~/types/system'
 
-const { signOut, token } = useAuth()
+const { signOut, token } = useAuthStore()
 const logout = () => {
-  signOut({ callbackUrl: '/signout' })
+  signOut()
 }
 const { moduleId, clientId, clientName, user } = useRouterStore()
 const userColor = computed(() => user?.idmedico > 0 ? 'primary' : 'primary')

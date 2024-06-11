@@ -97,6 +97,27 @@ const onCellKeyDown = ({ event, api }) => {
   }
 }
 listaAnexos()
+
+// function blobToDataURL(blob) {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader()
+//     reader.onloadend = function () {
+//       resolve(reader.result)
+//     }
+//     reader.onerror = reject
+//     reader.readAsDataURL(blob)
+//   })
+// }
+// function carregarImagens() {
+//   const lista = []
+//   rowData.value.forEach(async (item) => {
+//     const response = await doAnexoDownload(item.cd_documento)
+//     const dataURL = await blobToDataURL(response.stream)
+//     lista.push(dataURL)
+//   })
+//   images.value = lista
+//   console.log('images', images.value)
+// }
 </script>
 
 <template>

@@ -1,8 +1,7 @@
 type responseType = { data: any, error: string }
-const baseUrl = useRouterStore().apiUrl
 export const useAnexo = (id: number) => {
+  const baseUrl = useRouterStore().apiUrl
   const useBase = useBaseStore(`/atendimento/atendimento/${id}/documento`)
-
   async function post(url: string, body?: object): Promise<responseType> {
     const response = await useHttp(`${baseUrl}/se1/${url}`, { method: 'post', body, fileUpload: true })
     console.log('post', url, body, response)

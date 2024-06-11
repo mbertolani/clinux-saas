@@ -41,7 +41,7 @@ export const useRouterStore = defineStore({
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'FujiFilm',
-          ds_portal_url: 'http://localhost:8082',
+          ds_portal_url: 'http://192.168.56.1:8282',
           ds_portal_id: 'localhost'
         }
       } else {
@@ -55,9 +55,9 @@ export const useRouterStore = defineStore({
         }
       }
 
-      const config = useRuntimeConfig()
-      // config.public.BaseUrl = this.client?.ds_portal_url
-      config.public.auth.computed.fullBaseUrl = config.public.BaseUrl + '/auth'
+      // console.log(_1, config.public.auth.computed.fullBaseUrl, config.public.auth.computed.origin)
+      // config.public.auth.computed.fullBaseUrl = this.client?.ds_portal_url + '/auth'
+      // config.public.auth.computed.origin = this.client?.ds_portal_url
 
       return this.client?.ds_portal_url
     }

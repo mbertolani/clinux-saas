@@ -133,27 +133,27 @@ const schema: FormKitSchemaDefinition = [
     label: 'Texto',
     outerClass: 'md:col-span-12'
   },
-  {
-    $formkit: 'currency',
-    name: 'nr_nfe_iss',
-    label: 'Iss (%)',
-    currency: 'BRL',
-    decimals: 2,
-    min: 0,
-    // minDecimals: '2', // nao aceita null, nao aceita digitacao de numero com 2 digitos
-    displayLocale: 'pt-BR',
-    valueFormat: 'number', // string
-    outerClass: 'md:col-span-2'
-  },
-  {
-    $formkit: 'number',
-    name: 'nr_nfe_pis',
-    label: 'Pis (%)',
-    min: 0,
-    number: 'float', // number: integer
-    step: 'any',
-    outerClass: 'md:col-span-2'
-  },
+  // {
+  //   $formkit: 'currency',
+  //   name: 'nr_nfe_iss',
+  //   label: 'Iss (%)',
+  //   currency: 'BRL',
+  //   decimals: 2,
+  //   min: 0,
+  //   // minDecimals: '2', // nao aceita null, nao aceita digitacao de numero com 2 digitos
+  //   displayLocale: 'pt-BR',
+  //   valueFormat: 'number', // string
+  //   outerClass: 'md:col-span-2'
+  // },
+  // {
+  //   $formkit: 'number',
+  //   name: 'nr_nfe_pis',
+  //   label: 'Pis (%)',
+  //   min: 0,
+  //   number: 'float', // number: integer
+  //   step: 'any',
+  //   outerClass: 'md:col-span-2'
+  // },
   // {
   //   $formkit: 'date',
   //   name: 'dt_empresa',
@@ -179,7 +179,7 @@ const schema: FormKitSchemaDefinition = [
     label: 'Matriz ?',
     onValue: true,
     offValue: false,
-    outerClass: 'md:col-span-2 md:items-end inline-flex items-center'
+    outerClass: 'md:col-span-10 md:items-end inline-flex items-center'
   }
 ]
 

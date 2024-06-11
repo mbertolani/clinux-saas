@@ -12,7 +12,7 @@ export const useApiData = async <
 ) => $fetch<T>(url, {
   ...options,
   headers: {
-    Authorization: useAuth().token.value ? useAuth().token.value : '',
+    Authorization: useAuthStore().token.value ? useAuthStore().token.value : '',
     ...options?.headers
   }
 })

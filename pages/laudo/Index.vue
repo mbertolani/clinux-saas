@@ -151,7 +151,6 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       break
   }
 }
-
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acAnexo',
@@ -269,7 +268,6 @@ const modelFilter = ref({
   'ae.cd_medico': null,
   'cd_fila': null
 })
-
 const apiFilter = ref(null)
 const filtrar = async () => {
   apiPage.value.applyFilter()
@@ -343,7 +341,6 @@ const selecionarModelo = async () => {
     }
   })
 }
-
 const updateNodes = (responses) => {
   let nodes = []
   responses.forEach((response) => {
@@ -549,9 +546,6 @@ const editarChat = async (id: number) => {
       }
     })
 }
-
-// const response = await useLaudo().execPendencia({ cd_atendimento: 1 })
-// console.log(response)
 const appendColumnDefs = [
   {
     field: 'Sinalizadores',
@@ -571,12 +565,10 @@ const appendColumnDefs = [
   //   pinned: 'left'
   // }
 ]
-
 const colorDark = ref()
 watch(() => useColorMode().value, (value) => {
   colorDark.value = value === 'dark' ? 'white' : '#111827'
 })
-
 const mergeColumnDefs = {
   sn_atrasado: {
     cellRenderer: (params) => {

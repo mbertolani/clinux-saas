@@ -56,7 +56,6 @@
     "@nuxt/eslint": "^0.3.13",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
-    "@sidebase/nuxt-auth": "latest",
     "eslint": "^8.57.0",
     "nuxt-icon": "^0.6.10",
     "typescript": "^5.4.5",

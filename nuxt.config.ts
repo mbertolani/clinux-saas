@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
-    '@sidebase/nuxt-auth',
+    // '@sidebase/nuxt-auth',
     'nuxt-icon',
     'nuxt-og-image'
     // 'nuxt-security'
@@ -81,7 +81,7 @@ export default defineNuxtConfig({
       syncfusionKey: 'Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM='
       // apiBaseURL: process.env.NODE_ENV === 'production' ? 'https://sedi2.zapto.org/dwcluster' : 'https://sedi2.zapto.org/dwcluster'
     }
-  },
+  }
   // auth: {
   //   isEnabled: true,
   //   baseURL: process.env.AUTH_ORIGIN,
@@ -93,33 +93,34 @@ export default defineNuxtConfig({
   //     addDefaultCallbackUrl: false
   //   }
   // }
-  auth: {
-    isEnabled: true,
-    globalAppMiddleware: {
-      isEnabled: true
-    },
-    baseURL: 'http://localhost:8082/auth', // process.env.NODE_ENV === 'production' ? 'https://sedi2.zapto.org/dwcluster/auth' : 'https://sedi2.zapto.org/dwcluster/auth',
-    provider: {
-      type: 'local',
-      // endpoints: {
-      //   // signIn: { path: '/auth', method: 'post' },
-      //   // getSession: { path: '/user', method: 'post' }
-      // },
-      token: {
-        signInResponseTokenPointer: '/token/bearer'
-      },
-      pages: {
-        login: '/login'
-      },
-      sessionDataType: { id: 'string', email: 'string', name: 'string', role: 'admin | guest | account', idmedico: 'number', idleo: 'number', certificado: 'boolean' }
-    },
-    session: {
-      // Whether to refresh the session every time the browser window is refocused.
-      enableRefreshOnWindowFocus: false,
-      // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
-      enableRefreshPeriodically: 1000 * 60 * 60 // 5 minutes
-    }
-  }
+  // auth: {
+  //   isEnabled: true,
+  //   globalAppMiddleware: {
+  //     isEnabled: true
+  //   },
+  //   // baseURL: 'http://localhost:8082/auth', // process.env.NODE_ENV === 'production' ? 'https://sedi2.zapto.org/dwcluster/auth' : 'https://sedi2.zapto.org/dwcluster/auth',
+  //   baseURL: '/api/auth',
+  //   provider: {
+  //     type: 'local',
+  //     // endpoints: {
+  //     //   // signIn: { path: '/auth', method: 'post' },
+  //     //   // getSession: { path: '/user', method: 'post' }
+  //     // },
+  //     token: {
+  //       signInResponseTokenPointer: '/token/bearer'
+  //     },
+  //     pages: {
+  //       login: '/login'
+  //     },
+  //     sessionDataType: { id: 'string', email: 'string', name: 'string', role: 'admin | guest | account', idmedico: 'number', idleo: 'number', certificado: 'boolean' }
+  //   },
+  //   session: {
+  //     // Whether to refresh the session every time the browser window is refocused.
+  //     enableRefreshOnWindowFocus: false,
+  //     // Whether to refresh the session every `X` milliseconds. Set this to `false` to turn it off. The session will only be refreshed if a session already exists.
+  //     enableRefreshPeriodically: 1000 * 60 * 60 // 5 minutes
+  //   }
+  // }
   // security: {
   //   headers: {
   //     crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp'

@@ -6,7 +6,7 @@ import { useEmpresaStore } from '~/stores/gerencial/empresa'
 import { useFuncionarioStore } from '~/stores/gerencial/funcionario'
 
 const { appConfig } = useAppConfig()
-definePageMeta({ layout: 'default' })
+
 useHead({
   titleTemplate: 'Index page',
   title: (appConfig as { name: string })?.name || 'Nuxt 3 Awesome Starter'

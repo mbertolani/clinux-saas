@@ -1,9 +1,4 @@
 <script setup lang="ts">
-// definePageMeta({
-//   auth: false,
-//   layout: 'auth'
-// })
-
 const fields = [{
   name: 'username',
   type: 'text',
@@ -50,8 +45,8 @@ const validate = (state: any) => {
 //   }
 // }]
 
-const { signIn } = useAuth()
-const { apiUrl } = useRouterStore()
+const { signIn } = useAuthStore()
+// const { apiUrl } = useRouterStore()
 const system = useSystemStore()
 const { setup, logo } = storeToRefs(system)
 const { loadLogo, loadSetup } = system
@@ -60,13 +55,14 @@ const loading = ref(false)
 const onSubmit = async (form: any) => {
   try {
     loading.value = true
-    await signIn(
-      { ...form, api: apiUrl },
-      { callbackUrl: '/' } // Where the user will be redirected after a successiful login
-    )
-    useSystemStore().showMessage('Login efetuado com sucesso')
-  } catch (error) {
-    useSystemStore().showError(error.response?._data.error)
+    const response = await signIn(form)
+    // await signIn(
+    //   { ...form, api: apiUrl },
+    //   { callbackUrl: '/' } // Where the user will be redirected after a successiful login
+    // )
+    if (response) {
+      useSystemStore().showMessage('Login efetuado com sucesso')
+    }
   } finally {
     loading.value = false
   }

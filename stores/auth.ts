@@ -8,14 +8,16 @@ interface UserPayloadInterface {
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    authenticated: false,
-    loading: false
+    authenticated: false
   }),
+  getters: {
+    token() {
+      return useCookie('token')
+    }
+  },
   actions: {
-    authenticateUser({ username, password }: UserPayloadInterface) {
-      // useFetch from nuxt 3
-      console.log('authenticateUser', username, password)
-      const { data, error, success }: any = useHttp('/login/auth', {
+    async signIn({ username, password }: UserPayloadInterface) {
+      const { data, success }: any = await useHttp(useRouterStore().apiUrl + '/auth/login', {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: {
@@ -24,18 +26,30 @@ export const useAuthStore = defineStore('auth', {
         }
       })
       // this.loading = pending
-      console.log('set cookie', data, error, success)
       this.authenticated = success
       if (success) {
         const token = useCookie('token') // useCookie new hook in nuxt 3
-        token.value = data?.value?.token // set token to cookie
+        token.value = 'Bearer ' + data?.token.bearer // set token to cookie `Bearer ${token}`
         this.authenticated = true // set authenticated  state value to true
+        navigateTo('/')
       }
+      return data
     },
-    logUserOut() {
+    signOut() {
       const token = useCookie('token') // useCookie new hook in nuxt 3
       this.authenticated = false // set authenticated  state value to false
       token.value = null // clear the token cookie
+      navigateTo('/signout')
+    },
+    getSession() {
+      const { data, success }: any = useHttp('/auth/login', {
+        method: 'post'
+      })
+      if (success) {
+        this.user = data
+      }
+      console.log('getSession', data, success)
+      return data
     }
   }
 })

@@ -6,7 +6,7 @@ type responseType = { data: any, error: string }
 export const useLaudo = () => {
   const baseUrl = useRouterStore().apiUrl
   const userId = useRouterStore().user
-  const { token } = useAuth()
+  const { token } = useAuthStore()
   const setup = useSystemStore().setup
   const snMacOs = true
 

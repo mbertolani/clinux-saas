@@ -1,11 +1,12 @@
 export default defineNuxtPlugin(async () => {
-  const { token } = useAuth()
+  const token = useCookie('token') // useCookie new hook in nuxt 3
   const { loadClient, apiUrl } = useRouterStore()
   await loadClient()
   const api = $fetch.create({
-    baseURL: apiUrl || 'https://sedi2.zapto.org/dwcluster',
+    // baseURL: apiUrl.value,
     onRequest({ options }) {
-      if (token) {
+      this.baseURL = apiUrl
+      if (token.value) {
         const headers = options.headers ||= {}
         if (Array.isArray(headers)) {
           headers.push(['Authorization', `${token.value}`])

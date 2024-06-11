@@ -12,9 +12,6 @@ const page = ref({
     // ]
   }
 })
-definePageMeta({
-  auth: true
-})
 // const modal = useModal()
 // const count = ref(0)
 
@@ -28,6 +25,11 @@ definePageMeta({
 //     }
 //   })
 // }
+// const config = useRuntimeConfig()
+// console.log(11, config.public.auth.computed)
+// config.public.auth.computed.fullBaseUrl = '/api/auth'
+// config.public.auth.computed.origin = ''
+// console.log(22, config.public.auth.computed)
 </script>
 
 <template>
