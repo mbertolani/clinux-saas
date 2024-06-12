@@ -257,7 +257,7 @@ const assinarLaudo = async () => {
   }
 }
 const dataAtual = new Date()
-dataAtual.setDate(dataAtual.getDate() - 90)
+dataAtual.setDate(dataAtual.getDate() - 7)
 const modelFilter = ref({
   'dt_de': useDateFormat(dataAtual, 'YYYY-MM-DD').value,
   'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,

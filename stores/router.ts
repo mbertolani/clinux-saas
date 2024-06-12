@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ModuleType, type Client, type User } from '~/types/system'
+import type { ModuleType, Client, User } from '~/types/system'
 
 export const useRouterStore = defineStore({
   id: 'routerStore',
@@ -24,7 +24,7 @@ export const useRouterStore = defineStore({
     },
     async loadClient() {
       const router = useRoute()
-      const client = router.params.client || router.query.id || 'localhost'
+      const client = router.params.client || router.query.id
 
       if (this.client && client === this.clientId)
         return this.client?.ds_portal_url
@@ -36,14 +36,18 @@ export const useRouterStore = defineStore({
       this.clientId = client as string
 
       if (this.clientId === 'localhost') {
-        this.moduleId = ModuleType.CLINUX
-        this.clientId = 'localhost'
+        this.client = {
+          cd_empresa: 1,
+          ds_empresa: 'Genesis',
+          ds_portal_url: process.env.NODE_ENV === 'production' ? 'http://192.168.56.1:8282' : 'http://127.0.0.1:8082',
+          ds_portal_id: 'localhost'
+        }
+      } else if (this.clientId === 'sedi2') {
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'FujiFilm',
-          // ds_portal_url: 'http://192.168.56.1:8282',
-          ds_portal_url: 'http://127.0.0.1:8082',
-          ds_portal_id: 'localhost'
+          ds_portal_url: 'https://sedi2.zapto.org/dwcluster',
+          ds_portal_id: 'sedi2'
         }
       } else {
         try {
