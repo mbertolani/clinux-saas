@@ -94,7 +94,9 @@ menu.value = menu.value.map((item) => {
   }
   return item
 })
-
+if (!menu.value.length) {
+  menu.value = props.actionMenu
+}
 const buttonSearch = async () => {
   !props.filter ? await api.getAll() : await api.getView(replaceEmptyStringWithNull(props.filter))
   apiGrid.value?.selectFirst()

@@ -152,6 +152,13 @@ export const mainMenu = [
   {
     label: 'Relatórios',
     children: [
+      { label: 'Atendimento', to: '/report/atendimento' },
+      { label: 'Exames', to: '/report/exame' },
+      { label: 'Laudo Analítico', to: '/report/laudo/analitico' },
+      { label: 'Laudo Sintético', to: '/report/laudo/sintetico' },
+      { label: 'Laudo Atrasado', to: '/report/laudo/atrasado' },
+      { label: 'Laudo Recebido', to: '/report/laudo/recebido' },
+      { label: 'Laudo Fila', to: '/report/laudo/fila' }
     ]
   },
   {

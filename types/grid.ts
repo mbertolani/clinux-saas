@@ -32,5 +32,6 @@ export const translateDataType = (type: string): TableColumnType | undefined => 
 }
 export type ActionMenuItem = {
   name: string
+  title?: string
   action: any
 }

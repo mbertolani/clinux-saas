@@ -53,6 +53,7 @@ export const useHttpData = (
     } else {
       items.value = []
     }
+    return items.value
   }
 
   /**
@@ -210,8 +211,8 @@ export const useHttpData = (
     return await Post(`find/${payload}`, body)
   }
 
-  const exec = async (body: any) => {
-    return await Post('exec', body)
+  const exec = async (payload: string, body?: any) => {
+    return await Post('exec/' + payload, body)
   }
 
   const getState = async (body: any) => {
