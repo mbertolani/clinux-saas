@@ -1,11 +1,14 @@
-<template>
-  <div />
-</template>
-
 <script lang="ts" setup>
+import { useReportAtendimento } from '~/composables/report/useReportAtendimento'
 
+const apiPage = ref(null)
+const controller = useReportAtendimento()
 </script>
 
-<style>
-
-</style>
+<template>
+  <BaseReport
+    ref="apiPage"
+    :header="{ title: 'Relatório de Atendimentos', icon: 'i-heroicons-document-text' }"
+    :controller
+  />
+</template>

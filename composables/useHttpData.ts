@@ -22,9 +22,10 @@ export const useHttpData = (
    * (if the query included pagination) is updated with the response data.
   */
   const getView = async (body: any) => {
+    console.log('getView', body)
     const { data, error, success } = await useHttp(`${url}/view`,
       {
-        method: 'post',
+        method: 'POST',
         body
       })
     // console.log(data, error, success)

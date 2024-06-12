@@ -106,15 +106,15 @@ export const mainMenu = [
       { label: 'Modelo', to: '/gerencial/modelo', icon: 'i-heroicons-film' }
     ]
   },
-  {
-    label: 'Atendimento',
-    children: [
-      { label: 'Agendamento', to: '/login', disabled: true },
-      { label: 'Atendimento', to: '/login', disabled: true },
-      { label: 'Paciente', to: '/login', disabled: true },
-      { label: 'Médico', to: '/login', disabled: true }
-    ]
-  },
+  // {
+  //   label: 'Atendimento'
+  //   // children: [
+  //   //   { label: 'Agendamento', to: '/login', disabled: true },
+  //   //   { label: 'Atendimento', to: '/login', disabled: true },
+  //   //   { label: 'Paciente', to: '/login', disabled: true },
+  //   //   { label: 'Médico', to: '/login', disabled: true }
+  //   // ]
+  // },
   {
     label: 'Laudo',
     children: [
@@ -122,33 +122,33 @@ export const mainMenu = [
       { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' }
     ]
   },
-  {
-    label: 'Estoque',
-    children: [
-      { label: 'Estoque', to: '/login', disabled: true },
-      { label: 'Material', to: '/login', disabled: true },
-      { label: 'Unidade', to: '/login', disabled: true },
-      { label: 'Compras', to: '/login', disabled: true }
-    ]
-  },
-  {
-    label: 'Faturamento',
-    children: [
-      { label: 'Faturamento', to: '/login' },
-      { label: 'Plano', to: '/login' },
-      { label: 'Guia', to: '/login' },
-      { label: 'Tabela', to: '/login' }
-    ]
-  },
-  {
-    label: 'Financeiro',
-    children: [
-      { label: 'Lançamentos', to: '/login' },
-      { label: 'Fornecedores', to: '/login' },
-      { label: 'Bancos', to: '/login' },
-      { label: 'Planos de Conta', to: '/login' }
-    ]
-  },
+  // {
+  //   label: 'Estoque'
+  //   // children: [
+  //   //   { label: 'Estoque', to: '/login', disabled: true },
+  //   //   { label: 'Material', to: '/login', disabled: true },
+  //   //   { label: 'Unidade', to: '/login', disabled: true },
+  //   //   { label: 'Compras', to: '/login', disabled: true }
+  //   // ]
+  // },
+  // {
+  //   label: 'Faturamento'
+  //   // children: [
+  //   //   { label: 'Faturamento', to: '/login' },
+  //   //   { label: 'Plano', to: '/login' },
+  //   //   { label: 'Guia', to: '/login' },
+  //   //   { label: 'Tabela', to: '/login' }
+  //   // ]
+  // },
+  // {
+  //   label: 'Financeiro'
+  //   // children: [
+  //   //   { label: 'Lançamentos', to: '/login' },
+  //   //   { label: 'Fornecedores', to: '/login' },
+  //   //   { label: 'Bancos', to: '/login' },
+  //   //   { label: 'Planos de Conta', to: '/login' }
+  //   // ]
+  // },
   {
     label: 'Relatórios',
     children: [
@@ -162,13 +162,13 @@ export const mainMenu = [
     ]
   },
   {
-    label: 'Setup',
-    to: '/tools',
-    children: [
-      { label: 'Editor', to: '/tools/editor' },
-      { label: 'Grid', to: '/tools/grid' },
-      { label: 'Data', to: '/tools/data' },
-      { label: 'Form', to: '/tools/form' }
-    ]
+    label: 'Setup'
+    // to: '/tools',
+    // children: [
+    //   { label: 'Editor', to: '/tools/editor' },
+    //   { label: 'Grid', to: '/tools/grid' },
+    //   { label: 'Data', to: '/tools/data' },
+    //   { label: 'Form', to: '/tools/form' }
+    // ]
   }
 ]
