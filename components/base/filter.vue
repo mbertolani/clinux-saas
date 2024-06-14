@@ -2,47 +2,34 @@
 import { FormKitSchema } from '@formkit/vue'
 import type { FormKitSchemaDefinition } from '@formkit/core'
 
-const props = defineProps({
+defineProps({
   schema: {
     type: Array as () => FormKitSchemaDefinition[],
     required: true
   },
-  controller: {
+  filter: {
     type: Object,
-    required: true
+    required: false
+  },
+  data: {
+    type: Object,
+    required: false
   }
 })
-const { api, items: rowData } = props.controller
-
-const onSubmit = async (_data: any) => {
-  await api.getAll(_data)
-  emit('submit', rowData.value)
-}
-const onClose = () => {
-  emit('close')
-}
 const emit = defineEmits(['submit', 'close'])
-
-const model = ref(null)
-const data = ref(null)
 </script>
 
 <template>
   <FormKit
-    v-model="model"
+    :value="filter"
     dirty-behavior="compare"
     type="form"
     :data="data"
     :actions="false"
-    @submit="onSubmit"
-    @close="onClose"
+    @submit="emit('submit')"
   >
     <FormKitSchema
       :schema="schema as FormKitSchemaDefinition"
     />
   </FormKit>
-  <pre
-    v-if="false"
-    wrap
-  >{{ model }}</pre>
 </template>

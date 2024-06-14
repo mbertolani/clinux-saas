@@ -19,6 +19,14 @@ const onSubmit = (data: any) => {
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
 
+const apiFilter = ref(null)
+const modelFilter = ref({
+  'em.sn_ativo': true
+})
+const filtrar = async () => {
+  apiPage.value.applyFilter()
+}
+
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acAnexo',
@@ -77,10 +85,15 @@ const actionMenu: ActionMenuItem[] = [
     :header="{ title, icon: 'i-heroicons-queue-list' }"
     :controller
     :action-menu
+    :filter="modelFilter"
     @open-form="openForm"
   >
     <template #filter>
-      <GerencialEmpresaFiltro />
+      <GerencialEmpresaFiltro
+        ref="apiFilter"
+        v-model="modelFilter"
+        @submit="filtrar"
+      />
     </template>
     <template #form>
       <GerencialEmpresa

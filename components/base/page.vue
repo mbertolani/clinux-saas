@@ -63,7 +63,7 @@ const menu = ref(null)
 const modal = useModal()
 const { showError, showMessage } = useMessage()
 
-rowData.value = (!props.filter) ? await props.controller.getView(StrToNull(props.filter)) : await props.controller.getAll()
+rowData.value = (props.filter) ? await props.controller.getView(StrToNull(props.filter)) : await props.controller.getAll()
 columnDefs.value = await props.controller.getGrid()
 columnDefs.value = columnDefs.value.concat(props.appendColumnDefs)
 columnDefs.value = columnDefs.value.map((column) => {
