@@ -20,9 +20,8 @@ export const useSystemStore = defineStore('system', () => {
   // }
 
   const loadLogo = async () => {
-    const { data } = await useAPI('/setup/logo') as any
-    // console.log('loadLogo', data.value, error.value)
-    logo.value = data
+    return await useAPI('/setup/logo')
+    // console.log('loadLogo', response)
   }
 
   const loadSetup = async () => {

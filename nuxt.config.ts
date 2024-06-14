@@ -14,6 +14,9 @@ export default defineNuxtConfig({
   //     hashMode: true
   //   }
   // },
+  routeRules: {
+    '/clinux/**': { ssr: false }
+  },
   build: {
     transpile: process.env.NODE_ENV === 'production' ? ['@syncfusion'] : []
   },
@@ -51,10 +54,10 @@ export default defineNuxtConfig({
   colorMode: {
     disableTransition: true
   },
-  routeRules: {
-    '/api/search.json': { prerender: true },
-    '/docs': { redirect: '/docs/getting-started', prerender: false }
-  },
+  // routeRules: {
+  //   '/api/search.json': { prerender: true },
+  //   '/docs': { redirect: '/docs/getting-started', prerender: false }
+  // },
   devtools: {
     enabled: true
   },

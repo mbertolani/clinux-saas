@@ -57,9 +57,9 @@ export const useRouterStore = defineStore({
         try {
           const url = 'https://lumen.clinux.com.br/chamados/cgi-bin/dwserver.cgi/se1/dotListaCgi?id=' + this.clientId
           // console.log('loadClient', url)
-          const { data, error } = await useFetch(url, { method: 'get' })
-          // console.log('loadClient', data, error)
-          this.client = !error.value ? data?.value[0] : null
+          const { data } = await useFetch(url, { method: 'get' })
+          // console.log('loadClient', status.value, data.value, error.value, pending.value)
+          this.client = data?.value ? data.value[0] : null
           // console.log('loadClient', this.client)
           // useMessage().showDebug(JSON.stringify(this.client))
         } catch (error) {

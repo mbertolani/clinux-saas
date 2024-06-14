@@ -2,7 +2,7 @@
 const schema = [
   {
     $formkit: 'dropdown',
-    name: 'em.sn_ativo',
+    name: 'em.sn_empresa',
     placeholder: 'Ativo',
     options: [
       { value: true, label: 'Ativo' },

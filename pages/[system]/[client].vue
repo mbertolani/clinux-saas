@@ -31,11 +31,11 @@ const { signIn } = authStore
 const { user } = storeToRefs(authStore)
 
 const system = useSystemStore()
-const { setup, logo } = storeToRefs(system)
+const { setup } = storeToRefs(system)
 const { loadLogo, loadSetup } = system
 
 const loading = ref(false)
-// const logo = ref(null)
+const logo = ref(null)
 
 const onSubmit = async (form: any) => {
   try {
@@ -49,16 +49,15 @@ const onSubmit = async (form: any) => {
   }
 }
 // const imageLogo = ref(null)
-const imageLogo = computed(() => {
-  return logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
-})
-useAuthStore().$reset() // reset the store
-await loadSetup()
-// await loadLogo()
+// const imageLogo = computed(() => {
+//   return logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
+// })
 onMounted(async () => {
-  await loadLogo()
-  // const response = await loadLogo() as any
-  // logo.value = response.data.value instanceof Blob ? URL.createObjectURL(response.data.value) : ''
+  useAuthStore().$reset() // reset the store
+  await useRouterStore().loadClient()
+  await loadSetup()
+  const response = await loadLogo()
+  logo.value = response instanceof Blob ? URL.createObjectURL(response) : ''
 })
 </script>
 
@@ -69,8 +68,7 @@ onMounted(async () => {
     class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur"
   >
     <NuxtImg
-      v-if="imageLogo"
-      :src="imageLogo"
+      :src="logo"
       class="mx-auto mt-4 mb-4 opacity-1"
     />
     <UAuthForm

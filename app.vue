@@ -13,7 +13,7 @@ watch(colorMode, () => {
 })
 onMounted(async () => {
   color.value = getColor()
-  useRouterStore().loadClient()
+  // useRouterStore().loadClient()
 })
 
 useHead({

@@ -21,7 +21,7 @@ const onSubmit = (data: any) => {
 
 const apiFilter = ref(null)
 const modelFilter = ref({
-  'em.sn_ativo': true
+  'em.sn_empresa': true
 })
 const filtrar = async () => {
   apiPage.value.applyFilter()
