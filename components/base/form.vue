@@ -8,10 +8,21 @@ defineProps({
 // const model = ref(props.data)
 const emit = defineEmits(['close'])
 
-function onClose() {
-  emit('close')
+const onClose = () => {
+  if (!getNode('form-kit')) {
+    emit('close')
+    return
+  }
+  if (getNode('form-kit').context.state.dirty) {
+    useMessage().openDialog({
+      description: 'Deseja sair sem salvar ?',
+      okClick: () => { useMessage().closeDialog(), emit('close') },
+      noClick: () => { useMessage().closeDialog() }
+    })
+  } else {
+    emit('close')
+  }
 }
-
 // defineShortcuts({
 //   escape: {
 //     usingInput: true,

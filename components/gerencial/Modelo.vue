@@ -16,9 +16,11 @@ const model = ref(null)
 const { getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useModelo()
 const { get, create, update } = useModelo()
 
+const validaModalidade = computed(() => props.id > 0)
+
 const data = reactive({
   cd_modalidade: {
-    disabled: props.id > 0,
+    disabled: validaModalidade,
     optionLoader: async (id, cachedOption) => {
       if (cachedOption) return cachedOption
       if (!id) return []
@@ -122,13 +124,13 @@ const schema: FormKitSchemaDefinition = [
 
 ]
 
-model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
-
+watch(() => props.id, async () => {
+  model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
+})
 const onSubmit = async (_data: any) => {
   const item = (props.id) ? await update(props.id, _data) : await create(_data)
-  if (item) {
-    emit('submit', props.id, item.value)
-  }
+  if (item)
+    emit('submit', props.id, item)
 }
 </script>
 
@@ -138,6 +140,7 @@ const onSubmit = async (_data: any) => {
     @close="emit('close')"
   >
     <FormKit
+      id="form-kit"
       v-slot="{ state: { dirty } }"
       v-model="model"
       dirty-behavior="compare"

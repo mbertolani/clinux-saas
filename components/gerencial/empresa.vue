@@ -254,43 +254,46 @@ const props = defineProps({
 // const apiForm: typeof FormKitSchema = ref(null)
 
 const model = ref({})
-const response = props.id ? await get(props.id, getFieldName(schema)) : {}
-response.bb_portal_anexo = Decode64(response.bb_portal_anexo)
-model.value = response
+
+watch(() => props.id, async () => {
+  const response = props.id ? await get(props.id, getFieldName(schema)) : {}
+  response.bb_portal_anexo = Decode64(response.bb_portal_anexo)
+  model.value = response
+})
 //
 const onSubmit = async (_data: any) => {
   _data.bb_portal_anexo = Encode64(_data.bb_portal_anexo)
   const response = props.id ? await update(props.id, _data) : await create(_data)
-  if (!response.error)
+  console.log('onSubmit', response)
+  if (response)
     emit('submit', props.id, response)
 }
-const onClose = () => {
-  if (getNode('form-empresa').context.state.dirty) {
-    useMessage().openDialog({
-      description: 'Deseja sair sem salvar ?',
-      okClick: () => { useMessage().closeDialog(), emit('close') },
-      noClick: () => { useMessage().closeDialog() }
-    })
-  } else {
-    emit('close')
-  }
-}
+// const onClose = () => {
+//   if (getNode('form-empresa').context.state.dirty) {
+//     useMessage().openDialog({
+//       description: 'Deseja sair sem salvar ?',
+//       okClick: () => { useMessage().closeDialog(), emit('close') },
+//       noClick: () => { useMessage().closeDialog() }
+//     })
+//   } else {
+//     emit('close')
+//   }
+// }
 </script>
 
 <template>
   <BaseForm
     title="Cadastro de Empresas"
-    @close="onClose()"
+    @close="emit('close')"
   >
     <FormKit
-      id="form-empresa"
+      id="form-kit"
       v-slot="{ state: { dirty } }"
       v-model="model"
       dirty-behavior="compare"
       type="form"
       :actions="false"
       @submit="onSubmit"
-      @close="onClose"
     >
       <div class="flex items-center justify-center">
         <div class="container max-w-screen-lg mx-auto">

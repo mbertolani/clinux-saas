@@ -105,13 +105,13 @@ const schema: FormKitSchemaDefinition = [
 ]
 const model = ref({})
 const { get, create, update } = useMedico()
-model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
-
+watch(() => props.id, async () => {
+  model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
+})
 const onSubmit = async (_data: any) => {
   const item = (props.id) ? await update(props.id, _data) : await create(_data)
-  if (item) {
-    emit('submit', props.id, item.value)
-  }
+  if (item)
+    emit('submit', props.id, item)
 }
 </script>
 
@@ -121,6 +121,7 @@ const onSubmit = async (_data: any) => {
     @close="emit('close')"
   >
     <FormKit
+      id="form-kit"
       v-slot="{ state: { dirty } }"
       v-model="model"
       dirty-behavior="compare"

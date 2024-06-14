@@ -30,7 +30,6 @@ const onSubmit = (_id: number, data: any) => {
   showModal.value = false
   const nodes = _id ? { update: [data] } : { add: [data] }
   apiPage.value.applyTransaction(nodes)
-  id.value = null
 }
 // const modal = useModal()
 // const openForm = (codigo?: number) => {
@@ -71,31 +70,28 @@ const onSubmit = (_id: number, data: any) => {
 </script>
 
 <template>
-  <div>
-    <BasePage
-      ref="apiPage"
-      :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
-      :controller
-      :action-menu
-      @open-form="openForm"
-    >
-      <template #filter>
-        <!-- <UButton
+  <BasePage
+    ref="apiPage"
+    :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
+    :controller
+    :action-menu
+    @open-form="openForm"
+  >
+    <template #filter>
+      <!-- <UButton
           color="primary"
           label="Nova Empresa"
           @click="test()"
         /> -->
-        <GerencialEmpresaFiltro />
-      </template>
-      <template #form>
-        <GerencialEmpresa
-          v-if="showModal"
-          :id="id"
-          v-model="showModal"
-          @submit="onSubmit"
-          @close="showModal = false"
-        />
-      </template>
-    </BasePage>
-  </div>
+      <GerencialEmpresaFiltro />
+    </template>
+    <template #form>
+      <GerencialEmpresa
+        :id="id"
+        v-model="showModal"
+        @submit="onSubmit"
+        @close="showModal = false"
+      />
+    </template>
+  </BasePage>
 </template>

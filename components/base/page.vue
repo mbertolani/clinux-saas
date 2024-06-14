@@ -112,12 +112,10 @@ const buttonDelete = async () => {
       const selectedNodes = apiGrid.value.getSelectedNodes()
       const removedNodes = []
       await Promise.all(selectedNodes.map(async (node) => {
-        await props.controller.remove(node.id)
-        if (props.controller.status.value) {
+        const response = await props.controller.remove(node.id)
+        if (response) {
           removedNodes.push(node.data)
           showMessage(`Registro [${node.id}] excluído com sucesso !`)
-        } else {
-          showError(JSON.stringify(props.controller.errors.value.error))
         }
       }))
       modal.close()
