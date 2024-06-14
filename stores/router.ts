@@ -1,40 +1,37 @@
 import { defineStore } from 'pinia'
-import type { ModuleType, Client, User } from '~/types/system'
+import type { ModuleType, Client } from '~/types/system'
 
 export const useRouterStore = defineStore({
-  id: 'routerStore',
+  id: 'router',
   state: () => ({
     clientId: ref(null),
     moduleId: ref<ModuleType>(),
-    client: ref<Client>(),
-    userId: ref<User>()
+    client: ref<Client>()
   }),
 
   getters: {
-    user: state => state.userId,
-    apiUrl: state => state.client?.ds_portal_url,
-    clientName: state => state.client?.ds_empresa
+    clientName: state => state.client?.ds_empresa,
+    apiUrl: state => state.client?.ds_portal_url
   },
 
   actions: {
-    async loadUser(): Promise<User | null> {
-      const { data } = await useHttp(this.apiUrl + '/auth/session', { method: 'post' })
-      this.userId = data as any
-      return data as any
-    },
     async loadClient() {
+      // App.Vue - onMounted
       const router = useRoute()
-      const client = router.params.client || router.query.id
 
-      if (this.client && client === this.clientId)
-        return this.client?.ds_portal_url
+      // console.log('loadClient', router.params.client, this.client, this.clientId)
+      // console.log('loadClient', router.params.client, this.client)
 
-      if (!client)
+      if (!router.params.client)
         return
-
-      this.moduleId = router.params.system as ModuleType
-      this.clientId = client as string
-
+      if (router.params.client) {
+        this.moduleId = router.params.system as ModuleType
+        this.clientId = router.params.client as string
+      }
+      if (router.params.client === this.client?.ds_portal_id) {
+        // console.log('loadClient', 'client already loaded')
+        return
+      }
       if (this.clientId === 'localhost') {
         this.client = {
           cd_empresa: 1,
@@ -42,9 +39,9 @@ export const useRouterStore = defineStore({
           ds_portal_url: process.env.NODE_ENV === 'production' ? 'http://192.168.56.1:8282' : 'http://127.0.0.1:8082',
           ds_portal_id: 'localhost'
         }
-      } else if (this.clientId === 'sedi2') {
+      } else if (this.clientId === 'sedi22') {
         this.client = {
-          cd_empresa: 1,
+          cd_empresa: 2,
           ds_empresa: 'FujiFilm',
           ds_portal_url: 'https://sedi2.zapto.org/dwcluster',
           ds_portal_id: 'sedi2'
@@ -52,19 +49,17 @@ export const useRouterStore = defineStore({
       } else {
         try {
           const url = 'https://lumen.clinux.com.br/chamados/cgi-bin/dwserver.cgi/se1/dotListaCgi?id=' + this.clientId
-          const data = await $fetch(url)
-          this.client = data ? data[0] : null
+          // console.log('loadClient', url)
+          const { data, error } = await useFetch(url, { method: 'get' })
+          // console.log('loadClient', data, error)
+          this.client = !error.value ? data?.value[0] : null
+          // console.log('loadClient', this.client)
+          // useMessage().showDebug(JSON.stringify(this.client))
         } catch (error) {
           this.client = null
-          console.error(error)
+          useMessage().showError(error)
         }
       }
-
-      // console.log(_1, config.public.auth.computed.fullBaseUrl, config.public.auth.computed.origin)
-      // config.public.auth.computed.fullBaseUrl = this.client?.ds_portal_url + '/auth'
-      // config.public.auth.computed.origin = this.client?.ds_portal_url
-
-      return this.client?.ds_portal_url
     }
   },
   persist: true

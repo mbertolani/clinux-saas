@@ -2,8 +2,8 @@
 definePageMeta({
   layout: 'auth'
 })
-const { moduleId, clientId } = useRouterStore()
-const homeUrl = computed(() => `/${moduleId}/${clientId}`)
+const { moduleId, clientId } = storeToRefs(useRouterStore())
+const homeUrl = computed(() => clientId.value ? `/${moduleId.value}/${clientId.value}` : '/')
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const homeUrl = computed(() => `/${moduleId}/${clientId}`)
     />
     <div class="text-center">
       <p class="mt-4">
-        Sessão encerrada
+        Sessão encerrada!
       </p>
     </div>
   </div>

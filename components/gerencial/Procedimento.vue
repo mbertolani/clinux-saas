@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 const model = ref(null)
-const { api, item, getGrupos, getGrupo } = useProcedimento()
+const { get, create, update, getGrupos, getGrupo } = useProcedimento()
 
 const data = reactive({
   cd_modalidade: {
@@ -76,7 +76,7 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     bind: '$cd_modalidade',
     selectionRemovable: true,
-    options: getFieldList(await useBaseStore('/gerencial/modalidade').api.getList()),
+    options: getFieldList(await useBaseStore('/gerencial/modalidade').getList()),
     outerClass: 'md:col-span-4'
   },
   {
@@ -106,22 +106,12 @@ const schema: FormKitSchemaDefinition = [
 
 ]
 
-if (props.id === 0) {
-  model.value = {}
-} else {
-  await api.get(props.id, getFieldName(schema))
-  model.value = item.value
-}
+model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
+
 const onSubmit = async (_data: any) => {
-  if (props.id === 0) {
-    await api.create(_data)
-  } else {
-    await api.update(props.id, _data)
-  }
-  if (api.status.value) {
+  const item = (props.id) ? await update(props.id, _data) : await create(_data)
+  if (item) {
     emit('submit', props.id, item.value)
-  } else {
-    useSystemStore().showError(JSON.stringify(api.errors.value.error))
   }
 }
 </script>

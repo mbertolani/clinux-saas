@@ -12,20 +12,15 @@ const props = defineProps({
     required: true
   }
 })
-const response = await useLaudo().execPendencia({ cd_atendimento: props.id })
+const { get } = useAtendimento()
+const { execPendencia } = useLaudo()
+const response = await execPendencia({ cd_atendimento: props.id })
 const options = getFieldList(response.data)
 const onSubmit = async (_data: any) => {
-  // _data.bb_complemento = _data.bb_complemento ? atob(_data.bb_complemento) : null
-  const response = await useLaudo().execPendencia(_data)
+  const response = await execPendencia(_data)
   if (!response.error)
     emit('submit', response.data)
 }
-
-const data = reactive({
-  // cd_complemento: {
-  //   disabled: '$cd_complemento > 0'
-  // }
-})
 
 const schema: FormKitSchemaDefinition = [
   {
@@ -48,11 +43,13 @@ const schema: FormKitSchemaDefinition = [
   }
 
 ]
-const { api, item } = useAtendimento()
+// const { api, item } = useAtendimento()
 const model = ref(null)
-await api.get(props.id, getFieldName(schema))
-model.value = item.value
-model.value.bb_complemento = model.value.bb_complemento ? atob(model.value.bb_complemento) : null
+// await api.get(props.id, getFieldName(schema))
+// model.value = item.value
+// model.value.bb_complemento = model.value.bb_complemento ? atob(model.value.bb_complemento) : null
+model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
+model.value.bb_complemento = Decode64(model.value.bb_complemento)
 </script>
 
 <template>
@@ -73,7 +70,6 @@ model.value.bb_complemento = model.value.bb_complemento ? atob(model.value.bb_co
           <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
             <FormKitSchema
               :schema
-              :data
             />
             <FormKit
               type="submit"

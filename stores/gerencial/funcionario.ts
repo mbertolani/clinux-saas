@@ -10,7 +10,7 @@ export const useFuncionarioStore = defineStore('funcionario', () => {
     console.log('Hello')
   }
   return {
-    ...useBaseStore<Funcionario>('/gerencial/funcionario'),
+    ...useBaseStore('/gerencial/funcionario'),
     sayHello
   }
 })

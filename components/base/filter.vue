@@ -29,7 +29,6 @@ const data = ref(null)
 
 <template>
   <FormKit
-    v-slot="{ state: { dirty } }"
     v-model="model"
     dirty-behavior="compare"
     type="form"
@@ -40,11 +39,6 @@ const data = ref(null)
   >
     <FormKitSchema
       :schema="schema as FormKitSchemaDefinition"
-    />
-    <FormKit
-      type="submit"
-      label="Pesquisar"
-      :disabled="!dirty"
     />
   </FormKit>
   <pre

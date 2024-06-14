@@ -13,7 +13,8 @@ const props = defineProps({
   }
 })
 const model = ref(null)
-const { api, item, getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useModelo()
+const { getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useModelo()
+const { get, create, update } = useModelo()
 
 const data = reactive({
   cd_modalidade: {
@@ -121,22 +122,12 @@ const schema: FormKitSchemaDefinition = [
 
 ]
 
-if (props.id === 0) {
-  model.value = {}
-} else {
-  await api.get(props.id, getFieldName(schema))
-  model.value = item.value
-}
+model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
+
 const onSubmit = async (_data: any) => {
-  if (props.id === 0) {
-    await api.create(_data)
-  } else {
-    await api.update(props.id, _data)
-  }
-  if (api.status.value) {
+  const item = (props.id) ? await update(props.id, _data) : await create(_data)
+  if (item) {
     emit('submit', props.id, item.value)
-  } else {
-    useSystemStore().showError(JSON.stringify(api.errors.value.error))
   }
 }
 </script>

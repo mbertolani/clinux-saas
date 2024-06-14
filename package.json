@@ -21,7 +21,7 @@
     "@formkit/themes": "latest",
     "@formkit/vue": "latest",
     "@iconify-json/heroicons": "^1.1.21",
-    "@iconify-json/simple-icons": "^1.1.104",
+    "@iconify-json/simple-icons": "^1.1.105",
     "@nuxt/fonts": "^0.7.0",
     "@nuxt/image": "^1.7.0",
     "@nuxt/ui-pro": "^1.2.0",
@@ -34,17 +34,16 @@
     "@syncfusion/ej2-popups": "latest",
     "@syncfusion/ej2-splitbuttons": "latest",
     "@syncfusion/ej2-vue-documenteditor": "latest",
-    "@vueuse/nuxt": "^10.10.0",
+    "@vueuse/nuxt": "^10.11.0",
     "ag-charts-community": "9.3.1",
     "ag-charts-vue3": "^9.3.1",
     "ag-grid-charts-enterprise": "31.3.1",
     "ag-grid-community": "31.3.1",
     "ag-grid-enterprise": "31.3.1",
     "ag-grid-vue3": "31.3.1",
-    "nuxt": "^3.11.2",
-    "nuxt-og-image": "3.0.0-rc.53",
+    "nuxt": "^3.12.1",
     "sharp": "^0.33.4",
-    "tailwindcss": "^3.4.3",
+    "tailwindcss": "^3.4.4",
     "vue-class-component": "8.0.0-rc.1",
     "vue-spinner": "^1.0.4"
   },
@@ -59,6 +58,6 @@
     "eslint": "^8.57.0",
     "nuxt-icon": "^0.6.10",
     "typescript": "^5.4.5",
-    "vue-tsc": "^2.0.19"
+    "vue-tsc": "^2.0.21"
   }
 }

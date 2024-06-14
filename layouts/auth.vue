@@ -4,7 +4,8 @@ useHead({
     class: 'dark:bg-gray-950'
   }
 })
-const { clientId } = useRouterStore()
+const { clientId } = storeToRefs(useRouterStore())
+const { debugMessage } = useMessage()
 </script>
 
 <template>
@@ -15,12 +16,15 @@ const { clientId } = useRouterStore()
       class="absolute top-16"
     />
     <UBadge
-      v-if="clientId"
-      :label="clientId"
+      :label="clientId || 'No client ID found'"
       variant="subtle"
       class="absolute top-8"
     />
     <slot />
+    <pre
+      v-if="debugMessage"
+      class="absolute bottom-24"
+    >Debug Message: {{ debugMessage }}</pre>
   </div>
 </template>
 

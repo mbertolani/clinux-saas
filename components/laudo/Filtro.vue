@@ -20,7 +20,7 @@ defineProps({
   }
 })
 // const { filtro: model } = toRefs(props)
-const { getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades, api } = useLaudo()
+const { getMedico, getEmpresa, getModalidade, getEmpresas, getModalidades, find } = useLaudo()
 
 const data = reactive({
   cd_modalidade: {
@@ -58,32 +58,33 @@ const data = reactive({
     options: async () => {
       // if (!search) return []
       // if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
-      const id = getNode('cd_modalidade').value
-      return id
-        ? await getMedicos(Number(id))
-        : await api.find('medico')
+      // const id = getNode('cd_modalidade').value
+      // return id
+      //   ? await getMedicos(Number(id))
+      //   : await find('medico')
+      return find('medico')
     }
   },
   nr_aviso: {
-    options: async () => getFieldList(await api.find('aviso'))
+    options: async () => getFieldList(await find('aviso'))
   },
   nr_urgente: {
-    options: async () => getFieldList(await api.find('urgente'))
+    options: async () => getFieldList(await find('urgente'))
   },
   nr_periodo: {
-    options: async () => getFieldList(await api.find('periodo'))
+    options: async () => getFieldList(await find('periodo'))
   },
   nr_status: {
-    options: async () => getFieldList(await api.find('status'))
+    options: async () => getFieldList(await find('status'))
   },
   nr_fluxo: {
-    options: async () => getFieldList(await api.find('fluxo'))
+    options: async () => getFieldList(await find('fluxo'))
   },
   cd_fila: {
-    options: async () => getFieldList(await api.find('fila'))
+    options: async () => getFieldList(await find('fila'))
   },
   nr_edicao: {
-    options: async () => getFieldList(await api.find('edicao'))
+    options: async () => getFieldList(await find('edicao'))
   }
 })
 
@@ -207,7 +208,7 @@ const schema: FormKitSchemaDefinition = [
 // if (props.id === 0) {
 //   model.value = {}
 // } else {
-//   await api.get(props.id, getFieldName(schema))
+//   await get(props.id, getFieldName(schema))
 //   model.value = item.value
 // }
 // const getFields = () => {

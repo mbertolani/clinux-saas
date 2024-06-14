@@ -45,7 +45,7 @@ const schema: FormKitSchemaDefinition = [
     label: 'Usuário',
     validation: 'required',
     selectionRemovable: true,
-    options: getFieldList(await useBaseStore('/gerencial/usuario').api.getList()),
+    options: getFieldList(await useBaseStore('/gerencial/usuario').getList()),
     outerClass: 'md:col-span-9'
   },
   {
@@ -92,7 +92,7 @@ const schema: FormKitSchemaDefinition = [
     name: 'cd_fila',
     label: 'Fila de Trabalho',
     selectionRemovable: true,
-    options: [{ label: 'FILA', value: 1 }], // getFieldList(await useBaseStore('/financeiro/centro').api.getList()),
+    options: [{ label: 'FILA', value: 1 }], // getFieldList(await useBaseStore('/financeiro/centro').getList()),
     outerClass: 'md:col-span-9'
   },
   {
@@ -104,24 +104,13 @@ const schema: FormKitSchemaDefinition = [
 
 ]
 const model = ref({})
-const { api, item } = useMedico()
+const { get, create, update } = useMedico()
+model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
 
-if (props.id === 0) {
-  model.value = {}
-} else {
-  await api.get(props.id, getFieldName(schema))
-  model.value = item.value
-}
 const onSubmit = async (_data: any) => {
-  if (props.id === 0) {
-    await api.create(_data)
-  } else {
-    await api.update(props.id, _data)
-  }
-  if (api.status.value) {
+  const item = (props.id) ? await update(props.id, _data) : await create(_data)
+  if (item) {
     emit('submit', props.id, item.value)
-  } else {
-    useSystemStore().showError(JSON.stringify(api.errors.value.error))
   }
 }
 </script>

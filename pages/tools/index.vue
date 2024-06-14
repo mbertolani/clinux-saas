@@ -22,24 +22,16 @@ const listaFuncionarios = ref<Funcionario[]>([])
 // const { setup } = storeToRefs(setupStore())
 // useLoadSetup()
 
-const { $api } = useNuxtApp()
-
-const apiFetch = async () => {
-  listaEmpresas.value = await $api('/gerencial/empresa')
-}
-
 const getEmpresas = async () => {
   const workGroupStore = useEmpresaStore
-  await workGroupStore().api.getAll()
-  listaEmpresas.value = workGroupStore().items
+  listaEmpresas.value = await workGroupStore().getAll()
   listaFuncionarios.value = []
   workGroupStore().sayOla()
 }
 
 const getFuncionarios = async () => {
   const functionarioStore = useFuncionarioStore
-  await functionarioStore().api.getAll()
-  listaFuncionarios.value = functionarioStore().items
+  listaFuncionarios.value = await functionarioStore().getAll()
   listaEmpresas.value = []
   functionarioStore().sayHello()
 }
@@ -62,12 +54,12 @@ const showPageError = () => {
       >
         useApi Fetch()
       </button>
-      <button
+      <!-- <button
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
         @click="apiFetch()"
       >
         Api Fetch()
-      </button>
+      </button> -->
       <button
         class="bg-blue-500 font-bold hover:bg-blue-700 px-4 py-2 rounded text-white"
         @click="getEmpresas()"

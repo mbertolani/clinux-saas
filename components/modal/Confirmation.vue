@@ -1,32 +1,38 @@
 <script setup lang="ts">
-const system = useSystemStore()
-const { closeDialog } = system
-const { propsDialog } = storeToRefs(system)
-const emit = defineEmits(['yes', 'no'])
+const { config, isOpen, closeDialog } = useMessage()
+
+const emit = defineEmits(['yes', 'no', 'close'])
 const loading = ref(false)
+
 const okClick = () => {
-  propsDialog.value.okClick()
+  config.value?.okClick()
   closeDialog()
   emit('yes')
 }
 const noClick = () => {
-  propsDialog.value.noClick()
+  // config.value.noClick()
+  closeDialog()
   emit('no')
 }
-defineShortcuts({
-  enter: {
-    handler: () => { emit('yes') }
-  }
-})
+// defineShortcuts({
+//   enter: {
+//     handler: () => { okClick() }
+//   },
+//   escape: {
+//     handler: () => { noClick() }
+//   }
+// })
+
+// Fecha modal apos F5
+// closeDialog()
 </script>
 
 <template>
   <UDashboardModal
-    v-if="propsDialog.okClick"
-    v-model="propsDialog.visible"
+    :model-value="isOpen"
     prevent-close
-    :title="propsDialog.title"
-    :description="propsDialog.description"
+    :title="config?.title"
+    :description="config?.description"
     icon="i-heroicons-exclamation-circle"
     :ui="{
       // width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
@@ -36,13 +42,13 @@ defineShortcuts({
   >
     <template #footer>
       <UButton
-        :label="propsDialog.okButton"
+        :label="config?.okButton"
         :loading="loading"
         @click="okClick()"
       />
       <UButton
         color="white"
-        :label="propsDialog.noButton"
+        :label="config?.noButton"
         @click="noClick()"
       />
     </template>

@@ -1,27 +1,19 @@
-const id = ref(0)
 export const useEmpresa = () => {
-  function incId() {
-    id.value++
-  }
   async function getBancos() {
-    const response = await useBaseStore('/financeiro/banco').api.getList()
-    return getFieldList(response)
+    return getFieldList(await useBaseStore('/financeiro/banco').getList())
   }
   async function getEstoques() {
-    const response = await useBaseStore('/estoque/estoque').api.getList()
-    return getFieldList(response)
+    return getFieldList(await useBaseStore('/estoque/estoque').getList())
   }
-
   async function getEstoque(id: number) {
-    const { item, api } = useBaseStore('/estoque/estoque')
-    await api.get(id, 'cd_estoque,ds_estoque')
-    return getFieldItem(item.value)
+    return getFieldItem(useBaseStore('/estoque/estoque').get(id, 'cd_estoque,ds_estoque'))
+  }
+  async function getBanco(id: number) {
+    return getFieldItem(useBaseStore('/financeiro/banco').get(id, 'cd_banco,ds_banco'))
   }
 
-  const getId = computed(() => id.value)
   return {
-    getId,
-    incId,
+    getBanco,
     getBancos,
     getEstoque,
     getEstoques,

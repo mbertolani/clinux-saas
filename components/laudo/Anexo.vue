@@ -8,9 +8,10 @@ const props = defineProps({
     required: true
   }
 })
-const { doAnexoLista, doAnexoDownload, doAnexoSalvar } = useAnexo(props.id)
+const { remove, doAnexoLista, doAnexoDownload, doAnexoSalvar } = useAnexo(props.id)
+const { find } = useLaudo()
 const rowData = ref()
-const options = getFieldList(await useLaudo().api.find('tipodocumento'))
+const options = getFieldList(await find('tipodocumento'))
 const columnDefs = [
   { field: 'ds_arquivo', headerName: 'Arquivo', width: 400 },
   { field: 'ds_documento', headerName: 'Tipo Documento', width: 200 }
@@ -64,13 +65,13 @@ const submitHandler = async (data): Promise<void> => {
   }))
   await listaAnexos()
   getNode('form-anexo').reset()
-  useSystemStore().showMessage()
+  useMessage().showMessage()
   return
 }
 
 const deleteAnexo = (api) => {
   Promise.all(api.getSelectedNodes().map(async (node) => {
-    return useAnexo(props.id).api.remove(node.data.cd_documento)
+    return remove(node.data.cd_documento)
   }))
   api.applyTransaction({
     remove: api.getSelectedRows()
@@ -82,11 +83,11 @@ const buttonDelete = async (api) => {
     showError('Nenhum registro selecionado')
     return
   }
-  useSystemStore().showDialog({
+  useMessage().openDialog({
     title: 'Exclusão',
     description: 'Confirmar exclusão ?',
-    okClick: () => { useSystemStore().closeDialog(), deleteAnexo(api) },
-    noClick: () => { useSystemStore().closeDialog() }
+    okClick: () => { useMessage().closeDialog(), deleteAnexo(api) },
+    noClick: () => { useMessage().closeDialog() }
   })
 }
 const onCellKeyDown = ({ event, api }) => {

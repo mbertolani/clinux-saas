@@ -36,7 +36,7 @@ function replaceEmptyStringWithNull(obj) {
   return obj
 }
 const apiGrid = ref(null)
-const { loadUser } = useRouterStore()
+// const { loadUser } = useRouterStore()
 const { api, items: rowData, grid: columnDefs } = props.controller
 const inputSearch = ref('')
 watch(inputSearch, () => {
@@ -44,13 +44,13 @@ watch(inputSearch, () => {
 })
 if (!props.filter) {
   await Promise.all([
-    loadUser(),
+    // loadUser(),
     // api.getAll(),
     api.getGrid()
   ])
 } else {
   await Promise.all([
-    loadUser(),
+    // loadUser(),
     // api.getView(replaceEmptyStringWithNull(props.filter)),
     api.getGrid()
   ])

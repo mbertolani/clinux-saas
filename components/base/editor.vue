@@ -4,8 +4,8 @@ import { registerLicense } from '@syncfusion/ej2-base'
 import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
 import { ptBr } from '~/utils/editor'
 
-registerLicense('Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXpfeXRdRGhZWUxxWEM=')
-// useRuntimeConfig().public.syncfusionKey
+// registerLicense('Mgo+DSMBMAY9C3t2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5Vd0diWX9ZcHZRQWRf')
+// registerLicense(useRuntimeConfig().public.syncfusionKey)
 
 export default {
   name: 'BaseEditor',
@@ -44,6 +44,9 @@ export default {
     editor(): DocumentEditor {
       return (this.$refs.documentEditor as any).ej2Instances.documentEditor
     }
+  },
+  created() {
+    registerLicense(useRuntimeConfig().public.syncfusionKey)
   },
   async mounted() {
     console.log('mounted')

@@ -48,11 +48,10 @@ const schema: FormKitSchemaDefinition = [
   }
 
 ]
-const { api, item } = useAtendimento()
+const { get } = useAtendimento()
 const model = ref(null)
-await api.get(props.id, getFieldName(schema))
-model.value = item.value
-model.value.bb_auditado = model.value.bb_auditado ? atob(model.value.bb_auditado) : null
+model.value = await get(props.id, getFieldName(schema))
+model.value.bb_auditado = Decode64(model.value.bb_auditado)
 </script>
 
 <template>

@@ -20,18 +20,30 @@ const actionMenu: ActionMenuItem[] = [
   }
 ]
 const controller = useEmpresa()
-const modal = useModal()
+const showModal = ref(false)
+const id = ref(0)
 const openForm = (codigo?: number) => {
-  modal.open(GerencialEmpresa, {
-    id: Number(codigo),
-    onClose: () => modal.close(),
-    onSubmit: (id: number, data: any) => {
-      const nodes = id ? { update: [data] } : { add: [data] }
-      apiPage.value.applyTransaction(nodes)
-      modal.close()
-    }
-  })
+  showModal.value = true
+  id.value = Number(codigo)
 }
+const onSubmit = (_id: number, data: any) => {
+  showModal.value = false
+  const nodes = _id ? { update: [data] } : { add: [data] }
+  apiPage.value.applyTransaction(nodes)
+  id.value = null
+}
+// const modal = useModal()
+// const openForm = (codigo?: number) => {
+//   modal.open(GerencialEmpresa, {
+//     id: Number(codigo),
+//     onClose: () => modal.close(),
+//     onSubmit: (id: number, data: any) => {
+//       const nodes = id ? { update: [data] } : { add: [data] }
+//       apiPage.value.applyTransaction(nodes)
+//       modal.close()
+//     }
+//   })
+// }
 // const getRowStyle = ({ data }) => {
 //   if (data && 'sn_ativo' in data)
 //     if (!data?.sn_ativo) {
@@ -48,21 +60,42 @@ const openForm = (codigo?: number) => {
 //   return 'var(--ag-row)'
 // }
 // const rowClassRules = { 'custom-row-alert': ({ data }) => data?.sn_ativo === false }
+// const { openDialog } = useMessage()
+// const test = () => {
+//   openDialog({
+//     description: 'Deseja sair sem salvar ?',
+//     okClick: () => { useMessage().closeDialog() },
+//     noClick: () => { useMessage().closeDialog() }
+//   })
+// }
 </script>
 
 <template>
-  <BasePage
-    ref="apiPage"
-    :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
-    :controller
-    :action-menu
-    @open-form="openForm"
-  >
-    <template
-      v-if="false"
-      #filter
+  <div>
+    <BasePage
+      ref="apiPage"
+      :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
+      :controller
+      :action-menu
+      @open-form="openForm"
     >
-      <GerencialEmpresaFiltro />
-    </template>
-  </BasePage>
+      <template #filter>
+        <!-- <UButton
+          color="primary"
+          label="Nova Empresa"
+          @click="test()"
+        /> -->
+        <GerencialEmpresaFiltro />
+      </template>
+      <template #form>
+        <GerencialEmpresa
+          v-if="showModal"
+          :id="id"
+          v-model="showModal"
+          @submit="onSubmit"
+          @close="showModal = false"
+        />
+      </template>
+    </BasePage>
+  </div>
 </template>

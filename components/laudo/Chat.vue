@@ -26,7 +26,7 @@ const submitHandler = async (data): Promise<void> => {
   })
   rowData.value = (await useLaudo().doChatLista({ cd_atendimento: props.id })).data
   getNode('form-chat').reset()
-  useSystemStore().showMessage()
+  // useSystemStore().showMessage()
 }
 const onCellKeyDown = ({ event, api }) => {
   switch (event.key) {

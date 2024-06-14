@@ -46,7 +46,7 @@
 
     <template #right>
       <UButton
-        to="https://github.com/nuxt-ui-pro/saas"
+        v-if="false"
         target="_blank"
         icon="i-simple-icons-github"
         aria-label="GitHub"

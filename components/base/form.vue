@@ -9,7 +9,6 @@ defineProps({
 const emit = defineEmits(['close'])
 
 function onClose() {
-  console.log('BaseForm onClose')
   emit('close')
 }
 

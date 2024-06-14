@@ -2,14 +2,15 @@
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
-import { getFieldName } from '~/utils/schema'
 
-const listaBancos = await useEmpresa().getBancos()
+const { get, create, update, getBancos, getEstoques, getEstoque } = useEmpresa()
+
+const listaBancos = await getBancos()
 
 async function searchEstoque() {
   // if (!search) return []
   // console.log('search', search)
-  return await useEmpresa().getEstoques()
+  return await getEstoques()
 }
 
 // The function assigned to the `option-loader` prop will be called with the
@@ -17,7 +18,7 @@ async function searchEstoque() {
 // the cached option as the second argument (if it exists).
 async function searchEstoqueId(id, cachedOption) {
   if (cachedOption) return cachedOption
-  const response = await useEmpresa().getEstoque(id)
+  const response = await getEstoque(id)
   console.log('searchEstoqueId', response)
   return response ? response : { label: 'Error loading' }
 }
@@ -171,7 +172,7 @@ const schema: FormKitSchemaDefinition = [
     $formkit: 'toggle',
     name: 'sn_empresa',
     label: 'Ativo ?',
-    outerClass: 'md:col-span-2 md:items-end inline-flex items-center'
+    outerClass: 'md:col-span-3 md:items-end inline-flex items-center'
   },
   {
     $formkit: 'toggle',
@@ -179,22 +180,9 @@ const schema: FormKitSchemaDefinition = [
     label: 'Matriz ?',
     onValue: true,
     offValue: false,
-    outerClass: 'md:col-span-10 md:items-end inline-flex items-center'
+    outerClass: 'md:col-span-9 md:items-end inline-flex items-center'
   }
 ]
-
-const onSubmit = async (_data: any) => {
-  if (props.id === 0) {
-    await api.create(_data)
-  } else {
-    await api.update(props.id, _data)
-  }
-  if (api.status.value) {
-    emit('submit', props.id, item.value)
-  } else {
-    useSystemStore().showError(JSON.stringify(api.errors.value.error))
-  }
-}
 
 const emit = defineEmits(['submit', 'close'])
 const props = defineProps({
@@ -203,19 +191,16 @@ const props = defineProps({
     required: true
   }
 })
-const { api, item } = useEmpresa()
-const model = ref({})
-// const data = ref(null)
-const data = reactive({
-  someAttributes: {
-    'onClick': () => {
-      console.log('clicked')
-    },
-    'onKeyDown.Enter': (event: Event) => {
-      console.log('key up', event)
-    }
-  }
-})
+// const data = reactive({
+//   someAttributes: {
+//     'onClick': () => {
+//       console.log('clicked')
+//     },
+//     'onKeyDown.Enter': (event: Event) => {
+//       console.log('key up', event)
+//     }
+//   }
+// })
 
 // const { getId, incId } = useEmpresa()
 // const clique = () => {
@@ -267,20 +252,24 @@ const data = reactive({
 // })
 // @keydown.enter="keydownHandler"
 // const apiForm: typeof FormKitSchema = ref(null)
-if (props.id === 0) {
-  model.value = {}
-} else {
-  await api.get(props.id, getFieldName(schema))
-  model.value = item.value
-}
+
+const model = ref({})
+const response = props.id ? await get(props.id, getFieldName(schema)) : {}
+response.bb_portal_anexo = Decode64(response.bb_portal_anexo)
+model.value = response
 //
+const onSubmit = async (_data: any) => {
+  _data.bb_portal_anexo = Encode64(_data.bb_portal_anexo)
+  const response = props.id ? await update(props.id, _data) : await create(_data)
+  if (!response.error)
+    emit('submit', props.id, response)
+}
 const onClose = () => {
-  console.log('FormEmpresa onClose')
   if (getNode('form-empresa').context.state.dirty) {
-    useSystemStore().showDialog({
+    useMessage().openDialog({
       description: 'Deseja sair sem salvar ?',
-      okClick: () => { useSystemStore().closeDialog(), emit('close') },
-      noClick: () => { useSystemStore().closeDialog() }
+      okClick: () => { useMessage().closeDialog(), emit('close') },
+      noClick: () => { useMessage().closeDialog() }
     })
   } else {
     emit('close')
@@ -301,15 +290,12 @@ const onClose = () => {
       type="form"
       :actions="false"
       @submit="onSubmit"
-      @close="emit('close')"
+      @close="onClose"
     >
       <div class="flex items-center justify-center">
         <div class="container max-w-screen-lg mx-auto">
           <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema="schema"
-              :data
-            />
+            <FormKitSchema :schema="schema" />
             <FormKit
               type="submit"
               label="Salvar"

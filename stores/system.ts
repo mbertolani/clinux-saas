@@ -11,87 +11,28 @@ export const useSystemStore = defineStore('system', () => {
   const icon = ref(null)
   const logo = ref(null)
   const loading = ref(0)
-  const toast = useToast()
 
-  const initDialog = {
-    title: 'Aviso',
-    description: 'Deseja confirmar a operação ?',
-    okButton: 'Confirmar',
-    noButton: 'Cancelar',
-    visible: false,
-    okClick: null,
-    noClick: null // () => { propsDialog.value.visible = false }
-  }
-  const propsDialog = ref(initDialog)
-
-  const showError = (message?: string) => {
-    toast.add({
-      title: 'Erro',
-      color: 'red',
-      description: message || 'Nenhum registro selecionado',
-      icon: 'i-heroicons-exclamation-triangle'
-    })
-  }
-  const showMessage = (message?: string) => {
-    toast.add({
-      title: 'Aviso',
-      color: 'green',
-      description: message || 'Operação realizada com sucesso',
-      icon: 'i-heroicons-check-circle'
-    })
-  }
-
-  // const getAll = async () => {
-  //   await useAsyncData('system', async () => {
-  //     const [_setup, _logo, _icon] = await Promise.all([
-  //       useNuxtApp().$api('/setup/data'),
-  //       useNuxtApp().$api('/setup/logo'),
-  //       useNuxtApp().$api('/setup/icon')
-  //     ])
-  //     setup.value = _setup[0]
-  //     logo.value = _logo
-  //     icon.value = _icon
-  //     return { _setup, _logo, _icon }
-  //   })
+  // const changeTheme = (primary, gray) => {
+  //   // const config = useAppConfig()
+  //   console.log('changeTheme', primary, gray)
+  //   // config.ui.primary = primary
+  //   // config.ui.gray = gray
   // }
 
   const loadLogo = async () => {
-    try {
-      // loading.value = true
-      // const { data: response } = await useAPI('/setup/logo')
-      const response = await useNuxtApp().$api('/setup/logo')
-      // const { data } = await useAPI('/setup/logo', { method: 'GET', default: () => null })
-      logo.value = response
-    } catch (error) {
-      showError(error.response?._data.error || 'Não foi possível conectar ao servidor')
-    } finally {
-      // loading.value = false
-    }
-  }
-
-  const changeTheme = (primary, gray) => {
-    // const config = useAppConfig()
-    console.log('changeTheme', primary, gray)
-    // config.ui.primary = primary
-    // config.ui.gray = gray
+    const { data } = await useAPI('/setup/logo') as any
+    // console.log('loadLogo', data.value, error.value)
+    logo.value = data
   }
 
   const loadSetup = async () => {
-    try {
-      // loading.value = true
-      const { data } = await useAPI('/setup/data', { method: 'GET', default: () => null })
-      setup.value = data.value ? data?.value[0] : null
-      changeTheme(setup.value?.ds_dicomvix_tema, setup.value?.ds_dicomvix_tema)
-    } catch (error) {
-      showError(error.response?._data.error || 'Não foi possível conectar ao servidor')
-    } finally {
-      // loading.value = false
-    }
+    const response = await useAPI('/setup/data', { method: 'GET', default: () => null })
+    setup.value = response ? response[0] : null
+    // changeTheme(setup.value?.ds_dicomvix_tema, setup.value?.ds_dicomvix_tema)
   }
 
   const loadMenu = async () => {
-    const { data } = await useAPI('/setup/menu', { method: 'GET', default: () => null })
-    menu.value = data.value
+    menu.value = await useAPI('/setup/menu', { method: 'GET', default: () => null })
   }
 
   function $reset() {
@@ -103,18 +44,14 @@ export const useSystemStore = defineStore('system', () => {
   }
 
   function startLoading() {
+    // console.log('startLoading', loading.value)
     loading.value++
   }
   function finishLoading() {
+    // console.log('finishLoading', loading.value)
     loading.value--
   }
-  function showDialog(payload: any) {
-    propsDialog.value = { ...initDialog, ...payload }
-    propsDialog.value.visible = true
-  }
-  function closeDialog() {
-    propsDialog.value.visible = false
-  }
+
   watch
   return {
     menu,
@@ -127,13 +64,7 @@ export const useSystemStore = defineStore('system', () => {
     $reset,
     loadSetup,
     loadMenu,
-    loadLogo,
-    // getAll,
-    showError,
-    showMessage,
-    showDialog,
-    closeDialog,
-    propsDialog
+    loadLogo
   }
 },
 { persist: true }

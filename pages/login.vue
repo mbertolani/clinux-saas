@@ -27,30 +27,9 @@ const validate = (state: any) => {
   return errors
 }
 
-// const socialAction = async (action: string) => {
-//   console.log('action', action)
-//   await signIn(action, { redirect: false })
-// }
-
-// const providers = [{
-//   label: 'Continue with GitHub',
-//   icon: 'i-simple-icons-github',
-//   color: 'white' as const,
-//   click: () => {
-//     socialAction('github')
-//   }
-// },
-// {
-//   label: 'Continue with Google',
-//   icon: 'i-simple-icons-google',
-//   color: 'white' as const,
-//   click: () => {
-//     socialAction('google')
-//   }
-// }]
-
-const { signIn } = useAuthStore()
-// const { apiUrl } = useRouterStore()
+const authStore = useAuthStore()
+const { signIn } = authStore
+const { user } = storeToRefs(authStore)
 const system = useSystemStore()
 const { setup, logo } = storeToRefs(system)
 const { loadLogo, loadSetup } = system
@@ -59,14 +38,9 @@ const loading = ref(false)
 const onSubmit = async (form: any) => {
   try {
     loading.value = true
-    // await signIn(
-    //   { ...form, api: apiUrl },
-    //   { callbackUrl: '/' } // Where the user will be redirected after a successiful login
-    // )
     await signIn(form)
-    useSystemStore().showMessage('Login efetuado com sucesso')
   } catch (error) {
-    useSystemStore().showError(error.response?._data.error)
+    useMessage().showError(error.response?._data.error)
   } finally {
     loading.value = false
   }
@@ -75,13 +49,14 @@ const imageLogo = ref(null)
 // const imageLogo = computed(() => {
 //   return logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
 // })
-// console.log('login setup apiUrl', apiUrl)
+useAuthStore().$reset() // reset the store
+await loadSetup()
+await loadLogo()
+imageLogo.value = logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
 
 onMounted(async () => {
-  // console.log('login mounted apiUrl', apiUrl)
-  await loadSetup()
-  await loadLogo()
-  imageLogo.value = logo.value instanceof Blob ? URL.createObjectURL(logo.value as unknown as Blob) as string : ''
+//  console.log('mounted', user.value)
+//  console.log('reset', user.value)
 })
 </script>
 
@@ -89,7 +64,6 @@ onMounted(async () => {
 <!-- eslint-disable vue/singleline-html-element-content-newline -->
 <template>
   <UCard
-    v-if="false"
     class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur"
   >
     <NuxtImg
@@ -126,7 +100,12 @@ onMounted(async () => {
         Você concorda com nosso <NuxtLink
           to="/"
           class="text-primary font-medium"
-        >Termo de serviço</NuxtLink>.
+        >Termo de serviço</NuxtLink>..
+        <UBadge
+          :label="user.name || 'No User ID found'"
+          variant="subtle"
+          class="absolute top-8"
+        />
       </template>
     </UAuthForm>
   </UCard>

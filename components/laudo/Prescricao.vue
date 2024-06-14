@@ -12,8 +12,8 @@ const props = defineProps({
     required: true
   }
 })
-const { api, item, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes } = usePrescricao(props.id)
-const { api: apiMaterial, items: itemsMaterial } = usePrescricaoMaterial
+const { get, update, create, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes } = usePrescricao(props.id)
+const { get: _get, update: _update, create: _create, getAll: _getAll, remove: _remove } = usePrescricaoMaterial
 
 // const optionsMaterial = await getMateriais()
 // const optionsUnidade = await getUnidades(0)
@@ -139,49 +139,47 @@ const schemaRepeater: FormKitSchemaDefinition = [
 ]
 
 const model = ref({})
-// const modelFilho = ref({})
+const itensMaterial = await _getAll()
 if (props.id === 0) {
   model.value = { prescricao: { dt_prescricao: useDateFormat(useNow(), 'YYYY-MM-DD').value } }
-  console.log(model.value)
 } else {
-  const prescricao = await api.get(props.id, getFieldName(schema))
-  prescricao.bb_observacao = prescricao.bb_observacao ? atob(prescricao.bb_observacao) : ''
+  const prescricao = await get(props.id, getFieldName(schema))
+  prescricao.bb_observacao = Decode64(prescricao.bb_observacao)
   model.value = {
     prescricao,
-    material: await apiMaterial.getAll()
+    material: itensMaterial
   }
 }
 const onSubmit = async (_data: any) => {
-  _data.prescricao.bb_observacao = _data.prescricao.bb_observacao ? btoa(_data.prescricao.bb_observacao) : null
+  _data.prescricao.bb_observacao = Encode64(_data.prescricao.bb_observacao)
+  let response = null
   if (props.id === 0) {
-    const response = await api.create(_data.prescricao)
+    response = await create(_data.prescricao)
     _data.material.forEach(async (item: any) => {
       item.cd_prescricao = response.cd_prescricao
-      await apiMaterial.create(item)
+      await _create(item)
     })
   } else {
-    await api.update(props.id, _data.prescricao)
+    response = await update(props.id, _data.prescricao)
     _data.material.forEach(async (item: any) => {
       if (item.cd_codigo) {
-        await apiMaterial.update(item.cd_codigo, item)
+        await _update(item.cd_codigo, item)
       } else {
         item.cd_prescricao = props.id
-        await apiMaterial.create(item)
+        await _create(item)
       }
     })
     // verifica excluidos
-    const remove = itemsMaterial.value.filter((item1) => {
+    const remove = itensMaterial.filter((item1) => {
       return !_data.material.some(item2 => item2.cd_codigo === (item1 as any).cd_codigo)
     })
     remove.forEach(async (item: any) => {
-      await apiMaterial.remove(item.cd_codigo)
+      await _remove(item.cd_codigo)
     })
   }
   // comparar o array items com _data.material pela chave cd_codigo e apagar do banco
-  if (api.status.value) {
-    emit('submit', props.id, item.value)
-  } else {
-    useSystemStore().showError(JSON.stringify(api.errors.value.error))
+  if (response) {
+    emit('submit', props.id, response)
   }
 }
 // const columnDefs = ref()

@@ -40,10 +40,10 @@ const closeEditor = async () => {
 const abrirModelo = async () => {
   idEditor.value = apiPage.value.getSelectedNodes()[0]?.id
   if (!idEditor.value) {
-    useSystemStore().showError('Nenhum registro selecionado')
+    useMessage().showError('Nenhum registro selecionado')
     return
   }
-  const response = await useModelo().api.get(idEditor.value, 'bb_modelo')
+  const response = await useModelo().get(idEditor.value, 'bb_modelo')
   if (response?.bb_modelo) {
     apiEditor.value.load(atob(response.bb_modelo))
   } else {
@@ -52,12 +52,12 @@ const abrirModelo = async () => {
 }
 const salvarModelo = async () => {
   const payload = await apiEditor.value.save()
-  const response = await controller.api.update(idEditor.value, { bb_modelo: payload }) // payload.split(',')[1]
+  const response = await controller.update(idEditor.value, { bb_modelo: payload }) // payload.split(',')[1]
   if (response) {
-    useSystemStore().showMessage('Modelo salvo com sucesso')
+    useMessage().showMessage('Modelo salvo com sucesso')
     closeEditor()
   } else {
-    useSystemStore().showError('Erro ao salvar modelo')
+    useMessage().showError('Erro ao salvar modelo')
   }
 }
 // mdi:text-box-outline

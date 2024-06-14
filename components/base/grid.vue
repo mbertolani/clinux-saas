@@ -55,7 +55,7 @@ const getSelectedNodes = () => {
   return handleGrid().getSelectedNodes()
 }
 const selectFirst = () => {
-  handleGrid().getDisplayedRowAtIndex(0)?.setSelected(true)
+  handleGrid()?.getDisplayedRowAtIndex(0)?.setSelected(true)
 }
 
 defineExpose({
@@ -80,7 +80,7 @@ const getRowId = ({ data }) => Object.values(data)[0]
 const onGridReady = async () => {
   await restoreColumnState()
   selectFirst()
-  handleGrid().closeToolPanel()
+  handleGrid()?.closeToolPanel()
 }
 
 const onRowDataUpdated = ({ api }) => {
@@ -94,7 +94,7 @@ const restoreColumnState = async () => {
   const savedState = await props.http?.getState()
   if (savedState) {
     if (!handleGrid()) {
-      useSystemStore().showError('Grid não carregado')
+      useMessage().showError('Grid não carregado')
       return
     }
     handleGrid()?.applyColumnState({

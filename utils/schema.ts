@@ -25,3 +25,19 @@ export function getFieldList(list) {
     })
     : []
 }
+
+export function StrToNull(obj) {
+  for (const key in obj) {
+    if (obj[key] === '') {
+      obj[key] = null
+    }
+  }
+  return obj
+}
+
+export function Encode64(obj) {
+  return obj ? btoa(obj) : null
+}
+export function Decode64(obj) {
+  return obj ? atob(obj) : null
+}

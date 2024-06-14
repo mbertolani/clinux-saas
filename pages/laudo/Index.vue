@@ -213,7 +213,7 @@ const idEditor = ref<number>(0)
 const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
-const { user } = useRouterStore()
+const { user } = useAuthStore()
 const modal = useModal()
 const openForm = (codigo?: number) => {
   abrirLaudo(codigo)
@@ -243,7 +243,7 @@ const salvarLaudo = async () => {
   const texto = await apiEditor.value.save()
   const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: texto, ds_exame: selectedNodeIds().join(',') })
   if (!response.error) {
-    useSystemStore().showMessage()
+    useMessage().showMessage()
     closeEditor()
     apiPage.value.applyTransaction({ update: response.data })
   }
@@ -251,15 +251,15 @@ const salvarLaudo = async () => {
 const assinarLaudo = async () => {
   const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: await apiEditor.value.save() })
   if (response) {
-    useSystemStore().showMessage()
+    useMessage().showMessage()
     closeEditor()
     apiPage.value.applyTransaction({ update: response.data })
   }
 }
-const dataAtual = new Date()
-dataAtual.setDate(dataAtual.getDate() - 7)
+// const dataAtual = new Date()
+// dataAtual.setDate(dataAtual.getDate() - 7)
 const modelFilter = ref({
-  'dt_de': useDateFormat(dataAtual, 'YYYY-MM-DD').value,
+  'dt_de': useDateFormat(useNow(), 'YYYY-MM-DD').value,
   'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,
   'nr_periodo': 1,
   'ae.nr_controle': null,
@@ -298,7 +298,7 @@ const selectedData = () => {
 const selectedNode = () => {
   const selectedNode = apiPage.value.getSelectedNodes()[0]
   if (!selectedNode) {
-    useSystemStore().showError()
+    useMessage().showError()
     return
   }
   return selectedNode
@@ -307,7 +307,7 @@ const laudoAssinado = async () => {
   if (!selectedNode())
     return
   const { cd_atendimento, cd_exame } = selectedNode().data
-  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico }) // cd_atendimento: 1723321, cd_exame: 12834
+  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico }) as any// cd_atendimento: 1723321, cd_exame: 12834
   // const data = await convertToBase64Image(response.data as Blob)
   if (response.data)
     modal.open(LaudoAssinado, {

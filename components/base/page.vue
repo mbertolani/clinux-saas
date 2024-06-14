@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ModalDelete, ModalLog } from '#components'
 import type { ActionMenuItem } from '~/types/grid'
+import { StrToNull } from '~/utils/schema'
 
 const props = defineProps({
   header: {
@@ -40,14 +41,6 @@ const props = defineProps({
   }
 })
 
-function replaceEmptyStringWithNull(obj) {
-  for (const key in obj) {
-    if (obj[key] === '') {
-      obj[key] = null
-    }
-  }
-  return obj
-}
 defineExpose({
   getSelectedNodes: () => {
     return apiGrid.value.getSelectedNodes()
@@ -56,49 +49,39 @@ defineExpose({
     apiGrid.value.applyTransaction(transaction)
   },
   applyFilter: () => {
-    api.getView(replaceEmptyStringWithNull(props.filter))
+    props.controller.getView(StrToNull(props.filter))
     apiGrid.value?.selectFirst()
   }
 })
 
-const apiGrid = ref(null)
 const emit = defineEmits(['openForm'])
-const modal = useModal()
-const { showError, showMessage } = useSystemStore()
-const { loadUser } = useRouterStore()
-const { api, items: rowData, grid: columnDefs, menu } = props.controller
 
-if (!props.filter) {
-  await Promise.all([
-    loadUser(),
-    api.getAll(),
-    api.getGrid(),
-    api.getMenu()
-  ])
-} else {
-  await Promise.all([
-    loadUser(),
-    api.getView(replaceEmptyStringWithNull(props.filter)),
-    api.getGrid(),
-    api.getMenu()
-  ])
-}
+const apiGrid = ref(null)
+const rowData = ref([])
+const columnDefs = ref([])
+const menu = ref(null)
+const modal = useModal()
+const { showError, showMessage } = useMessage()
+
+rowData.value = (!props.filter) ? await props.controller.getView(StrToNull(props.filter)) : await props.controller.getAll()
+columnDefs.value = await props.controller.getGrid()
 columnDefs.value = columnDefs.value.concat(props.appendColumnDefs)
 columnDefs.value = columnDefs.value.map((column) => {
   return (props.mergeColumnDefs[column.field]) ? Object.assign(column, props.mergeColumnDefs[column.field]) : column
 })
-menu.value = menu.value.map((item) => {
+menu.value = await props.controller.getMenu()
+menu.value = menu.value?.map((item) => {
   const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
   if (actionItem) {
     item.action = actionItem.action
   }
   return item
 })
-if (!menu.value.length) {
+if (!menu.value?.length) {
   menu.value = props.actionMenu
 }
 const buttonSearch = async () => {
-  !props.filter ? await api.getAll() : await api.getView(replaceEmptyStringWithNull(props.filter))
+  !props.filter ? await props.controller.getAll() : await props.controller.getView(StrToNull(props.filter))
   apiGrid.value?.selectFirst()
 }
 const actionEdit = async (id: number) => {
@@ -129,12 +112,12 @@ const buttonDelete = async () => {
       const selectedNodes = apiGrid.value.getSelectedNodes()
       const removedNodes = []
       await Promise.all(selectedNodes.map(async (node) => {
-        await api.remove(node.id)
-        if (api.status.value) {
+        await props.controller.remove(node.id)
+        if (props.controller.status.value) {
           removedNodes.push(node.data)
           showMessage(`Registro [${node.id}] excluído com sucesso !`)
         } else {
-          showError(JSON.stringify(api.errors.value.error))
+          showError(JSON.stringify(props.controller.errors.value.error))
         }
       }))
       modal.close()
@@ -152,7 +135,7 @@ const buttonLog = async () => {
     return
   }
   modal.open(ModalLog, {
-    rowData: await api.getLog(selectedNode.id),
+    rowData: await props.controller.getLog(selectedNode.id),
     onClose() {
       modal.close()
     }
@@ -241,9 +224,14 @@ watch(inputSearch, () => {
           </template>
         </UInput>
       </template>
-      <slot name="filter" />
+      <div
+        v-if="$slots.filter"
+        class="mt-2"
+      >
+        <slot name="filter" />
+      </div>
     </UPageHeader>
-    <UPageBody class="mt-0">
+    <UPageBody class="mt-2">
       <BaseGrid
         ref="apiGrid"
         :row-data
@@ -251,9 +239,10 @@ watch(inputSearch, () => {
         :on-row-double-clicked="onRowDoubleClicked"
         :on-cell-key-down="onCellKeyDown"
         :row-class-rules
-        :http="api"
+        :http="props.controller"
         :menu
       />
     </UPageBody>
+    <slot name="form" />
   </UPage>
 </template>

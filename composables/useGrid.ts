@@ -1,8 +1,8 @@
 import type { ItemDataType, ItemAlignment, DbGridColumn } from '@/types/grid'
 
-export const useGrid = (url?: string) => {
+export const useGrid = () => {
   const gridFontSize = 12
-  const DbGridColumns = ref<DbGridColumn[]>([])
+  // const DbGridColumns = ref<DbGridColumn[]>([])
   const AgGridColumns = ref([])
 
   const currencyFormatter = p =>
@@ -177,9 +177,9 @@ export const useGrid = (url?: string) => {
   //   })
   //   return response
   // }
-  const getCols = async () => {
-    DbGridColumns.value = await apiGrid()
-    AgGridColumns.value = DbGridColumns.value.filter(item => item.visible).map(item => ({
+  const getCols = (DbGridColumns: DbGridColumn[]) => {
+    // DbGridColumns.value = await apiGrid()
+    AgGridColumns.value = DbGridColumns.filter(item => item.visible).map(item => ({
       field: formatField(item),
       headerName: formatDisplayLabel(item),
       cellDataType: formatCellDataType(item),
@@ -197,11 +197,6 @@ export const useGrid = (url?: string) => {
       ...(item.dataType === 'ftTime' ? fieldTime : {})
     }))
     return AgGridColumns.value
-  }
-
-  const apiGrid = async (): Promise<DbGridColumn[]> => {
-    const response = await useApiData(`${url}/grid`)
-    return response as DbGridColumn[]
   }
 
   const columns = computed(() => {

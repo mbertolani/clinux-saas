@@ -25,7 +25,7 @@ const rowClassRules = {
 
 const commandAction = async (action) => {
   apiPage.value.getSelectedNodes().map(async (node) => {
-    const response = await controller.api.exec(action, { cd_prescricao: node.data.cd_prescricao })
+    const response = await controller.exec(action, { cd_prescricao: node.data.cd_prescricao })
     apiPage.value.applyTransaction({ update: response })
   })
 }
@@ -35,11 +35,11 @@ const buttonAction = async (action: string) => {
     showError('Nenhum registro selecionado')
     return
   }
-  useSystemStore().showDialog({
+  useMessage().openDialog({
     title: 'Atualizar Prescrição',
     description: `Deseja ${action} o(s) registro(s) selecionado(s) ?`,
-    okClick: () => { useSystemStore().closeDialog(), commandAction(action) },
-    noClick: () => { useSystemStore().closeDialog() }
+    okClick: () => { useMessage().closeDialog(), commandAction(action) },
+    noClick: () => { useMessage().closeDialog() }
   })
 }
 const actionMenu: ActionMenuItem[] = [
@@ -74,7 +74,6 @@ const actionMenu: ActionMenuItem[] = [
       v-if="false"
       #filter
     />
-    123
   </BasePage>
 </template>
 

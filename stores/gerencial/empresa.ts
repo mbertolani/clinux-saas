@@ -12,7 +12,7 @@ export const useEmpresaStore = defineStore('empresa', () => {
     console.log('Ola')
   }
   return {
-    ...useBaseStore<Empresa>('/gerencial/empresa'),
+    ...useBaseStore('/gerencial/empresa'),
     sayOla
   }
 })

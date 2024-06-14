@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { mainMenu } from '~/types/system'
 
-const { signOut, token } = useAuthStore()
+const { signOut, getSession } = useAuthStore()
+const { user, token } = storeToRefs(useAuthStore())
+const { moduleId, clientId, clientName } = storeToRefs(useRouterStore())
+const userColor = computed(() => user.value?.idmedico > 0 ? 'primary' : 'red')
+const userName = computed(() => user.value?.name)
+const homeUrl = computed(() => `/${moduleId}/${clientId}`)
+onMounted(async () => {
+  getSession()
+})
 const logout = () => {
   signOut()
+  useAuthStore().$reset()
+  useSystemStore().$reset()
+  // useRouterStore().$reset()
 }
-const { moduleId, clientId, clientName, user } = useRouterStore()
-const userColor = computed(() => user?.idmedico > 0 ? 'primary' : 'primary')
-const userName = computed(() => user?.name)
-const homeUrl = computed(() => `/${moduleId}/${clientId}`)
 </script>
 
 <template>
@@ -20,6 +27,7 @@ const homeUrl = computed(() => `/${moduleId}/${clientId}`)
         :label="moduleId"
         variant="subtle"
         class="mb-0.5"
+        @click="getSession()"
       />
     </template>
 
