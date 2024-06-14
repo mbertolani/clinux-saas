@@ -3,13 +3,6 @@ import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-quartz.min.css'
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
-// const colorMode = useColorMode()
-
-// const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
-
-// const { apiUrl } = useRouterStore()
-const route = useRoute()
-console.log('router', route)
 const colorMode = useColorMode()
 const color = ref(null)
 const getColor = () => {
@@ -18,8 +11,9 @@ const getColor = () => {
 watch(colorMode, () => {
   color.value = getColor()
 })
-onMounted(() => {
+onMounted(async () => {
   color.value = getColor()
+  useRouterStore().loadClient()
 })
 
 useHead({
