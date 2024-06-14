@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import { GerencialProcedimento } from '#components'
-import { useProcedimento } from '~/composables/gerencial/useProcedimento'
-import type { ActionMenuItem } from '~/types/grid'
+import { GerencialSala } from '#components'
+import { useSala } from '~/composables/gerencial/useSala'
 
-const title = 'Cadastro de Procedimentos'
 const apiPage = ref(null)
-const actionMenu: ActionMenuItem[] = []
-const controller = useProcedimento()
+const controller = useSala()
 const showModal = ref(false)
 const id = ref(0)
+
 const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
 }
+
 const onSubmit = (_id: number, data: any) => {
+  console.log('submit3', _id, data)
   showModal.value = false
   apiPage.value.applyTransaction(_id ? { update: [data] } : { add: [data] })
 }
@@ -22,9 +22,8 @@ const onSubmit = (_id: number, data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: 'i-heroicons-queue-list' }"
+    :header="{ title: 'Salas', icon: 'i-heroicons-queue-list' }"
     :controller
-    :action-menu
     @open-form="openForm"
   >
     <template
@@ -32,10 +31,9 @@ const onSubmit = (_id: number, data: any) => {
       #filter
     />
     <template #form>
-      <GerencialProcedimento
+      <GerencialSala
         :id
         v-model="showModal"
-        :title
         @submit="onSubmit"
         @close="showModal = false"
       />

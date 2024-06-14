@@ -36,15 +36,22 @@ export const useRouterStore = defineStore({
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'Genesis',
-          ds_portal_url: process.env.NODE_ENV === 'production' ? 'http://192.168.56.1:8282' : 'http://127.0.0.1:8082',
-          ds_portal_id: 'localhost'
+          ds_portal_url: 'http://127.0.0.1:8082',
+          ds_portal_id: this.clientId
         }
-      } else if (this.clientId === 'sedi22') {
+      } else if (this.clientId === 'bsd') {
+        this.client = {
+          cd_empresa: 1,
+          ds_empresa: 'Genesis',
+          ds_portal_url: 'http://192.168.56.1:8282',
+          ds_portal_id: this.clientId
+        }
+      } else if (this.clientId === 'sedi2') {
         this.client = {
           cd_empresa: 2,
           ds_empresa: 'FujiFilm',
           ds_portal_url: 'https://sedi2.zapto.org/dwcluster',
-          ds_portal_id: 'sedi2'
+          ds_portal_id: this.clientId
         }
       } else {
         try {

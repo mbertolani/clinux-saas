@@ -61,27 +61,13 @@ export const useHttp = async (
       headers: options.headers,
       responseType: fileDownload ? 'blob' : 'json'
     })
-    // if (response) {
-    //   const res = !fileDownload ? await response.json() : await response.blob()
-    //   data = res
-    //   success = true
-    // } else {
-    //   // Throw an error with status code and message
-    //   const res = response ? await response.json() : { error: 'Erro de conexão com o servidor' }
-    //   data = null
-    //   error = res
-    //   success = false
-    // }
-    // if (error.value)
-    //   useSystemStore()?.showError(error.value.message || 'Erro de conexão com o servidor')
-    // console.log('useHttp 2', response)
     return {
       data: response,
       error: null,
       status: 'success'
     }
   } catch (e) {
-    useMessage().showError(e?.response?._data || 'Erro de conexão com o servidor')
+    useMessage().showError(e?.response?._data?.error || 'Erro de conexão com o servidor')
     return {
       data: null,
       error: e?.response?._data,

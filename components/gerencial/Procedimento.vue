@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useProcedimento } from '~/composables/gerencial/useProcedimento'
 import { getFieldName } from '~/utils/schema'
 
@@ -10,10 +9,14 @@ const props = defineProps({
   id: {
     type: Number,
     required: true
+  },
+  title: {
+    type: String,
+    required: false
   }
 })
 const model = ref(null)
-const { get, create, update, getGrupos, getGrupo } = useProcedimento()
+const { get, getGrupos, getGrupo } = useProcedimento()
 
 const data = reactive({
   cd_modalidade: {
@@ -106,50 +109,25 @@ const schema: FormKitSchemaDefinition = [
 
 ]
 
-model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
-
-const onSubmit = async (_data: any) => {
-  const item = (props.id) ? await update(props.id, _data) : await create(_data)
-  if (item) {
-    emit('submit', props.id, item.value)
-  }
+watch(() => props.id, async () => {
+  model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
+})
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
 }
 </script>
 
 <template>
   <BaseForm
-    title="Cadastro de Procedimentos"
+    :title
     @close="emit('close')"
   >
-    <FormKit
-      v-slot="{ state: { dirty } }"
-      v-model="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
+    <BaseFormLayout
+      :id
+      :schema
+      :data
+      :controller="useProcedimento()"
       @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema
-              :data
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
-          </div>
-        </div>
-      </div>
-    </FormKit>
+    />
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

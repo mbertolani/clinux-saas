@@ -22,7 +22,7 @@ export const useAPI = async <
   // const cookieHeaders = { ...useRequestHeaders(['cookie']) as HeadersInit }
   // console.log('useAPI', options ? { ...options, ...{ headers: cookieHeaders } } : { ...{ headers: cookieHeaders } })
   return $fetch<T>(url, {
-    baseURL: 'http://192.168.56.1:8282',
+    baseURL: 'http://192.168.56.1:8282', // useRouterStore().apiUrl, //
     ...options,
     headers: {
       Authorization: `${useCookie('token').value}`,

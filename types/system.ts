@@ -101,6 +101,7 @@ export const mainMenu = [
     children: [
       { label: 'Empresa', to: '/gerencial/empresa', icon: 'i-heroicons-building-office' },
       { label: 'Funcionário', to: '/gerencial/funcionario', icon: 'i-heroicons-identification' },
+      { label: 'Sala', to: '/gerencial/sala', icon: 'i-heroicons-identification' },
       { label: 'Médico', to: '/gerencial/medico', icon: 'i-heroicons-user-group' },
       { label: 'Procedimento', to: '/gerencial/procedimento', icon: 'i-heroicons-queue-list' },
       { label: 'Modelo', to: '/gerencial/modelo', icon: 'i-heroicons-film' }
