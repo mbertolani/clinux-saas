@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 
-const { get, create, update, getBancos, getEstoques, getEstoque } = useEmpresa()
+const { get, getBancos, getEstoques, getEstoque } = useEmpresa()
 
 const listaBancos = await getBancos()
 
@@ -189,6 +188,10 @@ const props = defineProps({
   id: {
     type: Number,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
   }
 })
 // const data = reactive({
@@ -263,25 +266,25 @@ watch(() => props.id, async () => {
 //
 const onSubmit = async (_data: any) => {
   _data.bb_portal_anexo = Encode64(_data.bb_portal_anexo)
-  const response = props.id ? await update(props.id, _data) : await create(_data)
-  console.log('onSubmit', response)
-  if (response)
-    emit('submit', props.id, response)
+  emit('submit', _data)
 }
-// const onClose = () => {
-//   if (getNode('form-empresa').context.state.dirty) {
-//     useMessage().openDialog({
-//       description: 'Deseja sair sem salvar ?',
-//       okClick: () => { useMessage().closeDialog(), emit('close') },
-//       noClick: () => { useMessage().closeDialog() }
-//     })
-//   } else {
-//     emit('close')
-//   }
-// }
 </script>
 
 <template>
+  <BaseForm
+    :title
+    @close="emit('close')"
+  >
+    <BaseFormLayout
+      :id
+      :schema
+      :controller="useEmpresa()"
+      @submit="onSubmit"
+    />
+  </BaseForm>
+</template>
+
+<!-- <template>
   <BaseForm
     title="Cadastro de Empresas"
     @close="emit('close')"
@@ -319,4 +322,4 @@ const onSubmit = async (_data: any) => {
 .formkit-input {
   text-transform: uppercase;
 }
-</style>
+</style> -->

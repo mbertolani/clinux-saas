@@ -3,7 +3,21 @@ import { GerencialEmpresa, GerencialEmpresaFiltro } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import type { ActionMenuItem } from '~/types/grid'
 
+const title = 'Empresas'
 const apiPage = ref(null)
+const controller = useEmpresa()
+const showModal = ref(false)
+const id = ref(0)
+
+const openForm = (codigo?: number) => {
+  showModal.value = true
+  id.value = Number(codigo)
+}
+
+const onSubmit = (data: any) => {
+  showModal.value = false
+  apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
+}
 
 const actionMenu: ActionMenuItem[] = [
   {
@@ -19,18 +33,6 @@ const actionMenu: ActionMenuItem[] = [
     }
   }
 ]
-const controller = useEmpresa()
-const showModal = ref(false)
-const id = ref(0)
-const openForm = (codigo?: number) => {
-  showModal.value = true
-  id.value = Number(codigo)
-}
-const onSubmit = (_id: number, data: any) => {
-  showModal.value = false
-  const nodes = _id ? { update: [data] } : { add: [data] }
-  apiPage.value.applyTransaction(nodes)
-}
 // const modal = useModal()
 // const openForm = (codigo?: number) => {
 //   modal.open(GerencialEmpresa, {
@@ -72,23 +74,19 @@ const onSubmit = (_id: number, data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title: 'Empresas', description: 'Cadastro de Empresas', icon: 'i-heroicons-building-office' }"
+    :header="{ title, icon: 'i-heroicons-queue-list' }"
     :controller
     :action-menu
     @open-form="openForm"
   >
     <template #filter>
-      <!-- <UButton
-          color="primary"
-          label="Nova Empresa"
-          @click="test()"
-        /> -->
       <GerencialEmpresaFiltro />
     </template>
     <template #form>
       <GerencialEmpresa
-        :id="id"
+        :id
         v-model="showModal"
+        :title
         @submit="onSubmit"
         @close="showModal = false"
       />

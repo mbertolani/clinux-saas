@@ -2,6 +2,7 @@
 import { GerencialSala } from '#components'
 import { useSala } from '~/composables/gerencial/useSala'
 
+const title = 'Salas'
 const apiPage = ref(null)
 const controller = useSala()
 const showModal = ref(false)
@@ -13,7 +14,6 @@ const openForm = (codigo?: number) => {
 }
 
 const onSubmit = (_id: number, data: any) => {
-  console.log('submit3', _id, data)
   showModal.value = false
   apiPage.value.applyTransaction(_id ? { update: [data] } : { add: [data] })
 }
@@ -22,18 +22,15 @@ const onSubmit = (_id: number, data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title: 'Salas', icon: 'i-heroicons-queue-list' }"
+    :header="{ title, icon: 'i-heroicons-queue-list' }"
     :controller
     @open-form="openForm"
   >
-    <template
-      v-if="false"
-      #filter
-    />
     <template #form>
       <GerencialSala
         :id
         v-model="showModal"
+        :title
         @submit="onSubmit"
         @close="showModal = false"
       />

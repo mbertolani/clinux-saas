@@ -8,6 +8,10 @@ defineProps({
   id: {
     type: Number,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
   }
 })
 const schema: FormKitSchemaDefinition = [
@@ -29,14 +33,14 @@ const schema: FormKitSchemaDefinition = [
     outerClass: 'md:col-span-12 md:items-end inline-flex items-center'
   }
 ]
-const onSubmit = async (_id: number, _data: any) => {
-  emit('submit', _id, _data)
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
 }
 </script>
 
 <template>
   <BaseForm
-    title="Cadastro de Salas"
+    :title
     @close="emit('close')"
   >
     <BaseFormLayout

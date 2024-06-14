@@ -12,7 +12,7 @@ const props = defineProps({
   },
   title: {
     type: String,
-    required: false
+    required: true
   }
 })
 const model = ref(null)

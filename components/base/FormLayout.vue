@@ -29,7 +29,7 @@ model.value = props.id ? await props.controller.get(props.id, getFieldName(props
 const onSubmit = async (_data: any) => {
   const item = (props.id) ? await props.controller.update(props.id, _data) : await props.controller.create(_data)
   if (item)
-    emit('submit', props.id, item)
+    emit('submit', item)
 }
 </script>
 

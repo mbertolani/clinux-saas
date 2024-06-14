@@ -3,7 +3,7 @@ import { GerencialProcedimento } from '#components'
 import { useProcedimento } from '~/composables/gerencial/useProcedimento'
 import type { ActionMenuItem } from '~/types/grid'
 
-const title = 'Cadastro de Procedimentos'
+const title = 'Procedimentos'
 const apiPage = ref(null)
 const actionMenu: ActionMenuItem[] = []
 const controller = useProcedimento()
