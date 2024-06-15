@@ -14,7 +14,7 @@ const emit = defineEmits(['close'])
 const columnDefs = [
   { field: 'dt_log', headerName: 'Data', width: useGrid().dataTypeWidth('ftDateTime'), valueFormatter: p => formatDateTime(p.value) },
   { field: 'ds_funcionario', headerName: 'Usuário', width: useGrid().dataTypeWidth('ftString', 64) },
-  { field: 'ds_field', headerName: 'Campo', width: useGrid().dataTypeWidth('ftString', 32) },
+  { field: 'ds_campo', headerName: 'Campo', width: useGrid().dataTypeWidth('ftString', 32) },
   { field: 'ds_before', headerName: 'Antes', width: useGrid().dataTypeWidth('ftString', 32) },
   { field: 'ds_after', headerName: 'Depois', width: useGrid().dataTypeWidth('ftString', 32) }
 ]

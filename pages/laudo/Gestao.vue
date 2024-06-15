@@ -256,10 +256,10 @@ const assinarLaudo = async () => {
     apiPage.value.applyTransaction({ update: response.data })
   }
 }
-// const dataAtual = new Date()
-// dataAtual.setDate(dataAtual.getDate() - 7)
+const dataInicio = new Date()
+dataInicio.setDate(dataInicio.getDate() - 90)
 const modelFilter = ref({
-  'dt_de': useDateFormat(useNow(), 'YYYY-MM-DD').value,
+  'dt_de': useDateFormat(dataInicio, 'YYYY-MM-DD').value,
   'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,
   'nr_periodo': 1,
   'ae.nr_controle': null,
@@ -556,7 +556,7 @@ const appendColumnDefs = [
     pinned: 'right',
     cellRenderer: (params) => {
       const achado = `<i class="i-heroicons-magnifying-glass-plus" style="color: ${params.data?.ds_achado ? 'orange' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Achado Crítico"></i>`
-      const urgencia = `<i class="i-heroicons-bell-alert" style="color: ${params.data?.sn_urgencia ? 'red' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Urgência"></i>`
+      const urgencia = `<i class="i-heroicons-bell-alert" style="color: ${params.data?.ds_urgente ? 'red' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Urgência"></i>`
       const imagem = `<i class="i-heroicons-user" style="color: ${params.data?.sn_imagem ? 'green' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Imagem"></i>`
       const complemento = `<i class="i-heroicons-receipt-refund" style="color: ${params.data?.ds_complemento ? 'cyan' : '#ddd'}; font-size: 24px; margin-top: 4px" title="Complemento"></i>`
       return achado + urgencia + imagem + complemento
@@ -568,10 +568,6 @@ const appendColumnDefs = [
   //   pinned: 'left'
   // }
 ]
-const colorDark = ref()
-watch(() => useColorMode().value, (value) => {
-  colorDark.value = value === 'dark' ? 'white' : '#111827'
-})
 const mergeColumnDefs = {
   sn_atrasado: {
     cellRenderer: (params) => {
@@ -596,7 +592,7 @@ const mergeColumnDefs = {
     cellStyle: ({ data }) => {
       return {
         'background-color': data?.ds_sla ? '#' + data.ds_sla : 'undefined',
-        'color': colorDark.value
+        'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
       }
     }
   },
@@ -604,7 +600,7 @@ const mergeColumnDefs = {
     cellStyle: ({ data }) => {
       return {
         'background-color': data.ds_urgente ? '#ff0000' : 'undefined',
-        'color': colorDark
+        'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
       }
     }
   },

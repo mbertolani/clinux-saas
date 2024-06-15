@@ -79,12 +79,14 @@ const getRowId = ({ data }) => Object.values(data)[0]
 
 const onGridReady = async () => {
   await restoreColumnState()
-  selectFirst()
+  // selectFirst()
   handleGrid()?.closeToolPanel()
 }
 
 const onRowDataUpdated = ({ api }) => {
-  api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
+  (api.getSelectedNodes().length === 0)
+    ? api.getDisplayedRowAtIndex(0)?.setSelected(true)
+    : api.ensureNodeVisible(api.getSelectedNodes()[0], 'middle')
 }
 const saveColumnState = () => {
   const state = handleGrid().getColumnState()

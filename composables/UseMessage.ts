@@ -12,7 +12,6 @@ const config = ref({
 
 // export const useMessageStore = defineStore('message', () => {
 export const useMessage = () => {
-  const toast = useToast()
 
   function openDialog(payload: any) {
     config.value = Object.assign(config.value, payload)
@@ -25,7 +24,7 @@ export const useMessage = () => {
     debugMessage.value = payload
   }
   const showError = (message?: string) => {
-    toast.add({
+    useToast().add({
       title: 'Erro',
       color: 'red',
       description: message || 'Nenhum registro selecionado',
@@ -33,7 +32,7 @@ export const useMessage = () => {
     })
   }
   const showMessage = (message?: string) => {
-    toast.add({
+    useToast().add({
       title: 'Aviso',
       color: 'green',
       description: message || 'Operação realizada com sucesso',

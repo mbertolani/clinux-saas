@@ -63,26 +63,34 @@ const menu = ref(null)
 const modal = useModal()
 const { showError, showMessage } = useMessage()
 
-rowData.value = (props.filter) ? await props.controller.getView(StrToNull(props.filter)) : await props.controller.getAll()
-columnDefs.value = await props.controller.getGrid()
-columnDefs.value = columnDefs.value.concat(props.appendColumnDefs)
-columnDefs.value = columnDefs.value.map((column) => {
-  return (props.mergeColumnDefs[column.field]) ? Object.assign(column, props.mergeColumnDefs[column.field]) : column
-})
-menu.value = await props.controller.getMenu()
-menu.value = menu.value?.map((item) => {
-  const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
-  if (actionItem) {
-    item.action = actionItem.action
-  }
-  return item
-})
-if (!menu.value?.length) {
-  menu.value = props.actionMenu
+const setRowData = async () => {
+  return (props.filter) ? await props.controller.getView(StrToNull(props.filter)) : await props.controller.getAll()
 }
+const setColumnDefs = async () => {
+  const columns = await props.controller.getGrid()
+  const appendColumns = columns.concat(props.appendColumnDefs)
+  const mergedColumns = appendColumns.map((column) => {
+    return (props.mergeColumnDefs[column.field]) ? Object.assign(column, props.mergeColumnDefs[column.field]) : column
+  })
+  return mergedColumns
+}
+const setMenu = async () => {
+  const menu = await props.controller.getMenu()
+  const menuAction = menu?.map((item) => {
+    const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
+    if (actionItem) {
+      item.action = actionItem.action
+    }
+    return item
+  })
+  return menuAction?.length ? menuAction : props.actionMenu
+}
+rowData.value = await setRowData()
+columnDefs.value = await setColumnDefs()
+menu.value = await setMenu()
 const buttonSearch = async () => {
-  !props.filter ? await props.controller.getAll() : await props.controller.getView(StrToNull(props.filter))
-  apiGrid.value?.selectFirst()
+  rowData.value = await setRowData()
+  // apiGrid.value?.selectFirst()
 }
 const actionEdit = async (id: number) => {
   emit('openForm', id)

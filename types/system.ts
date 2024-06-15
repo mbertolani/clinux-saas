@@ -119,7 +119,7 @@ export const mainMenu = [
   {
     label: 'Laudo',
     children: [
-      { label: 'Gestão Médica', to: '/laudo/index', icon: 'i-heroicons-document-text' },
+      { label: 'Gestão', to: '/laudo/gestao', icon: 'i-heroicons-document-text' },
       { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' }
     ]
   },
