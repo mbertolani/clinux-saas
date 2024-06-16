@@ -15,7 +15,7 @@ const props = defineProps({
 const response = await useLaudo().execAuditar({ cd_atendimento: props.id })
 const options = getFieldList(response.data)
 const onSubmit = async (_data: any) => {
-  // _data.bb_auditado = _data.bb_auditado ? atob(_data.bb_auditado) : null
+  // _data.bb_auditado = _data.bb_auditado ? Decode64(_data.bb_auditado) : null
   const response = await useLaudo().execAuditar(_data)
   if (!response.error)
     emit('submit', response.data)

@@ -47,7 +47,7 @@ const schema: FormKitSchemaDefinition = [
 const model = ref(null)
 // await api.get(props.id, getFieldName(schema))
 // model.value = item.value
-// model.value.bb_complemento = model.value.bb_complemento ? atob(model.value.bb_complemento) : null
+// model.value.bb_complemento = model.value.bb_complemento ? Decode64(model.value.bb_complemento) : null
 model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
 model.value.bb_complemento = Decode64(model.value.bb_complemento)
 </script>

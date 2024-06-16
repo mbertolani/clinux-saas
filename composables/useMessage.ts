@@ -12,7 +12,6 @@ const config = ref({
 
 // export const useMessageStore = defineStore('message', () => {
 export const useMessage = () => {
-
   function openDialog(payload: any) {
     config.value = Object.assign(config.value, payload)
     isOpen.value = true

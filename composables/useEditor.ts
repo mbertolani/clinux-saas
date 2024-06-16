@@ -1,6 +1,6 @@
 const serviceUrl = 'https://editor.telelaudo.com.br/api/documenteditor/'
 
-export const useUseEditor = () => {
+export const useEditor = () => {
   const Export = async (body: string): Promise<string> => {
     return await post('Export', body)
   }
@@ -41,12 +41,25 @@ export const useUseEditor = () => {
     })
     return response
   }
+  const RtfToTxt = async (body: any): Promise<any> => {
+    const formData = new FormData()
+    Object.keys(body).forEach(key => formData.append(key, body[key]))
+    const response = await $fetch('www/doRtf2Txt', {
+      baseURL: 'https://editor.telelaudo.com.br',
+      method: 'POST',
+      body: formData
+    }).catch((e) => {
+      console.error(e)
+    })
+    return response
+  }
   return {
     Import,
     Export,
     SfdtToHtml,
     SfdToRtf,
     SystemClipboard,
-    RtfToHtml
+    RtfToHtml,
+    RtfToTxt
   }
 }

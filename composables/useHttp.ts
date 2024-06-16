@@ -1,14 +1,8 @@
-// interface DataResponse {
-//   data: any
-//   meta: any
-// }
-
 export const useHttp = async (
   url: string,
   {
     method = 'get',
     body = {},
-    headers = new Headers(useRequestHeaders(['cookie']) as HeadersInit),
     fileUpload = false,
     fileDownload = false
   }: {
@@ -19,46 +13,22 @@ export const useHttp = async (
     fileDownload?: boolean
   } = { method: 'get' }
 ) => {
-  // const { token } = useAuthStore()
-  // const data: DataResponse = { data: null, meta: null }
-  // const error = null
-  // const success = false
-  const initHeaders = new Headers(headers)
-  // const initHeaders = new Headers(useRequestHeaders(['cookie']) as HeadersInit)
   let params: FormData | string = JSON.stringify(body)
 
-  // if (!initHeaders.has('Content-Type')) {
-  //   initHeaders.append('Content-Type', 'application/json')
-  // }
-  // if (token.value) {
-  //   initHeaders.append('Authorization', token.value)
-  // }
   if (fileUpload) {
-    // initHeaders.set('Content-Type', 'multipart/form-data')
     const formData = new FormData()
-    // for (const key of Object.keys(body) as Array<keyof typeof body>) {
-    //   formData.append(key, body[key])
-    // }
     Object.keys(body).forEach(key => formData.append(key, body[key]))
     params = formData
   }
-  if (fileDownload) {
-    initHeaders.set('Content-Type', 'application/octet-stream')
-  }
-  const options = {
-    method,
-    headers: initHeaders,
-    // responseType: fileDownload ? 'blob' : 'json',
-    body: method.toUpperCase() === 'GET' ? undefined : params
-  }
-  // console.log('useHttp', url, options)
+
   useSystemStore()?.startLoading()
   try {
     const response = await useAPI(url, {
-      // baseURL: process.env.NUXT_PUBLIC_API_URL,
-      method: options.method,
-      body: options.body,
-      headers: options.headers,
+      method,
+      body: method === 'get' ? undefined : params,
+      headers: fileUpload
+        ? new Headers()
+        : { 'Content-Type': fileDownload ? 'application/octet-stream' : 'application/json' },
       responseType: fileDownload ? 'blob' : 'json'
     })
     return {

@@ -36,7 +36,7 @@ export const useRouterStore = defineStore({
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'Genesis',
-          ds_portal_url: 'http://127.0.0.1:8082',
+          ds_portal_url: 'http://172.18.0.1:8082',
           ds_portal_id: this.clientId
         }
       } else if (this.clientId === 'bsd') {

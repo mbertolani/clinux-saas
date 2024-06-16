@@ -85,7 +85,7 @@ export const useBaseStore = (
 
   const getState = async (body: any) => {
     const response = await Post('state', body)
-    return response?.bb_grid ? JSON.parse(atob(response.bb_grid)) : null
+    return response?.bb_grid ? JSON.parse(Decode64(response.bb_grid)) : null
   }
 
   const getMenu = async () => {

@@ -18,7 +18,7 @@ const props = defineProps({
 const response = await useLaudo().execAchado({ cd_exame: props.id })
 const options = getFieldList(response.data)
 const onSubmit = async (_data: any) => {
-  // _data.bb_achado = _data.bb_achado ? atob(_data.bb_achado) : null
+  // _data.bb_achado = _data.bb_achado ? Decode64(_data.bb_achado) : null
   const response = await useLaudo().execAchado(_data)
   if (!response.error)
     emit('submit', response.data)

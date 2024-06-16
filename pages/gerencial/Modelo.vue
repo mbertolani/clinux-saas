@@ -56,7 +56,7 @@ const abrirModelo = async () => {
   }
   const response = await useModelo().get(idEditor.value, 'bb_modelo')
   if (response?.bb_modelo) {
-    apiEditor.value.load(atob(response.bb_modelo))
+    apiEditor.value.load(Decode64(response.bb_modelo))
   } else {
     apiEditor.value.clear()
   }

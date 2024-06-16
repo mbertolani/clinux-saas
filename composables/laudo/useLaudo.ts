@@ -37,7 +37,11 @@ export const useLaudo = () => {
     return await useHttp(`${url}`, { method: 'post', body, fileUpload: false })
   }
   async function doLaudoAbrir(payload: { cd_exame: number, cd_medico: number, cd_fila: number }) {
-    return await post('doLaudoAbrir', payload)
+    const response = await post('doLaudoAbrir', payload)
+    return {
+      data: response.data ? Decode64(response?.data[0]?.bb_laudo) : '',
+      error: response.error
+    }
   }
   async function doLaudoGravar(payload: {
     cd_exame: number
@@ -150,9 +154,9 @@ export const useLaudo = () => {
     ])
     return {
       data: {
-        layout: layout?.data?.length ? layout?.data : null,
-        modelo: modelo?.data?.length ? modelo?.data : null,
-        chave: chave?.data?.length ? chave?.data : null
+        layout: Decode64(layout?.data),
+        modelo: Decode64(modelo?.data),
+        chave: Decode64(chave?.data)
       },
       error: layout?.error || modelo?.error || chave?.error
     }
@@ -185,11 +189,11 @@ export const useLaudo = () => {
     return post('doLaudoLista', { cd_paciente, sn_assinado: true })
   }
   function doAchadoGravar(payload: { cd_atendimento: number, cd_exame: number, cd_achado: number, ds_descricao: string }) {
-    payload.ds_descricao = payload.ds_descricao ? btoa(payload.ds_descricao) : ''
+    payload.ds_descricao = payload.ds_descricao ? Encode64(payload.ds_descricao) : ''
     return post('doAchadoGravar', payload)
   }
   function doComplementoGravar(payload: { cd_atendimento: number, cd_complemento: number, bb_complemento: string }) {
-    payload.bb_complemento = payload.bb_complemento ? btoa(payload.bb_complemento) : ''
+    payload.bb_complemento = payload.bb_complemento ? Encode64(payload.bb_complemento) : ''
     return post('doComplementoGravar')
   }
   function doDicomCompressao() {
@@ -198,7 +202,7 @@ export const useLaudo = () => {
   async function doLaudoVisualizar(cd_exame: number) {
     const response = await post('doLaudoVisualizar', { cd_exame })
     return {
-      data: response.data[0]?.bb_laudo ? atob(response.data[0]?.bb_laudo) : '',
+      data: response.data[0]?.bb_laudo ? Decode64(response.data[0]?.bb_laudo) : '',
       error: response.error
     }
   }
@@ -313,11 +317,11 @@ export const useLaudo = () => {
     return await Post('laudo/laudo/exec/acAuditar', payload)
   }
   async function execAchado(payload: { cd_exame: number, cd_achado?: number, bb_achado?: string }) {
-    payload.bb_achado = payload.bb_achado ? btoa(payload.bb_achado) : ''
+    payload.bb_achado = payload.bb_achado ? Encode64(payload.bb_achado) : ''
     return await Post('laudo/laudo/exec/acAchado', payload)
   }
   async function execPendencia(payload: { cd_atendimento: number, cd_complemento?: number, bb_complemento?: string }) {
-    payload.bb_complemento = payload.bb_complemento ? btoa(payload.bb_complemento) : ''
+    payload.bb_complemento = payload.bb_complemento ? Encode64(payload.bb_complemento) : ''
     return await Post('laudo/laudo/exec/acPendencia', payload)
   }
   async function execUrgencia(payload: { cd_atendimento: number, cd_urgente?: number }) {
@@ -330,8 +334,8 @@ export const useLaudo = () => {
     const { data, error } = await post('doFuncionarioAcesso', { ds_form: 'ATE_LAUDO_EXE_CABECALHO' }) as any
     return !error && data.length > 0
   }
-  function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_medico?: number, cd_paciente?: number }) {
-    return useHttp(`laudo/laudo?filename=laudo.pdf&cmd=acAssinado`, { method: 'post', body: payload, fileDownload: true })
+  async function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_medico?: number, cd_paciente?: number }) {
+    return await useHttp(`laudo/laudo?filename=laudo.pdf&cmd=acAssinado`, { method: 'post', body: payload, fileDownload: true })
   }
   function doChatLista(payload: { cd_atendimento: number, sn_medico?: boolean }) {
     return post('doChatLista', payload)
@@ -340,7 +344,7 @@ export const useLaudo = () => {
     return post('doChatApagar', payload)
   }
   async function doChatGravar(payload: { cd_atendimento: number, ds_mensagem: string, sn_medico: boolean }) {
-    return await post('doChatGravar', { js_tabela: btoa(JSON.stringify(payload)) })
+    return await post('doChatGravar', { js_tabela: Encode64(JSON.stringify(payload)) })
   }
   function doComplementoFim(payload: { cd_atendimento: number, bb_complemento: string }) {
     return post('doComplementoFim', payload)

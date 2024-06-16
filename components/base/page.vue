@@ -76,14 +76,23 @@ const setColumnDefs = async () => {
 }
 const setMenu = async () => {
   const menu = await props.controller.getMenu()
+  // Cria uma cópia de props.actionMenu para manipulação
+  const remainingActionMenuItems = [...props.actionMenu]
+
   const menuAction = menu?.map((item) => {
-    const actionItem: ActionMenuItem = props.actionMenu.find(action => action.name === item.name)
-    if (actionItem) {
-      item.action = actionItem.action
+    const actionItemIndex = remainingActionMenuItems.findIndex(action => action.name === item.name)
+    if (actionItemIndex !== -1) {
+      // Atualiza a ação do item de menu
+      item.action = remainingActionMenuItems[actionItemIndex].action
+      // Remove o item correspondente de remainingActionMenuItems
+      remainingActionMenuItems.splice(actionItemIndex, 1)
     }
     return item
-  })
-  return menuAction?.length ? menuAction : props.actionMenu
+  }) || []
+
+  // Concatena os itens restantes de actionMenu que não foram encontrados
+  const result = menuAction.concat(remainingActionMenuItems)
+  return result.length ? result : props.actionMenu
 }
 rowData.value = await setRowData()
 columnDefs.value = await setColumnDefs()

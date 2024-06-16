@@ -81,7 +81,7 @@ export default {
       // }).catch((e) => {
       //   console.error(e)
       // })
-      const response = await useUseEditor().Import(payload)
+      const response = await useEditor().Import(payload)
       this.editor.open(response)
       this.editor.selection.moveToDocumentEnd()
     },

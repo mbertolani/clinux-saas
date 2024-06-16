@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalSearch, LaudoAnexo, LaudoChat } from '#components'
+import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalSearch, LaudoAnexo, LaudoChat, LaudoDiff } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -106,6 +106,13 @@ const toolBarItens = [
     text: 'Imprimir',
     id: 'imprimir',
     cssClass: 'e-de-toolbar-btn'
+  },
+  {
+    prefixIcon: 'e-diff',
+    tooltipText: 'Alterações do Laudo',
+    text: 'Diff',
+    id: 'diff',
+    cssClass: 'e-de-toolbar-btn'
   }
 ]
 const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
@@ -148,6 +155,9 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       break
     case 'imprimir':
       console.log('imprimir')
+      break
+    case 'diff':
+      openDiff()
       break
   }
 }
@@ -207,6 +217,11 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'acDigitado',
     action: () => { laudoAssinado() }
+  },
+  {
+    name: 'Diff',
+    title: 'Diff',
+    action: () => { openDiff() }
   }
 ]
 const idEditor = ref<number>(0)
@@ -216,7 +231,15 @@ const controller = useLaudo()
 const { user } = useAuthStore()
 const modal = useModal()
 const openForm = (codigo?: number) => {
-  abrirLaudo(codigo)
+  if (codigo) {
+    if (selectedNode().data?.dt_assinado) {
+      laudoAssinado()
+    } else {
+      abrirLaudo(codigo)
+    }
+  } else {
+    abrirLaudo(codigo)
+  }
 }
 const loadEditor = (editor) => {
   apiEditor.value = editor
@@ -231,11 +254,11 @@ const abrirLaudo = async (id: number) => {
   if (response.error) return
   apiEditor.value.clear()
   if (response.data) {
-    apiEditor.value.load(atob(response.data))
+    apiEditor.value.load(response.data)
   } else {
-    const response = await useLaudo().carregarModelo(id, 0)
-    if (response.data.layout)
-      await apiEditor.value.load(atob(response.data.layout))
+    const response = await useLaudo().carregarModelo(id, 0) as any
+    if (response.layout)
+      await apiEditor.value.load(response.layout)
   }
   idEditor.value = id
 }
@@ -307,9 +330,9 @@ const laudoAssinado = async () => {
   if (!selectedNode())
     return
   const { cd_atendimento, cd_exame } = selectedNode().data
-  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico }) as any// cd_atendimento: 1723321, cd_exame: 12834
-  // const data = await convertToBase64Image(response.data as Blob)
-  if (response.data)
+  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico })// cd_atendimento: 1723321, cd_exame: 12834
+  // const data = await convertToBase64Image(response as Blob)
+  if (!response.error)
     modal.open(LaudoAssinado, {
       src: URL.createObjectURL(response.data),
       onClose() {
@@ -320,20 +343,20 @@ const laudoAssinado = async () => {
 const selecionarModelo = async () => {
   if (!selectedNode())
     return
-  const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value })
+  const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value }) as any
   if (response.error)
     return
   modal.open(ModalSearch, {
     title: 'Modelos de Laudo',
-    data: response.data,
+    data: response,
     async onSubmit(id) {
-      const response = await useLaudo().carregarModelo(idEditor.value, id)
+      const response = await useLaudo().carregarModelo(idEditor.value, id) as any
       if (!response.error) {
         apiEditor.value.clear()
-        if (response.data.layout)
-          await apiEditor.value.load(atob(response.data.layout))
+        if (response.layout)
+          await apiEditor.value.load(Decode64(response.layout))
         if (response.data.modelo) {
-          const sfdt = await useUseEditor().Import(atob(response.data.modelo))
+          const sfdt = await useEditor().Import(Decode64(response.data.modelo))
           apiEditor.value.editor.editor.paste(sfdt)
         }
       }
@@ -630,9 +653,9 @@ const mergeColumnDefs = {
 const openLeo = ref(false)
 const capturarLeo = async (texto) => {
   // console.log('capturarLeo', texto)
-  const Html = await useUseEditor().RtfToHtml({ bb_rtf: btoa(texto) }) as any
+  const Html = await useEditor().RtfToHtml({ bb_rtf: Encode64(texto) }) as any
   // console.log('RtfToHtml', Html)
-  const sfdt = await useUseEditor().Import(Html)
+  const sfdt = await useEditor().Import(Html)
   // console.log('Import', sfdt)
   apiEditor.value.editor.editor.paste(sfdt)
   openLeo.value = false
@@ -641,6 +664,16 @@ const openImagem = async () => {
   // console.log('openImagem')
   const response = await useLaudo().doDicomViewer({ cd_exame: idEditor.value })
   window.open(response.data, '_blank')
+}
+const openDiff = async () => {
+  const id = selectedNodeId() || idEditor.value
+  modal.close()
+  modal.open(LaudoDiff, {
+    id: Number(id),
+    onClose() {
+      modal.close()
+    }
+  })
 }
 </script>
 
