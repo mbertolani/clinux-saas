@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ModalFullScreen } from '#components'
+import DashboardModal from '@nuxt/ui-pro/components/dashboard/DashboardModal.vue'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 
 const props = defineProps({
@@ -8,50 +8,77 @@ const props = defineProps({
     required: true
   }
 })
-const emit = defineEmits(['close'])
+const gridRef = ref(null)
 const rowData = ref<any[]>([])
 const originalVal = ref<string>('')
 const modifiedVal = ref<string>('')
+const _id = ref<number>(0)
+const _nomeFuncionario = ref<string>('')
 
-const atualizaMerge = async (id: number) => {
-  console.log('atualizaMerge', id)
-  const response = await useLaudo().find('merge', { cd_laudo: props.id, cd_codigo: id })
-  if (response.length) {
-    originalVal.value = await useEditor().RtfToTxt({ bb_rtf: response[0].bb_old, format: 'ansi' })
-    originalVal.value = await useEditor().RtfToTxt({ bb_rtf: response[0].bb_new, format: 'ansi' })
-  }
-}
 function formatDateTime(payload: string) {
   return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
 }
+
 const columnDefs = [
-  { field: 'dt_laudo', headerName: 'Data', width: useGrid().dataTypeWidth('ftDateTime'), valueFormatter: p => formatDateTime(p.value) },
-  { field: 'ds_funcionario', headerName: 'Usuário', width: 500 }
+  { field: 'dt_laudo', headerName: 'Data', width: 10, valueFormatter: p => formatDateTime(p.value) }
+  // { field: 'ds_funcionario', headerName: 'Usuário', width: 100 }
 ]
+
+const gridOptions = {
+  suppressHorizontalScroll: true,
+  autoSizeStrategy: {
+    type: 'fitGridWidth'
+  }
+}
+
 rowData.value = await useLaudo().find('merge', { cd_laudo: props.id })
-if (rowData.value.length)
-  atualizaMerge(rowData.value[0].cd_codigo)
+
+const onFirstDataRendered = ({ api }) => {
+  api.getDisplayedRowAtIndex(0)?.setSelected(true)
+  // useFocus(gridRef).focused.value = true
+}
+
+const onSelectionChange = async ({ api }) => {
+  const node = api.getSelectedNodes() ? api.getSelectedNodes()[0] : null
+  if (!node) return
+  _id.value = node.data.cd_codigo
+  _nomeFuncionario.value = 'Modificado por: ' + node.data.ds_funcionario
+  const response = await useLaudo().find('merge', { cd_laudo: props.id, cd_codigo: _id.value })
+  if (response.length) {
+    const [original, modified] = await Promise.all([
+      response[0].bb_old ? useEditor().RtfToTxt({ bb_rtf: response[0].bb_old, format: 'ansi' }) : Promise.resolve(''),
+      response[0].bb_new ? useEditor().RtfToTxt({ bb_rtf: response[0].bb_new, format: 'ansi' }) : Promise.resolve('')
+    ])
+    originalVal.value = original || ''
+    modifiedVal.value = modified || ''
+  }
+}
 </script>
 
 <template>
-  <ModalFullScreen
-    title="Alterações do Laudo"
+  <DashboardModal
+    title="Laudo"
+    :description="_nomeFuncionario"
     :fullscreen="true"
-    @close="emit('close')"
   >
     <UPage>
       <template #left>
         <BaseGridCore
+          ref="gridRef"
           style="height: 100%; width: 100%;"
           :column-defs
           :row-data
           :pagination="false"
+          :grid-options
+          @selection-changed="onSelectionChange"
+          @first-data-rendered="onFirstDataRendered"
         />
       </template>
       <BaseMonaco
+        :id="_id"
+        v-model="modifiedVal"
         :original-val
-        :modified-val
       />
     </UPage>
-  </ModalFullScreen>
+  </DashboardModal>
 </template>

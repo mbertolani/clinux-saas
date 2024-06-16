@@ -1,32 +1,31 @@
 <script setup lang="ts">
 import type { MonacoDiffEditor } from '#components'
 
+const modifiedVal = defineModel({ type: String, required: true })
 defineProps({
-  originalVal: {
-    type: String,
+  id: {
+    type: Number,
     required: true
   },
-  modifiedVal: {
+  originalVal: {
     type: String,
     required: true
   }
 })
 
-const options = {
+const editorOptions = {
   automaticLayout: true,
   theme: useColorMode().value === 'dark' ? 'vs-dark' : 'vs',
   scrollBeyondLastLine: false,
   minimap: {
     enabled: true
   },
-  wordWrap: 'on',
-  wordWrapColumn: 80,
   wrappingIndent: 'same',
   wrappingStrategy: 'advanced',
-  renderWhitespace: 'all',
   renderLineHighlight: 'all'
 }
 
+// const modified = ref()
 const editorRef = ref(null)
 const colorMode = useColorMode()
 
@@ -36,16 +35,25 @@ const setEditorTheme = () => {
     editorRef.value.$editor.updateOptions({ theme })
   }
 }
-
-watch(colorMode, () => setEditorTheme())
+// watch(colorMode, () => setEditorTheme())
+// watch(() => props.id, () => {
+//   modified.value = props.modifiedVal
+// })
+const loadEditor = () => {
+  setEditorTheme()
+  editorRef.value.$editor.updateOptions({ readOnly: true })
+}
+// modified.value = props.modifiedVal
 </script>
 
 <template>
   <MonacoDiffEditor
     ref="editorRef"
+    v-model="modifiedVal"
     :original="originalVal"
-    :options="options"
+    :options="editorOptions"
     style="width: 100%; height: calc(100vh - 120px);"
+    @load="loadEditor"
   >
     Carregando...
   </MonacoDiffEditor>

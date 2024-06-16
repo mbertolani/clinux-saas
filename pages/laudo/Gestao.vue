@@ -108,7 +108,7 @@ const toolBarItens = [
     cssClass: 'e-de-toolbar-btn'
   },
   {
-    prefixIcon: 'e-diff',
+    prefixIcon: 'e-undo',
     tooltipText: 'Alterações do Laudo',
     text: 'Diff',
     id: 'diff',
@@ -220,7 +220,7 @@ const actionMenu: ActionMenuItem[] = [
   },
   {
     name: 'Diff',
-    title: 'Diff',
+    title: 'Laudo Diff',
     action: () => { openDiff() }
   }
 ]

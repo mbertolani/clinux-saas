@@ -9,10 +9,14 @@ import { AG_GRID_LOCALE_PT_BR } from '@/locales/grid'
 LicenseManager.setLicenseKey(
   useRuntimeConfig().public.aggridKey
 )
-defineProps({
+const props = defineProps({
   rowClassRules: {
     type: Object,
     default: null
+  },
+  gridOptions: {
+    type: Object,
+    default: () => ({})
   }
 })
 const colorMode = useColorMode()
@@ -26,7 +30,7 @@ watch(colorMode, () => {
 onMounted(() => {
   color.value = getColor()
 })
-const defaultGridOptions: GridOptions = {
+const defaultGridOptions: GridOptions = props.gridOptions || {
   suppressHorizontalScroll: false,
   alwaysShowVerticalScroll: false,
   autoSizeStrategy: {
@@ -52,10 +56,13 @@ function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | nu
 
   return suggestedNextCell
 }
-
+const selectFirst = () => {
+  coreApi.value.getDisplayedRowAtIndex(0)?.setSelected(true)
+}
 const coreApi = ref(null)
 defineExpose({
-  coreApi
+  coreApi,
+  selectFirst
 })
 </script>
 
