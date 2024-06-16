@@ -14,7 +14,7 @@ const rowData = ref()
 const options = getFieldList(await find('tipodocumento'))
 const columnDefs = [
   { field: 'ds_arquivo', headerName: 'Arquivo', width: 400 },
-  { field: 'ds_documento', headerName: 'Tipo Documento', width: 200 }
+  { field: 'ds_documento', headerName: 'Tipo Documento', width: 400 }
 ]
 
 const listaAnexos = async () => {

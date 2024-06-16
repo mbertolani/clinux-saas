@@ -16,11 +16,6 @@ export const useAPI = async <
   url: R,
   options?: O
 ) => {
-  // const token = useCookie('token')
-  // console.log('useAPI', token)
-  // const cookieHeader = { ...useRequestHeaders(['cookie']) as HeadersInit }
-  // const cookieHeaders = { ...useRequestHeaders(['cookie']) as HeadersInit }
-  // console.log('useAPI', options ? { ...options, ...{ headers: cookieHeaders } } : { ...{ headers: cookieHeaders } })
   return $fetch<T>(url, {
     baseURL: useRouterStore().apiUrl, //
     ...options,
