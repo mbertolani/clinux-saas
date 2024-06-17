@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useModelo } from '~/composables/gerencial/useModelo'
-import { getFieldName } from '~/utils/schema'
 
 const emit = defineEmits(['submit', 'close'])
 
@@ -10,11 +8,14 @@ const props = defineProps({
   id: {
     type: Number,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
   }
 })
-const model = ref(null)
+
 const { getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useModelo()
-const { get, create, update } = useModelo()
 
 const validaModalidade = computed(() => props.id > 0)
 
@@ -55,8 +56,8 @@ const data = reactive({
     options: async () => {
       // if (!search) return []
       // if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
-      if (!model.value.cd_modalidade) return []
-      return await getMedicos(model.value.cd_modalidade)
+      if (!getNode('cd_modalidade').value) return []
+      return await getMedicos(Number(getNode('cd_modalidade').value))
     }
   }
 })
@@ -79,13 +80,13 @@ const schema: FormKitSchemaDefinition = [
     name: 'ds_modelo',
     label: 'Descrição',
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'text',
     name: 'ds_observacao',
     label: 'Observação',
-    outerClass: 'md:col-span-8'
+    outerClass: formClass(8)
   },
   {
     $formkit: 'dropdown',
@@ -95,7 +96,7 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     bind: '$cd_modalidade',
     selectionRemovable: true,
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'dropdown',
@@ -104,7 +105,7 @@ const schema: FormKitSchemaDefinition = [
     label: 'Empresa',
     bind: '$cd_empresa',
     selectionRemovable: true,
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'dropdown',
@@ -113,62 +114,32 @@ const schema: FormKitSchemaDefinition = [
     label: 'Médico',
     bind: '$cd_medico',
     selectionRemovable: true,
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'toggle',
     name: 'sn_ativo',
     label: 'Ativo ?',
-    outerClass: 'md:col-span-12 md:items-end inline-flex items-center'
+    outerClass: formClass(12)
   }
-
 ]
 
-watch(() => props.id, async () => {
-  model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
-})
-const onSubmit = async (_data: any) => {
-  const item = (props.id) ? await update(props.id, _data) : await create(_data)
-  if (item)
-    emit('submit', props.id, item)
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
 }
 </script>
 
 <template>
   <BaseForm
-    title="Cadastro de Modelos"
+    :title
     @close="emit('close')"
   >
-    <FormKit
-      id="form-kit"
-      v-slot="{ state: { dirty } }"
-      v-model="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
+    <BaseFormLayout
+      :id
+      :schema
+      :data
+      :controller="useModelo()"
       @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema
-              :data
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
-          </div>
-        </div>
-      </div>
-    </FormKit>
+    />
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

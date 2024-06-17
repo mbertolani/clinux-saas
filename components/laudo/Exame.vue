@@ -76,7 +76,7 @@ const schema: FormKitSchemaDefinition = [
     name: 'ds_exame_realizado',
     label: 'Descrição',
     validation: 'required',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   }
 
 ]

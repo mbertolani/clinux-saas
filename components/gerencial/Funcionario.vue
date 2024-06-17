@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useFuncionario } from '~/composables/gerencial/useFuncionario'
-import { getFieldName } from '~/utils/schema'
 
 const emit = defineEmits(['submit', 'close'])
-const props = defineProps({
+
+defineProps({
   id: {
     type: Number,
+    required: true
+  },
+  title: {
+    type: String,
     required: true
   }
 })
@@ -21,13 +24,13 @@ const schema: FormKitSchemaDefinition = [
     name: 'ds_funcionario',
     label: 'Nome',
     validation: 'required',
-    outerClass: 'md:col-span-8'
+    outerClass: formClass(8)
   },
   {
     $formkit: 'text',
     name: 'ds_apelido',
     label: 'Apelido',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'mask',
@@ -36,7 +39,7 @@ const schema: FormKitSchemaDefinition = [
     mask: '###.###.###-##',
     label: 'Cpf',
     unmaskValue: true,
-    outerClass: 'md:col-span-3'
+    outerClass: formClass(3)
   },
   {
     $formkit: 'dropdown',
@@ -44,7 +47,7 @@ const schema: FormKitSchemaDefinition = [
     label: 'Usuário',
     selectionRemovable: true,
     options: getFieldList(await useBaseStore('/gerencial/usuario').getList()),
-    outerClass: 'md:col-span-9'
+    outerClass: formClass(9)
   },
   {
     $formkit: 'dropdown',
@@ -53,58 +56,24 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     selectionRemovable: true,
     options: getFieldList(await useBaseStore('/financeiro/centro').getList()),
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   }
 ]
-const model = ref({})
-const { get, create, update } = useFuncionario()
-
-watch(() => props.id, async () => {
-  const response = props.id ? await get(props.id, getFieldName(schema)) : {}
-  response.bb_portal_anexo = Decode64(response.bb_portal_anexo)
-  model.value = response
-})
-const onSubmit = async (_data: any) => {
-  const item = (props.id) ? await update(props.id, _data) : await create(_data)
-  if (item)
-    emit('submit', props.id, item)
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
 }
 </script>
 
 <template>
   <BaseForm
-    title="Cadastro de Funcionários"
+    :title
     @close="emit('close')"
   >
-    <FormKit
-      id="form-kit"
-      v-slot="{ state: { dirty } }"
-      v-model="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
+    <BaseFormLayout
+      :id
+      :schema
+      :controller="useFuncionario()"
       @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema="schema"
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
-          </div>
-        </div>
-      </div>
-    </FormKit>
+    />
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

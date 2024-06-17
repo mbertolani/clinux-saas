@@ -77,10 +77,10 @@ const defaultColDef = ref({
 
 const getRowId = ({ data }) => Object.values(data)[0]
 
-const onGridReady = async () => {
+const onGridReady = async ({ api }) => {
   await restoreColumnState()
-  // selectFirst()
-  handleGrid()?.closeToolPanel()
+  api.getDisplayedRowAtIndex(0)?.setSelected(true, true)
+  api.closeToolPanel()
 }
 
 const onRowDataUpdated = ({ api }) => {
@@ -275,7 +275,6 @@ function applyFilterChanged(payload: string) {
   <BaseGridCore
     ref="gridApi"
     style="height: 85vh; width: 100%"
-    v-bind="$attrs"
     row-model-type="clientSide"
     row-selection="multiple"
     :row-class-rules

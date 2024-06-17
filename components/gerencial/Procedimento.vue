@@ -56,20 +56,20 @@ const schema: FormKitSchemaDefinition = [
     name: 'ds_procedimento',
     label: 'Nome',
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'text',
     name: 'ds_exame',
     label: 'Nomenclatura TUSS',
-    outerClass: 'md:col-span-6'
+    outerClass: formClass(6)
   },
   {
     $formkit: 'text',
     name: 'ds_mn',
     label: 'Mnemônico',
     validation: 'required',
-    outerClass: 'md:col-span-2'
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
@@ -80,7 +80,7 @@ const schema: FormKitSchemaDefinition = [
     bind: '$cd_modalidade',
     selectionRemovable: true,
     options: getFieldList(await useBaseStore('/gerencial/modalidade').getList()),
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'autocomplete',
@@ -90,7 +90,7 @@ const schema: FormKitSchemaDefinition = [
     selectionRemovable: true,
     debounce: 500,
     bind: '$cd_grupo',
-    outerClass: 'md:col-span-6',
+    outerClass: formClass(6),
     emptyMessage: 'Nenhum registro encontrado !'
   },
 
@@ -98,13 +98,13 @@ const schema: FormKitSchemaDefinition = [
     $formkit: 'number',
     name: 'nr_prazo_entrega',
     label: 'P. Entrega',
-    outerClass: 'md:col-span-2'
+    outerClass: formClass(2)
   },
   {
     $formkit: 'toggle',
     name: 'sn_laudar',
     label: 'Não Laudar ?',
-    outerClass: 'md:col-span-12 md:items-end inline-flex items-center'
+    outerClass: formClass(12)
   }
 
 ]

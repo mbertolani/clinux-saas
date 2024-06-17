@@ -13,9 +13,9 @@ const openForm = (codigo?: number) => {
   id.value = Number(codigo)
 }
 
-const onSubmit = (_id: number, data: any) => {
+const onSubmit = (data: any) => {
   showModal.value = false
-  apiPage.value.applyTransaction(_id ? { update: [data] } : { add: [data] })
+  apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
 </script>
 

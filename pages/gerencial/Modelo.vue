@@ -15,6 +15,7 @@ const actionMenu: ActionMenuItem[] = [
     }
   }
 ]
+const title = 'Modelos'
 const idEditor = ref(0)
 const apiPage = ref(null)
 const apiEditor = ref(null)
@@ -25,10 +26,9 @@ const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
 }
-const onSubmit = (_id: number, data: any) => {
+const onSubmit = (data: any) => {
   showModal.value = false
-  const nodes = _id ? { update: [data] } : { add: [data] }
-  apiPage.value.applyTransaction(nodes)
+  apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
 // const modal = useModal()
 // const openForm = (codigo?: number) => {
@@ -85,7 +85,7 @@ const salvarModelo = async () => {
     <BasePage
       v-show="!idEditor"
       ref="apiPage"
-      :header="{ title: 'Modelos', icon: 'i-heroicons-film' }"
+      :header="{ title, icon: 'i-heroicons-film' }"
       :controller
       :action-menu
       @open-form="openForm"
@@ -98,6 +98,7 @@ const salvarModelo = async () => {
     <GerencialModelo
       :id="id"
       v-model="showModal"
+      :title
       @submit="onSubmit"
       @close="showModal = false"
     />

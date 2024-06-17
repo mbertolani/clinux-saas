@@ -24,13 +24,13 @@ const schema: FormKitSchemaDefinition = [
     name: 'ds_sala',
     label: 'Nome',
     validation: 'required',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   },
   {
     $formkit: 'toggle',
     name: 'sn_ativo',
     label: 'Ativo ?',
-    outerClass: 'md:col-span-12 md:items-end inline-flex items-center'
+    outerClass: formClass(12)
   }
 ]
 const onSubmit = async (...args) => {

@@ -43,7 +43,7 @@ const schema: FormKitSchemaDefinition = [
     autofocus: true,
     inputClass: 'uppercase',
     bind: '$someAttributes',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   },
   {
     $formkit: 'text',
@@ -51,7 +51,7 @@ const schema: FormKitSchemaDefinition = [
     id: 'ds_razao',
     label: 'Razão Social',
     validation: 'required',
-    outerClass: 'md:col-span-6'
+    outerClass: formClass(6)
   },
   {
     $formkit: 'mask',
@@ -59,7 +59,7 @@ const schema: FormKitSchemaDefinition = [
     id: 'ds_cnpj',
     mask: '##.###.###/####-##',
     label: 'Cnpj',
-    outerClass: 'md:col-span-3',
+    outerClass: formClass(3),
     // attrs: {
     //   '@keydown.enter': 'keydownHandler'
     // },
@@ -73,7 +73,7 @@ const schema: FormKitSchemaDefinition = [
     mask: '###.###.###-##',
     label: 'Cpf',
     unmaskValue: true,
-    outerClass: 'md:col-span-3'
+    outerClass: formClass(3)
   },
   {
     $formkit: 'dropdown',
@@ -84,7 +84,8 @@ const schema: FormKitSchemaDefinition = [
     selectionRemovable: true,
     openOnRemove: false,
     popover: true,
-    outerClass: 'md:col-span-6'
+    outerClass: formClass(6),
+    wrapperClass: '!mb-0'
   },
   {
     $formkit: 'dropdown',
@@ -93,14 +94,15 @@ const schema: FormKitSchemaDefinition = [
     // selectionAppearance: 'option',
     options: searchEstoque,
     optionLoader: searchEstoqueId,
-    outerClass: 'md:col-span-6'
+    outerClass: formClass(6),
+    wrapperClass: '!mb-0'
   },
   {
     $formkit: 'email',
     name: 'ds_email',
     label: 'Email',
     validation: 'email',
-    outerClass: 'md:col-span-8'
+    outerClass: formClass(8)
   },
   {
     $formkit: 'mask',
@@ -109,7 +111,7 @@ const schema: FormKitSchemaDefinition = [
     mask: '+55 (##) #####-####',
     label: 'Telefone',
     unmaskValue: true,
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   // {
   //   $formkit: 'colorpicker',
@@ -124,14 +126,14 @@ const schema: FormKitSchemaDefinition = [
     placeholder: 'https://www.example.com...',
     validation: 'url',
     // help: 'website',
-    outerClass: 'md:col-span-12',
+    outerClass: formClass(12),
     inputClass: '!lowercase'
   },
   {
     $formkit: 'textarea',
     name: 'bb_portal_anexo',
     label: 'Texto',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   },
   // {
   //   $formkit: 'currency',
@@ -139,11 +141,10 @@ const schema: FormKitSchemaDefinition = [
   //   label: 'Iss (%)',
   //   currency: 'BRL',
   //   decimals: 2,
-  //   min: 0,
   //   // minDecimals: '2', // nao aceita null, nao aceita digitacao de numero com 2 digitos
   //   displayLocale: 'pt-BR',
   //   valueFormat: 'number', // string
-  //   outerClass: 'md:col-span-2'
+  //   outerClass: formClass(2)
   // },
   // {
   //   $formkit: 'number',
@@ -152,7 +153,7 @@ const schema: FormKitSchemaDefinition = [
   //   min: 0,
   //   number: 'float', // number: integer
   //   step: 'any',
-  //   outerClass: 'md:col-span-2'
+  //   outerClass: formClass(2)
   // },
   // {
   //   $formkit: 'date',
@@ -165,13 +166,13 @@ const schema: FormKitSchemaDefinition = [
   //   // validation: '(1000)date_format:DD/MM/YYYY',
   //   valueFormat: 'YYYY-MM-DD',
   //   label: 'Data',
-  //   outerClass: 'md:col-span-4'
+  //   outerClass: formClass(4)
   // },
   {
     $formkit: 'toggle',
     name: 'sn_empresa',
     label: 'Ativo ?',
-    outerClass: 'md:col-span-3 md:items-end inline-flex items-center'
+    outerClass: formClass(3)
   },
   {
     $formkit: 'toggle',
@@ -179,7 +180,7 @@ const schema: FormKitSchemaDefinition = [
     label: 'Matriz ?',
     onValue: true,
     offValue: false,
-    outerClass: 'md:col-span-9 md:items-end inline-flex items-center'
+    outerClass: formClass(9)
   }
 ]
 

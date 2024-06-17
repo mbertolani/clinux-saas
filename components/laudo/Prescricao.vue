@@ -80,7 +80,7 @@ const schema: FormKitSchemaDefinition = [
     name: 'dt_prescricao',
     label: 'Data',
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'autocomplete',
@@ -90,13 +90,13 @@ const schema: FormKitSchemaDefinition = [
     bind: '$cd_paciente',
     validation: 'required',
     debounce: 500,
-    outerClass: 'md:col-span-8'
+    outerClass: formClass(8)
   },
   {
     $formkit: 'textarea',
     name: 'bb_observacao',
     label: 'Observação',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   }
 ]
 const schemaFilho: FormKitSchemaDefinition = [
@@ -110,7 +110,7 @@ const schemaFilho: FormKitSchemaDefinition = [
     label: 'Material',
     bind: '$cd_material',
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'number',
@@ -118,7 +118,7 @@ const schemaFilho: FormKitSchemaDefinition = [
     label: 'Quantidade',
     number,
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'dropdown',
@@ -126,14 +126,14 @@ const schemaFilho: FormKitSchemaDefinition = [
     bind: '$cd_unidade',
     label: 'Unidade',
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   }
 ]
 const schemaRepeater: FormKitSchemaDefinition = [
   {
     $formkit: 'repeater',
     name: 'material',
-    outerClass: 'md:col-span-12',
+    outerClass: formClass(12),
     children: schemaFilho
   }
 ]

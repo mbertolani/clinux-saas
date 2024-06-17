@@ -33,13 +33,13 @@ const schema: FormKitSchemaDefinition = [
     label: 'Classificação',
     options: options,
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'textarea',
     name: 'bb_complemento',
     label: 'Observação',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   }
 
 ]

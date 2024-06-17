@@ -41,13 +41,13 @@ const schema: FormKitSchemaDefinition = [
     label: 'Classificação',
     options: options,
     validation: 'required',
-    outerClass: 'md:col-span-4'
+    outerClass: formClass(4)
   },
   {
     $formkit: 'textarea',
     name: 'bb_achado',
     label: 'Observação',
-    outerClass: 'md:col-span-12'
+    outerClass: formClass(12)
   }
 
 ]
