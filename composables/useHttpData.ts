@@ -102,10 +102,7 @@ export const useBaseStore = (
   const download = async (id: number, fieldname: string, filename: string) => {
     return await useHttp(`${url}/${id}?fieldname=${fieldname}&filename=${filename}`, {
       method: 'put',
-      fileDownload: true,
-      headers: {
-        'Content-Type': 'application/octet-stream'
-      }
+      fileDownload: true
     })
   }
 

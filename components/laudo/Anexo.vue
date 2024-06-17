@@ -14,10 +14,15 @@ const rowData = ref()
 const rowImage = ref()
 const options = getFieldList(await find('tipodocumento'))
 const columnDefs = [
-  { field: 'ds_arquivo', headerName: 'Arquivo', width: 200 },
-  { field: 'ds_documento', headerName: 'Tipo Documento', width: 250 }
+  { field: 'ds_documento', headerName: 'Tipo Documento' }
+  // { field: 'ds_arquivo', headerName: 'Arquivo', width: 200 }
 ]
-
+const gridOptions = {
+  suppressHorizontalScroll: true,
+  autoSizeStrategy: {
+    type: 'fitGridWidth'
+  }
+}
 const listaAnexos = async () => {
   const response = await doAnexoLista({ cd_atendimento: props.id })
   if (!response.error) {
@@ -86,7 +91,6 @@ const onRowDoubleClicked = async (params) => {
   saveFile(response.filename, response.stream.data)
 }
 const onCellClicked = async ({ data }) => {
-  console.log('data1', data)
   const response = await doAnexoDownload(data.cd_documento)
   rowImage.value = response.stream.data instanceof Blob ? URL.createObjectURL(response.stream.data) : ''
 }
@@ -100,7 +104,7 @@ listaAnexos()
     @close="useModal().close()"
   >
     <div class="grid gap-x-4 grid-cols-1 lg:grid-cols-12">
-      <div class="lg:col-span-4">
+      <div :class="rowImage ? 'lg:col-span-4' : 'lg:col-span-12'">
         <FormKit
           id="form-anexo"
           type="form"
@@ -127,12 +131,17 @@ listaAnexos()
           style="height: 400px; width: 100%;"
           :column-defs
           :row-data
+          :pagination="false"
+          :grid-options
           :on-row-double-clicked="onRowDoubleClicked"
           :on-cell-key-down="onCellKeyDown"
           :on-cell-clicked="onCellClicked"
         />
       </div>
-      <div class="lg:col-span-8 row-span-2">
+      <div
+        v-if="rowImage"
+        class="lg:col-span-8 row-span-2"
+      >
         <NuxtImg
           :src="rowImage"
           class="mx-auto my-auto opacity-1"

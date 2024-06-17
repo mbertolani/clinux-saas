@@ -41,7 +41,21 @@ const props = defineProps({
   }
 })
 
+const selectedData = () => {
+  return selectedNode()?.data
+}
+const selectedNode = () => {
+  const node = apiGrid.value.getSelectedNodes()[0]
+  if (!node) {
+    useMessage().showError()
+    return null
+  }
+  return node
+}
+
 defineExpose({
+  selectedData,
+  selectedNode,
   getSelectedNodes: () => {
     return apiGrid.value.getSelectedNodes()
   },

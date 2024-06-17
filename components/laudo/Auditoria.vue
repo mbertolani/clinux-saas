@@ -15,8 +15,7 @@ const props = defineProps({
 const response = await useLaudo().execAuditar({ cd_atendimento: props.id })
 const options = getFieldList(response.data)
 const onSubmit = async (_data: any) => {
-  // _data.bb_auditado = _data.bb_auditado ? Decode64(_data.bb_auditado) : null
-  const response = await useLaudo().execAuditar(_data)
+  const response = await useLaudo().execAuditar({ ..._data, bb_auditado: Encode64(_data.bb_auditado) })
   if (!response.error)
     emit('submit', response.data)
 }
@@ -56,7 +55,7 @@ model.value.bb_auditado = Decode64(model.value.bb_auditado)
 
 <template>
   <BaseForm
-    title="Pendência"
+    title="Auditoria"
     @close="emit('close')"
   >
     <FormKit

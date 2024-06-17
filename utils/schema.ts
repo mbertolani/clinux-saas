@@ -10,18 +10,18 @@ export function getFieldName(schema) {
   }, [])
 }
 
-export function getFieldItem(item) {
+export function getFieldItem(item: object, value?: string, label?: string) {
   return item
     ? {
-        value: Object.values(item)[0],
-        label: Object.values(item)[1]
+        value: value ? item[value] : Object.values(item)[0],
+        label: label ? item[label] : Object.values(item)[1]
       }
     : {}
 }
-export function getFieldList(list) {
+export function getFieldList(list, value?: string, label?: string) {
   return list
     ? list.map((result) => {
-      return getFieldItem(result)
+      return getFieldItem(result, value, label)
     })
     : []
 }
