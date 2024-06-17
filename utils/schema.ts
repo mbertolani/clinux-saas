@@ -1,3 +1,6 @@
+export function formClass(cols: number) {
+  return `md:col-span-${cols} md:mb-2`
+}
 export function getFieldName(schema) {
   return schema.reduce((acc, item) => {
     if (item.name) {

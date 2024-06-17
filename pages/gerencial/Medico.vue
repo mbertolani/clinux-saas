@@ -3,6 +3,7 @@ import { GerencialMedico, GerencialMedicoProcedimento } from '#components'
 import { useMedico } from '~/composables/gerencial/useMedico'
 import type { ActionMenuItem } from '~/types/grid'
 
+const title = 'Médico'
 const apiPage = ref(null)
 const controller = useMedico()
 const showModal = ref(false)
@@ -23,9 +24,9 @@ const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
 }
-const onSubmit = (_id: number, data: any) => {
+const onSubmit = (data: any) => {
   showModal.value = false
-  const nodes = _id ? { update: [data] } : { add: [data] }
+  const nodes = id.value ? { update: [data] } : { add: [data] }
   apiPage.value.applyTransaction(nodes)
 }
 </script>
@@ -33,7 +34,7 @@ const onSubmit = (_id: number, data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title: 'Médicos', icon: 'i-heroicons-user-group' }"
+    :header="{ title, icon: 'i-heroicons-user-group' }"
     :controller
     :action-menu
     @open-form="openForm"
@@ -42,6 +43,7 @@ const onSubmit = (_id: number, data: any) => {
       <GerencialMedico
         :id
         v-model="showModal"
+        :title
         @submit="onSubmit"
         @close="showModal = false"
       />
