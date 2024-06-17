@@ -560,6 +560,7 @@ const editarAuditoria = async (id: number) => {
     })
 }
 const editarAnexo = async (id: number) => {
+  modal.close()
   if (id)
     modal.open(LaudoAnexo, { id })
 }

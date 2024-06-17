@@ -3,6 +3,10 @@ defineProps({
   title: {
     type: String,
     required: true
+  },
+  fullscreen: {
+    type: Boolean,
+    default: false
   }
 })
 // const model = ref(props.data)
@@ -34,6 +38,7 @@ const onClose = () => {
 <template>
   <UModal
     prevent-close
+    :fullscreen
     :ui="{
       width: 'w-full sm:max-w-xl md:max-w-2xl lg:max-w-6xl'
     }"

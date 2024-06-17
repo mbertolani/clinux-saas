@@ -11,10 +11,11 @@ const props = defineProps({
 const { remove, doAnexoLista, doAnexoDownload, doAnexoSalvar } = useAnexo(props.id)
 const { find } = useLaudo()
 const rowData = ref()
+const rowImage = ref()
 const options = getFieldList(await find('tipodocumento'))
 const columnDefs = [
-  { field: 'ds_arquivo', headerName: 'Arquivo', width: 400 },
-  { field: 'ds_documento', headerName: 'Tipo Documento', width: 400 }
+  { field: 'ds_arquivo', headerName: 'Arquivo', width: 200 },
+  { field: 'ds_documento', headerName: 'Tipo Documento', width: 250 }
 ]
 
 const listaAnexos = async () => {
@@ -23,10 +24,7 @@ const listaAnexos = async () => {
     rowData.value = response.data
   }
 }
-const onRowDoubleClicked = async (params) => {
-  const response = await doAnexoDownload(params.data.cd_documento)
-  saveFile(response.filename, response.stream)
-}
+
 function saveFile(filename, blob) {
   const a = document.createElement('a')
   a.download = filename
@@ -97,63 +95,63 @@ const onCellKeyDown = ({ event, api }) => {
       break
   }
 }
+const onRowDoubleClicked = async (params) => {
+  const response = await doAnexoDownload(params.data.cd_documento)
+  saveFile(response.filename, response.stream.data)
+}
+const onCellClicked = async ({ data }) => {
+  console.log('data1', data)
+  const response = await doAnexoDownload(data.cd_documento)
+  rowImage.value = response.stream.data instanceof Blob ? URL.createObjectURL(response.stream.data) : ''
+}
 listaAnexos()
-
-// function blobToDataURL(blob) {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader()
-//     reader.onloadend = function () {
-//       resolve(reader.result)
-//     }
-//     reader.onerror = reject
-//     reader.readAsDataURL(blob)
-//   })
-// }
-// function carregarImagens() {
-//   const lista = []
-//   rowData.value.forEach(async (item) => {
-//     const response = await doAnexoDownload(item.cd_documento)
-//     const dataURL = await blobToDataURL(response.stream)
-//     lista.push(dataURL)
-//   })
-//   images.value = lista
-//   console.log('images', images.value)
-// }
 </script>
 
 <template>
   <BaseForm
     title="Documentos"
+    :fullscreen="true"
     @close="useModal().close()"
   >
-    <FormKit
-      id="form-anexo"
-      type="form"
-      @submit="submitHandler"
-    >
-      <FormKit
-        type="dropdown"
-        label="Tipo"
-        name="cd_tipo"
-        :options
-        accept=".jpg,.png,.pdf"
-        validation="required"
-      />
-      <FormKit
-        type="file"
-        label="Documentos"
-        name="bb_arquivo"
-        accept=".jpg,.png,.pdf"
-        multiple
-        validation="required"
-      />
-    </FormKit>
-    <BaseGridCore
-      style="height: 400px; width: 100%;"
-      :column-defs
-      :row-data
-      :on-row-double-clicked="onRowDoubleClicked"
-      :on-cell-key-down="onCellKeyDown"
-    />
+    <div class="grid gap-x-4 grid-cols-1 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <FormKit
+          id="form-anexo"
+          type="form"
+          @submit="submitHandler"
+        >
+          <FormKit
+            type="dropdown"
+            label="Tipo"
+            name="cd_tipo"
+            :options
+            accept=".jpg,.png,.pdf"
+            validation="required"
+          />
+          <FormKit
+            type="file"
+            label="Documentos"
+            name="bb_arquivo"
+            accept=".jpg,.png,.pdf"
+            multiple
+            validation="required"
+          />
+        </FormKit>
+        <BaseGridCore
+          style="height: 400px; width: 100%;"
+          :column-defs
+          :row-data
+          :on-row-double-clicked="onRowDoubleClicked"
+          :on-cell-key-down="onCellKeyDown"
+          :on-cell-clicked="onCellClicked"
+        />
+      </div>
+      <div class="lg:col-span-8 row-span-2">
+        <NuxtImg
+          :src="rowImage"
+          class="mx-auto my-auto opacity-1"
+        />
+      </div>
+    </div>
   </BaseForm>
 </template>
