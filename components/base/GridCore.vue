@@ -59,9 +59,13 @@ function navigateToNextCell(params: NavigateToNextCellParams): CellPosition | nu
 const selectFirst = () => {
   coreApi.value.getDisplayedRowAtIndex(0)?.setSelected(true)
 }
+function applyFilterChanged(payload: string) {
+  coreApi.value.api.setGridOption('quickFilterText', payload)
+}
 const coreApi = ref(null)
 defineExpose({
   coreApi,
+  applyFilterChanged,
   selectFirst
 })
 </script>

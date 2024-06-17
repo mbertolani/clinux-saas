@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalSearch, LaudoAnexo, LaudoChat, LaudoDiff } from '#components'
+import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -346,7 +346,7 @@ const selecionarModelo = async () => {
   const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value }) as any
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Modelos de Laudo',
     data: response,
     async onSubmit(id) {
@@ -383,7 +383,7 @@ const editarProcedimento = async () => {
   const response = await useLaudo().execProcedimento({ cd_exame })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Procedimento',
     data: response.data,
     async onSubmit(cd_procedimento) {
@@ -400,7 +400,7 @@ const editarMedico = async () => {
   const response = await useLaudo().execMedico({ cd_atendimento })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Médico',
     data: response.data,
     async onSubmit(cd_medico) {
@@ -422,7 +422,7 @@ const editarRevisor = async () => {
   const response = await useLaudo().execRevisor({ cd_atendimento })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_medico) {
@@ -444,7 +444,7 @@ const editarAuditor = async () => {
   const response = await useLaudo().execAuditor({ cd_atendimento })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Auditor',
     data: response.data,
     async onSubmit(cd_medico) {
@@ -466,7 +466,7 @@ const editarUrgencia = async () => {
   const response = await useLaudo().execUrgencia({ cd_atendimento })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_urgente) {
@@ -488,7 +488,7 @@ const editarProcedencia = async () => {
   const response = await useLaudo().execProcedencia({ cd_atendimento })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Procedência',
     data: response.data,
     async onSubmit(cd_procedencia) {
@@ -505,7 +505,7 @@ const cancelarLaudo = async () => {
   const response = await useLaudo().execCancelar({ cd_exame })
   if (response.error)
     return
-  modal.open(ModalSearch, {
+  modal.open(ModalPesquisa, {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_motivo) {

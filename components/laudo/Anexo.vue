@@ -32,20 +32,6 @@ function saveFile(filename, blob) {
   a.click()
 }
 const submitHandler = async (data): Promise<void> => {
-  // await Promise.all(data.bb_arquivo.map((fileItem) => {
-  //   const fReader = new FileReader()
-  //   fReader.onloadend = async () => {
-  //     const data64 = String(fReader.result).replace(/^data:.+;base64,/, '')
-  //     return await doAnexoSalvar({
-  //       cd_atendimento: props.id,
-  //       cd_tipo: data.cd_tipo,
-  //       bb_arquivo: data64,
-  //       ds_arquivo: fileItem.file.name
-  //     })
-  //   }
-  //   fReader.readAsDataURL(fileItem.file)
-  // }))
-  // return await listaAnexos()
   await Promise.all(data.bb_arquivo.map((fileItem) => {
     return new Promise((resolve) => {
       const fReader = new FileReader()
