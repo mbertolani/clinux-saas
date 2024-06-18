@@ -209,6 +209,17 @@ export default {
       if (keyActions[key]) {
         keyActions[key]()
       }
+    },
+    searchReplace(payload) {
+      Object.entries(payload).forEach(async ([key, value]) => {
+        this.editor.search.findAll(key, 'WholeWord')
+        // this.editor.search.searchResults.replaceAll(value as string)
+        if (this.editor.search.searchResults.length > 0)
+          this.editor.editor.insertText(String(value || ' '))
+      })
+      this.editor.search.searchResults.clear()
+      this.editor.selection.moveToParagraphEnd()
+      this.editor.focusIn()
     }
     // async appendHtml({ state }, payload) {
     //   const bb_rtf = window.btoa(payload)

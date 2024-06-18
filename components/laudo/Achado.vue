@@ -2,10 +2,7 @@
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 import { useExame } from '~/composables/atendimento/useExame'
-// import { useAtendimento } from '~/composables/atendimento/useAtendimento'
-// import { useExame } from '~/composables/atendimento/useExame'
 import { useLaudo } from '~/composables/laudo/useLaudo'
-// import { getFieldName } from '~/utils/schema'
 
 const emit = defineEmits(['submit', 'close'])
 

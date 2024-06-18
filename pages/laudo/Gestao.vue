@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff } from '#components'
+import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -46,6 +46,13 @@ const toolBarItens = [
     tooltipText: 'Auto-Texto',
     text: 'Auto-Texto',
     id: 'texto',
+    cssClass: 'e-de-toolbar-btn'
+  },
+  {
+    prefixIcon: 'e-upper-case',
+    tooltipText: 'Variáveis e Fórmulas',
+    text: 'Fórmula',
+    id: 'formula',
     cssClass: 'e-de-toolbar-btn'
   },
   'Separator',
@@ -131,6 +138,12 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       break
     case 'modelo':
       selecionarModelo()
+      break
+    case 'texto':
+      selecionarAutotexto()
+      break
+    case 'formula':
+      selecionarFormula()
       break
     case 'pendencia':
       editarPendencia(selectedData()?.cd_atendimento)
@@ -222,6 +235,11 @@ const actionMenu: ActionMenuItem[] = [
     name: 'Diff',
     title: 'Laudo Diff',
     action: () => { openDiff() }
+  },
+  {
+    name: 'Fórmula',
+    title: 'Laudo Fórmula',
+    action: () => { selecionarFormula() }
   }
 ]
 const idEditor = ref<number>(0)
@@ -298,8 +316,20 @@ const filtrar = async () => {
 watch(() => modelFilter.value.cd_fila, async () => {
   apiPage.value.applyFilter()
 })
-const autoTexto = async (payload: any) => {
-  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: user.idmedico, ds_texto: payload })
+const selecionarFormula = () => {
+  modal.open(LaudoVariavel,
+    {
+      title: 'Variáveis e Fórmulas',
+      id: 0,
+      async onSubmit(data: any) {
+        apiEditor.value.searchReplace(data)
+        modal.close()
+      }
+    }
+  )
+}
+const selecionarAutotexto = async (payload?: any) => {
+  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: user.idmedico, ds_texto: payload || '%' })
   if (response.error)
     return
   if (!response.data.length) {
@@ -320,7 +350,7 @@ const autoTexto = async (payload: any) => {
         data: response.data,
         async onSubmit(payload: any, data: any) {
           if (data.label)
-            autoTexto(data.label)
+            selecionarAutotexto(data.label)
         },
         onCancel() {
           modal.close()
@@ -707,7 +737,7 @@ const openDiff = async () => {
         click: toolBarClick
       }"
       @load="loadEditor($event)"
-      @texto="autoTexto"
+      @texto="selecionarAutotexto"
     />
     <LaudoLeo
       v-if="openLeo"
