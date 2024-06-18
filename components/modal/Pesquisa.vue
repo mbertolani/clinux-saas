@@ -36,15 +36,21 @@ const gridOptions = {
   }
 }
 const onRowDoubleClicked = (params) => {
-  (params.node.id)
-    ? emit('submit', params.node.id)
-    : emit('cancel')
+  emit(params.node.data.id ? 'submit' : 'cancel', params.node.data.id, params.node.data)
 }
-const onKeyDown = (event) => {
+const onInputKeyDown = (event) => {
   if (event.key === 'Enter') {
     const selected = gridRef.value?.coreApi?.api.getDisplayedRowAtIndex(0)
     if (selected) {
-      emit('submit', selected.data.id)
+      emit('submit', selected.data.id, selected.data)
+    }
+  }
+}
+const onCellKeyDown = ({ event }) => {
+  if (event.key === 'Enter') {
+    const selected = gridRef.value?.coreApi?.api.getSelectedNodes()[0]
+    if (selected) {
+      emit('submit', selected.data.id, selected.data)
     }
   }
 }
@@ -69,7 +75,7 @@ watch(inputSearch, () => {
       input-class="uppercase"
       class="py-2 px-2"
       :ui="{ icon: { trailing: { pointer: '' } } }"
-      @keydown.enter="onKeyDown"
+      @keydown.enter="onInputKeyDown"
     />
     <BaseGridCore
       ref="gridRef"
@@ -79,6 +85,7 @@ watch(inputSearch, () => {
       :pagination="false"
       :grid-options
       :on-row-double-clicked="onRowDoubleClicked"
+      :on-cell-key-down="onCellKeyDown"
       class="pb-2 px-2"
     />
   </UModal>

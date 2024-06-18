@@ -49,7 +49,7 @@ export default {
     registerLicense(useRuntimeConfig().public.syncfusionKey)
   },
   async mounted() {
-    console.log('mounted')
+    // console.log('mounted')
     this.editor.defaultLocale = ptBr
     this.editor.locale = 'pt-BR'
     this.editor.enableLocalPaste = false
@@ -85,6 +85,15 @@ export default {
       this.editor.open(response)
       this.editor.selection.moveToDocumentEnd()
     },
+    async paste(payload) {
+      const sfdt = await useEditor().Import(payload)
+      this.editor.editor.paste(sfdt)
+      this.editor.focusIn()
+    },
+    insert(payload) {
+      this.editor.editor.insertText(payload)
+      this.editor.focusIn()
+    },
     async save() {
       const response = await this.saveBase()
       return response.split(',')[1]
@@ -114,7 +123,7 @@ export default {
       if (containerPanel)
         containerPanel.style.height = (window.innerHeight - 86) + 'px'
       // - (document.getElementById('documenteditor_titlebar').offsetHeight + document.getElementById('documenteditor_toolbar').offsetHeight)
-      console.log(containerPanel?.style.height)
+      // console.log(containerPanel?.style.height)
     },
     // setToolBar(): Array<CustomToolbarItemModel | ToolbarItem> {
     setToolBar() {
@@ -174,14 +183,29 @@ export default {
         }
       }
     },
-    keyDown({ event, isHandled }) {
+    keyDown(args) {
+      // const keyCode: number = args.event.which || args.event.keyCode
+      // const isCtrlKey: boolean = (args.event.ctrlKey || args.event.metaKey) ? true : ((keyCode === 17) ? true : false)
+      // // 67 is the character code for 'C'
+      // if (isCtrlKey && keyCode === 67) {
+      //   // To prevent copy operation set isHandled to true
+      //   args.isHandled = true
+      // }
       const keyActions = {
-        // å: () => event.altKey && dispatch('iniciarReconhecimento'),
-        // a: () => event.altKey && dispatch('iniciarReconhecimento'),
-        // f10: () => dispatch('iniciarReconhecimento'),
-        f3: () => this.$emit('texto', { event, isHandled })
+        f3: () => {
+          args.event.preventDefault()
+          args.isHandled = true
+          const so = this.editor.selection.startOffset
+          const eo = this.editor.selection.endOffset
+          this.editor.selection.moveToPreviousCharacter()
+          this.editor.selection.selectCurrentWord()
+          const texto = this.editor.selection.text
+          if (!texto.trim())
+            this.editor.selection.select(so, eo)
+          this.$emit('texto', texto.trim() || '%')
+        }
       }
-      const key = event.key.toLowerCase()
+      const key = args.event.key.toLowerCase()
       if (keyActions[key]) {
         keyActions[key]()
       }

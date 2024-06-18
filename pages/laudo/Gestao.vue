@@ -298,15 +298,35 @@ const filtrar = async () => {
 watch(() => modelFilter.value.cd_fila, async () => {
   apiPage.value.applyFilter()
 })
-const autoTexto = (payload: any) => {
-  payload.event.preventDefault()
-  // isHandled = true
-  apiEditor.value.editor().selection.moveToPreviousCharacter()
-  apiEditor.value.editor().selection.selectCurrentWord()
-  const texto = apiEditor.value.editor().selection.text
-  if (texto) {
-    apiEditor.value.editor().search.find(texto, 'WholeWord')
-    useLaudo().doLaudoFiltroTexto({ cd_exame: 1, cd_medico: 1, ds_texto: texto })
+const autoTexto = async (payload: any) => {
+  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: user.idmedico, ds_texto: payload })
+  if (response.error)
+    return
+  if (!response.data.length) {
+    useMessage().showMessage('Chave não encontrada !')
+    return
+  }
+  if (response.data.length === 1 && payload !== '%') {
+    const texto = Decode64(response.data[0].bb_html)
+    if (texto.includes('{\\rtf1')) {
+      apiEditor.value.paste(texto)
+    } else {
+      apiEditor.value.insert(texto)
+    }
+  } else {
+    modal.open(ModalPesquisa,
+      {
+        title: 'Auto-Texto',
+        data: response.data,
+        async onSubmit(payload: any, data: any) {
+          if (data.label)
+            autoTexto(data.label)
+        },
+        onCancel() {
+          modal.close()
+        }
+      }
+    )
   }
 }
 const selectedNodeIds = (): number[] => {
@@ -341,22 +361,22 @@ const laudoAssinado = async () => {
     })
 }
 const selecionarModelo = async () => {
-  if (!selectedNode())
+  if (!idEditor.value)
     return
   const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value }) as any
   if (response.error)
     return
   modal.open(ModalPesquisa, {
     title: 'Modelos de Laudo',
-    data: response,
+    data: response.data,
     async onSubmit(id) {
       const response = await useLaudo().carregarModelo(idEditor.value, id) as any
       if (!response.error) {
         apiEditor.value.clear()
-        if (response.layout)
-          await apiEditor.value.load(Decode64(response.layout))
+        if (response.data.layout)
+          await apiEditor.value.load(response.data.layout)
         if (response.data.modelo) {
-          const sfdt = await useEditor().Import(Decode64(response.data.modelo))
+          const sfdt = await useEditor().Import(response.data.modelo)
           apiEditor.value.editor.editor.paste(sfdt)
         }
       }
