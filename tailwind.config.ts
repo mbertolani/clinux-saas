@@ -20,7 +20,7 @@ export default <Partial<Config>>{
     './layouts/**/*.vue',
     './pages/**/*.vue',
     './types/**/*.{js,ts}',
-    './utils/**/*.{js,ts}',
+    // './utils/**/*.{js,ts}',
     './nuxt.config.{js,ts}'
   ],
   theme: {

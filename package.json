@@ -15,6 +15,7 @@
   "dependencies": {
     "@formkit/addons": "latest",
     "@formkit/core": "latest",
+    "@formkit/icons": "latest",
     "@formkit/nuxt": "latest",
     "@formkit/pro": "latest",
     "@formkit/themes": "latest",

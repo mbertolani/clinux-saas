@@ -1,4 +1,4 @@
-// import { genesisIcons } from '@formkit/icons'
+import { genesisIcons } from '@formkit/icons'
 import { defineFormKitConfig } from '@formkit/vue'
 import { createProPlugin, autocomplete,
   colorpicker,
@@ -80,7 +80,7 @@ function scrollToErrors(node) {
 
 export default defineFormKitConfig(() => ({
   plugins: [proPlugin, scrollToErrors, defaultToEmptyString],
-  // icons: { ...genesisIcons },
+  icons: { ...genesisIcons },
   locales: { pt },
   locale: 'pt',
   config: { rootClasses }

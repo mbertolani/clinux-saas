@@ -17,9 +17,7 @@ async function searchEstoque() {
 // the cached option as the second argument (if it exists).
 async function searchEstoqueId(id, cachedOption) {
   if (cachedOption) return cachedOption
-  const response = await getEstoque(id)
-  console.log('searchEstoqueId', response)
-  return response ? response : { label: 'Error loading' }
+  return await getEstoque(id)
 }
 
 // const customLine = 'flex flex-col sm:gap-4 sm:flex-row'
@@ -34,7 +32,6 @@ const schema: FormKitSchemaDefinition = [
     name: 'cd_empresa',
     label: 'Código'
   },
-
   {
     $formkit: 'text',
     name: 'ds_empresa',
@@ -42,7 +39,7 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     autofocus: true,
     inputClass: 'uppercase',
-    bind: '$someAttributes',
+    // bind: '$someAttributes',
     outerClass: formClass(12)
   },
   {
@@ -92,6 +89,7 @@ const schema: FormKitSchemaDefinition = [
     name: 'cd_estoque',
     label: 'Estoque',
     // selectionAppearance: 'option',
+    selectionRemovable: true,
     options: searchEstoque,
     optionLoader: searchEstoqueId,
     outerClass: formClass(6),
