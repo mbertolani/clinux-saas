@@ -37,27 +37,24 @@ function replaceEmptyStringWithNull(obj) {
 }
 const apiGrid = ref(null)
 // const { loadUser } = useRouterStore()
-const { api, items: rowData, grid: columnDefs } = props.controller
+// const { api, items: rowData, grid: columnDefs } = props.controller
 const inputSearch = ref('')
 watch(inputSearch, () => {
   apiGrid.value?.applyFilterChanged(inputSearch.value)
 })
-if (!props.filter) {
-  await Promise.all([
-    // loadUser(),
-    // api.getAll(),
-    api.getGrid()
-  ])
-} else {
-  await Promise.all([
-    // loadUser(),
-    // api.getView(replaceEmptyStringWithNull(props.filter)),
-    api.getGrid()
-  ])
+const setColumnDefs = async () => {
+  const columns = await props.controller.getGrid()
+  const appendColumns = columns.concat(props.appendColumnDefs)
+  const mergedColumns = appendColumns.map((column) => {
+    return (props.mergeColumnDefs[column.field]) ? Object.assign(column, props.mergeColumnDefs[column.field]) : column
+  })
+  return mergedColumns
 }
-
+const rowData = ref()
+const columnDefs = ref([])
+columnDefs.value = await setColumnDefs()
 const buttonSearch = async () => {
-  await api.getView(replaceEmptyStringWithNull(props.filter))
+  rowData.value = await props.controller.getView(replaceEmptyStringWithNull(props.filter))
   apiGrid.value?.selectFirst()
 }
 </script>
@@ -107,8 +104,9 @@ const buttonSearch = async () => {
         :row-data
         :column-defs
         :row-class-rules
-        :http="api"
+        :http="controller"
       />
+      <slot />
     </UPageBody>
   </UPage>
 </template>

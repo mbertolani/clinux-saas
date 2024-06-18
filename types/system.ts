@@ -120,7 +120,8 @@ export const mainMenu = [
     label: 'Laudo',
     children: [
       { label: 'Gestão', to: '/laudo/gestao', icon: 'i-heroicons-document-text' },
-      { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' }
+      { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' },
+      { label: 'Auditoria', to: '/laudo/auditoria', icon: 'i-mdi-account-card' }
     ]
   },
   // {

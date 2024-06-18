@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { number } from '@formkit/icons'
+// import { number } from '@formkit/icons'
 import { FormKitSchema } from '@formkit/vue'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import { getFieldName } from '~/utils/schema'
@@ -116,7 +116,7 @@ const schemaFilho: FormKitSchemaDefinition = [
     $formkit: 'number',
     name: 'nr_quantidade',
     label: 'Quantidade',
-    number,
+    // number
     validation: 'required',
     outerClass: formClass(4)
   },

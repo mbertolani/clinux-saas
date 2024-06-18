@@ -36,7 +36,7 @@ export default defineNuxtConfig({
     // '@sidebase/nuxt-auth',
     // 'nuxt-og-image'
     // 'nuxt-security'
-    'nuxt-icon',
+    // 'nuxt-icon',
     'nuxt-monaco-editor'
   ],
   // hooks: {
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
   //   }
   // },
   ui: {
-    icons: ['heroicons', 'simple-icons']
+    icons: ['heroicons', 'simple-icons', 'mdi', 'healthicons', 'lucide']
   },
   colorMode: {
     disableTransition: true
