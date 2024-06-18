@@ -81,8 +81,7 @@ const schema: FormKitSchemaDefinition = [
     selectionRemovable: true,
     openOnRemove: false,
     popover: true,
-    outerClass: formClass(6),
-    wrapperClass: '!mb-0'
+    outerClass: formClass(6)
   },
   {
     $formkit: 'dropdown',
@@ -92,8 +91,7 @@ const schema: FormKitSchemaDefinition = [
     selectionRemovable: true,
     options: searchEstoque,
     optionLoader: searchEstoqueId,
-    outerClass: formClass(6),
-    wrapperClass: '!mb-0'
+    outerClass: formClass(6)
   },
   {
     $formkit: 'email',

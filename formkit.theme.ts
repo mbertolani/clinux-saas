@@ -282,7 +282,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'dark:text-neutral-300': true
   },
   'family:dropdown__wrapper': {
-    'mb-1.5': true
+    'mb-1.5': false
   },
   'family:dropdown__inner': {
     'relative': true,
@@ -1007,7 +1007,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'max-w-[20em]': true,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'text-base': true,
     'data-[disabled]:opacity-100': true
@@ -1208,7 +1208,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'max-w-[20em]': false,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'data-[disabled]:opacity-50': true,
     'text-base': true,
@@ -2112,7 +2112,7 @@ const classes: Record<string, Record<string, boolean>> = {
   'repeater__outer': {
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'text-base': true,
     'group/repeater': true,
     'max-w-full': true
@@ -2313,7 +2313,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'max-w-[20em]': true,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'data-[disabled]:opacity-50': true,
     'text-base': true,
@@ -2546,7 +2546,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'group': true,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'data-[disabled]:opacity-50': true,
     'text-base': true,
@@ -2715,7 +2715,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'group': true,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'data-[disabled]:opacity-50': true,
     'text-base': true,
@@ -3131,7 +3131,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'group': true,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'data-[disabled]:opacity-50': true,
     'text-base': true,
@@ -3295,7 +3295,7 @@ const globals: Record<string, Record<string, boolean>> = {
     'max-w-[20em]': false,
     'min-w-0': true,
     'grow': true,
-    'mb-4': true,
+    'mb-2': true,
     'data-[disabled]:select-none': true,
     'data-[disabled]:opacity-50': true,
     'text-base': true
