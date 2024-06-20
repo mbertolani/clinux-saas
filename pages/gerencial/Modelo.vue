@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, GerencialModelo } from '#components'
+import { BaseEditor, GerencialModelo, GerencialModeloVariavel } from '#components'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -13,9 +13,18 @@ const actionMenu: ActionMenuItem[] = [
     action: () => {
       console.log('Rota')
     }
+  },
+  {
+    name: 'miEditarFormula',
+    title: 'Editar Fórmula',
+    action: () => {
+      abrirFormula()
+    }
   }
 ]
 const title = 'Modelos'
+const showMonaco = ref(false)
+const idFormula = ref(0)
 const idEditor = ref(0)
 const apiPage = ref(null)
 const apiEditor = ref(null)
@@ -71,6 +80,13 @@ const salvarModelo = async () => {
     useMessage().showError('Erro ao salvar modelo')
   }
 }
+const abrirFormula = async () => {
+  idFormula.value = Number(apiPage.value.getSelectedNodes()[0]?.id)
+  if (!idFormula.value)
+    useMessage().showError('Nenhum registro selecionado')
+  showMonaco.value = idFormula.value > 0
+}
+
 // mdi:text-box-outline
 </script>
 
@@ -81,6 +97,12 @@ const salvarModelo = async () => {
       @load="loadEditor($event)"
       @close="closeEditor()"
       @save="salvarModelo()"
+    />
+    <GerencialModeloVariavel
+      v-if="showMonaco"
+      :id="idFormula"
+      v-model="showMonaco"
+      @close="showMonaco = false"
     />
     <BasePage
       v-show="!idEditor"

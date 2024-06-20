@@ -1,6 +1,7 @@
 import { useModalidade } from '../gerencial/useModalidade'
 import { useMedico } from '../gerencial/useMedico'
 import { useEmpresa } from '../gerencial/useEmpresa'
+import { useModelo } from '../gerencial/useModelo'
 
 export const useLaudo = () => {
   // const baseUrl = 'https://sedi2.zapto.org/dwcluster'
@@ -147,16 +148,18 @@ export const useLaudo = () => {
     }
   }
   async function carregarModelo(cd_exame: number, cd_modelo: number) {
-    const [layout, modelo, chave] = await Promise.all([
+    const [layout, modelo, chave, formula] = await Promise.all([
       doModeloLayout(cd_exame),
       doModeloAbrir(cd_modelo),
-      doLaudoModeloChave(cd_modelo, 'modelo')
+      doLaudoModeloChave(cd_modelo, 'modelo'),
+      useModelo().getFormulaData(cd_modelo)
     ])
     const response = {
       data: {
         layout: Decode64(layout?.data),
         modelo: Decode64(modelo?.data),
-        chave: chave?.data
+        chave: chave?.data,
+        formula
       },
       error: layout?.error || modelo?.error || chave?.error
     }

@@ -21,7 +21,22 @@ export const useModelo = () => {
   async function getModalidade(id: number) {
     return getFieldItem(await useModalidade().get(id, 'cd_modalidade,ds_modalidade'))
   }
+  const setFormula = async (id: number, payload: string) => {
+    return await useModelo().update(id, { bb_variavel: Encode64(payload) })
+  }
+  const getFormula = async (id: number) => {
+    const response = await useBaseStore('/laudo/modelo').get(id, 'bb_variavel')
+    return Decode64(response?.bb_variavel)
+  }
+  const getFormulaData = async (id: number) => {
+    const response = await useBaseStore('/laudo/modelo').get(id, 'bb_variavel')
+    const data = Decode64(response?.bb_variavel).replace(/\\r?\\n|\\r/g, '')
+    return data ? JSON.parse(data) : null
+  }
   return {
+    setFormula,
+    getFormula,
+    getFormulaData,
     getModalidade,
     getEmpresa,
     getMedico,

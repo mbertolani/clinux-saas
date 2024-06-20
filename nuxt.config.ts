@@ -99,7 +99,7 @@ export default defineNuxtConfig({
   monacoEditor: {
     locale: 'en',
     componentName: {
-      // codeEditor: 'MonacoEditor',
+      codeEditor: 'MonacoEditor',
       diffEditor: 'MonacoDiffEditor'
     }
   }

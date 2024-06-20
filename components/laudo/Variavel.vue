@@ -1,29 +1,24 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
-import type { _0 } from '#tailwind-config/theme/backdropBlur'
 
-defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  id: {
-    type: Number,
-    required: false
-  }
-})
+defineProps<{
+  title: string
+  id?: number
+  data?: object
+  schema?: FormKitSchemaDefinition
+}>()
 
 const emit = defineEmits(['submit', 'close'])
 
-const value = ref({
-  nr_peso: 50,
-  nr_altura: 1.6,
-  nr_imc: 0, // getNode('nr_peso') ? getNode('nr_peso').value : null,
-  sn_fuma: false
-})
+// const value = ref({
+//   nr_peso: 50,
+//   nr_altura: 1.6,
+//   nr_imc: 0, // getNode('nr_peso') ? getNode('nr_peso').value : null,
+//   sn_fuma: false
+// })
 
-const data = {
+const _data = {
   // sync: name => (node) => {
   //   console.log('sync', name, node.name)
   //   node.at('nr_peso')?.on('commit', (payload) => {
@@ -66,7 +61,7 @@ const data = {
   stringify: JSON.stringify
 }
 
-const schema: FormKitSchemaDefinition = [
+const _schema: FormKitSchemaDefinition = [
   {
     $cmp: 'FormKit',
     props: {
@@ -170,7 +165,6 @@ const onSubmit = async (_data: any) => {
   >
     <FormKit
       v-slot="{ state: { dirty } }"
-      :value
       dirty-behavior="compare"
       type="form"
       :actions="false"

@@ -78,8 +78,8 @@ export function StrToNull(obj) {
 }
 
 export function Encode64(obj) {
-  return obj ? btoa(obj) : null
+  return obj ? btoa(obj) : ''
 }
 export function Decode64(obj) {
-  return obj ? atob(obj) : null
+  return obj ? atob(obj) : ''
 }

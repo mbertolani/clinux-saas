@@ -316,11 +316,12 @@ const filtrar = async () => {
 watch(() => modelFilter.value.cd_fila, async () => {
   apiPage.value.applyFilter()
 })
-const selecionarFormula = () => {
+const selecionarFormula = (data?: any) => {
   modal.open(LaudoVariavel,
     {
       title: 'Variáveis e Fórmulas',
-      id: 0,
+      schema: data,
+      data: null,
       async onSubmit(data: any) {
         apiEditor.value.searchReplace(data)
         modal.close()
@@ -402,6 +403,7 @@ const selecionarModelo = async () => {
     async onSubmit(id) {
       const response = await useLaudo().carregarModelo(idEditor.value, id) as any
       if (!response.error) {
+        modal.close()
         apiEditor.value.clear()
         if (response.data.layout)
           await apiEditor.value.load(response.data.layout)
@@ -409,8 +411,10 @@ const selecionarModelo = async () => {
           const sfdt = await useEditor().Import(response.data.modelo)
           apiEditor.value.editor.editor.paste(sfdt)
         }
+        if (response.data.formula) {
+          selecionarFormula(response.data.formula)
+        }
       }
-      modal.close()
     },
     onCancel() {
       modal.close()
