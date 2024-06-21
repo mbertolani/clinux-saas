@@ -1,7 +1,7 @@
 import { useModalidade } from '../gerencial/useModalidade'
 import { useMedico } from '../gerencial/useMedico'
 import { useEmpresa } from '../gerencial/useEmpresa'
-import { useModelo } from '../gerencial/useModelo'
+// import { useModelo } from '../gerencial/useModelo'
 
 export const useLaudo = () => {
   // const baseUrl = 'https://sedi2.zapto.org/dwcluster'
@@ -135,37 +135,21 @@ export const useLaudo = () => {
   }
   async function doModeloLayout(cd_exame: number) {
     const response = await post('doModeloLayout', { cd_exame })
-    return {
-      data: response.data[0]?.bb_layout,
-      error: response.error
-    }
+    return Decode64(response.data[0]?.bb_layout)
   }
   async function doModeloAbrir(cd_modelo: number) {
-    if (!cd_modelo)
-      return { data: null, error: null }
     const response = await post('doModeloAbrir', { cd_modelo })
-    return {
-      data: response.data[0]?.bb_modelo,
-      error: response.error
-    }
+    return Decode64(response.data[0]?.bb_modelo)
   }
   async function carregarModelo(cd_exame: number, cd_modelo: number) {
-    const [layout, modelo, chave, formula] = await Promise.all([
+    const [layout, modelo] = await Promise.all([
       doModeloLayout(cd_exame),
-      doModeloAbrir(cd_modelo),
-      doLaudoModeloChave(cd_modelo, 'modelo'),
-      useModelo().getFormulaData(cd_modelo)
+      doModeloAbrir(cd_modelo)
     ])
-    const response = {
-      data: {
-        layout: Decode64(layout?.data),
-        modelo: Decode64(modelo?.data),
-        chave: chave?.data,
-        formula
-      },
-      error: layout?.error || modelo?.error || chave?.error
+    return {
+      layout,
+      modelo
     }
-    return response
   }
   async function doModeloLista(payload: { cd_exame: number, sn_todos?: boolean, sn_html?: boolean }) {
     return await post('doModeloLista', payload)

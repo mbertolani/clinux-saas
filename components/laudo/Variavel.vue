@@ -3,14 +3,14 @@ import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 
 defineProps<{
-  title: string
-  id?: number
+  // id?: number
   data?: object
   schema?: FormKitSchemaDefinition
 }>()
 
 const emit = defineEmits(['submit', 'close'])
-
+// const data = ref()
+// const schema = ref()
 // const value = ref({
 //   nr_peso: 50,
 //   nr_altura: 1.6,
@@ -161,7 +161,7 @@ const onSubmit = async (_data: any) => {
 <template>
   <BaseForm
     title="Variável"
-    @close="useModal().close"
+    @close="emit('close')"
   >
     <FormKit
       v-slot="{ state: { dirty } }"

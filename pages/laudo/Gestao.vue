@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
 
 const toolBarItens = [
@@ -228,6 +229,8 @@ const actionMenu: ActionMenuItem[] = [
   }
 ]
 const idEditor = ref<number>(0)
+const dataFormula = ref()
+const showFormula = ref(false)
 const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
@@ -252,22 +255,17 @@ const closeEditor = async () => {
   idEditor.value = 0
 }
 const abrirLaudo = async (id: number) => {
-  if (!id) return
+  if (!id)
+    return
   const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: selectedMedico(), cd_fila: modelFilter.value.cd_fila }) as any
-  if (response.error) return
-  apiEditor.value.clear()
+  if (response.error)
+    return
+  idEditor.value = id
   if (response.data) {
     apiEditor.value.load(response.data)
   } else {
-    // const response = await useLaudo().carregarModelo(id, 0) as any
-    // if (response.layout)
-    //   await apiEditor.value.load(response.layout)
-    // const response = await useLaudo().doModeloLayout(id)
-    // console.log('doModeloLayout', response.data)
-    // await apiEditor.value.load(Decode64(response?.data))
-    apiEditor.value.clear()
+    selecionarModelo()
   }
-  idEditor.value = id
 }
 const salvarLaudo = async () => {
   const texto = await apiEditor.value.save()
@@ -305,19 +303,15 @@ const filtrar = async () => {
 watch(() => modelFilter.value.cd_fila, async () => {
   apiPage.value.applyFilter()
 })
-const selecionarFormula = (data?: any) => {
-  modal.close()
-  modal.open(LaudoVariavel,
-    {
-      title: 'Variáveis e Fórmulas',
-      schema: data,
-      data: null,
-      async onSubmit(data: any) {
-        apiEditor.value.searchReplace(data)
-        modal.close()
-      }
-    }
-  )
+const salvarFormula = async (data: any) => {
+  await apiEditor.value?.searchReplace(data)
+  showFormula.value = false
+}
+const abrirFormula = async (id: number) => {
+  const response = id ? await useModelo().getFormulaData(id) : null
+  console.log('abrirFormula', response)
+  dataFormula.value = response
+  showFormula.value = response ? true : false
 }
 const selecionarAutotexto = async (payload?: any) => {
   const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: selectedMedico(), ds_texto: payload || '%' })
@@ -384,30 +378,35 @@ const laudoAssinado = async () => {
       }
     })
 }
+const carregarModelo = async (id: number) => {
+  // const layout = await useLaudo().doModeloLayout(id)
+  // const modelo = await useLaudo().doModeloAbrir(id)
+  const response = await useLaudo().carregarModelo(idEditor.value, id) as any
+  if (response) {
+    apiEditor.value.clear()
+    await apiEditor.value.load(response?.layout)
+    if (response?.modelo) {
+      const sfdt = await useEditor().Import(response?.modelo)
+      apiEditor.value.editor.editor.paste(sfdt)
+      abrirFormula(id)
+    }
+  }
+}
 const selecionarModelo = async () => {
   if (!idEditor.value)
     return
   const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value }) as any
   if (response.error)
     return
+  if (response.data.length === 1) {
+    carregarModelo(response.data[0].cd_modelo)
+    return
+  }
   modal.open(ModalPesquisa, {
     title: 'Modelos de Laudo',
     data: response.data,
-    async onSubmit(id) {
-      const response = await useLaudo().carregarModelo(idEditor.value, id) as any
-      if (!response.error) {
-        modal.close()
-        apiEditor.value.clear()
-        if (response.data.layout)
-          await apiEditor.value.load(response.data.layout)
-        if (response.data.modelo) {
-          const sfdt = await useEditor().Import(response.data.modelo)
-          apiEditor.value.editor.editor.paste(sfdt)
-        }
-        if (response.data.formula) {
-          selecionarFormula(response.data.formula)
-        }
-      }
+    onSubmit(id) {
+      carregarModelo(id)
     },
     onCancel() {
       modal.close()
@@ -553,7 +552,7 @@ const cancelarLaudo = async () => {
   if (response.error)
     return
   modal.open(ModalPesquisa, {
-    title: 'Alterar Revisor',
+    title: 'Cancelar Laudo',
     data: response.data,
     async onSubmit(cd_motivo) {
       // const response = await useLaudo().execCancelar({ cd_exame, cd_motivo })
@@ -740,6 +739,12 @@ const openDiff = async () => {
       v-if="openLeo"
       :token="user.idleo"
       @laudo-capturado="capturarLeo"
+    />
+    <LaudoVariavel
+      v-model="showFormula"
+      :schema="dataFormula"
+      @submit="salvarFormula"
+      @close="showFormula = false"
     />
     <BasePage
       v-show="!idEditor"
