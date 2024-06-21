@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   //     routes.clear() // Do not generate any routes (except the defaults)
   //   }
   // },
-  // ssr: false,
+  ssr: false,
   // router: {
   //   options: {
   //     hashMode: true
