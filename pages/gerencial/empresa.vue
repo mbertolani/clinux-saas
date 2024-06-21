@@ -88,7 +88,10 @@ const actionMenu: ActionMenuItem[] = [
     :filter="modelFilter"
     @open-form="openForm"
   >
-    <template #filter>
+    <template
+      v-if="false"
+      #filter
+    >
       <GerencialEmpresaFiltro
         ref="apiFilter"
         v-model="modelFilter"

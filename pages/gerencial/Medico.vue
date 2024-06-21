@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { GerencialMedico, GerencialMedicoProcedimento } from '#components'
+import { GerencialMedico, GerencialMedicoProcedimento, GerencialMedicoSala } from '#components'
 import { useMedico } from '~/composables/gerencial/useMedico'
 import type { ActionMenuItem } from '~/types/grid'
 
@@ -11,13 +11,29 @@ const id = ref(0)
 const modal = useModal()
 const associarProcedimento = (codigo?: number) => {
   modal.open(GerencialMedicoProcedimento, {
-    id: Number(codigo)
+    id: Number(codigo),
+    onClose() {
+      modal.close()
+    }
+  })
+}
+const associarSala = (codigo?: number) => {
+  modal.open(GerencialMedicoSala, {
+    id: Number(codigo),
+    onClose() {
+      modal.close()
+    }
   })
 }
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acProcedimento',
     action: () => { associarProcedimento(apiPage.value.selectedData()?.cd_medico) }
+  },
+  {
+    name: 'acSala',
+    icon: 'i-heroicons-office-building',
+    action: () => { associarSala(apiPage.value.selectedData()?.cd_medico) }
   }
 ]
 const openForm = (codigo?: number) => {

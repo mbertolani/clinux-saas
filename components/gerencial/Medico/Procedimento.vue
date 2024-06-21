@@ -7,35 +7,35 @@ const props = defineProps({
     required: false
   }
 })
+const emit = defineEmits(['close'])
 const { getProcedimento, getProcedimentos, get, useMedicoProcedimento } = useMedico(props.id)
-const [procedimento, procedimentos, medico] = await Promise.all([
+const [procedimento, listaProcedimento, medico] = await Promise.all([
   getProcedimento(),
-  getProcedimentos(3),
+  getProcedimentos(),
   get(props.id, 'ds_medico')
 ])
 
 const onSubmit = async (_data: any) => {
   const insert = _data.procedimentos.filter(item => !procedimento.foreign.includes(item))
   const remove = procedimento.primary.filter(item => !_data.procedimentos.includes(item.cd_procedimento))
-  // insert.forEach(async (item: any) => {
-  //   await useMedicoProcedimento.create({ cd_medico: props.id, cd_procedimento: item })
-  // })
-  // remove.forEach(async (item: any) => {
-  //   await useMedicoProcedimento.remove(item.cd_codigo)
-  // })
   const operations = [
     ...insert.map(item => useMedicoProcedimento.create({ cd_medico: props.id, cd_procedimento: item })),
     ...remove.map(item => useMedicoProcedimento.remove(item.cd_codigo))
   ]
-
   await Promise.all(operations)
+  emit('close')
 }
+// const atualizaProcedimento = async (node) => {
+//   node.on('commit', async (context: any) => {
+//     listaProcedimento.value = await getProcedimentos(context.payload)
+//   })
+// }
 </script>
 
 <template>
   <BaseForm
     title="Associar Procedimentos"
-    @close="useModal().close"
+    @close="emit('close')"
   >
     <FormKit
       v-slot="{ state: { dirty } }"
@@ -43,13 +43,20 @@ const onSubmit = async (_data: any) => {
       :actions="false"
       @submit="onSubmit"
     >
+      <!-- <FormKit
+        id="cd_modalidade"
+        type="dropdown"
+        label="Modalidade"
+        name="cd_modalidade"
+        :options="listaModalidade"
+      /> -->
       <FormKit
         name="procedimentos"
         type="transferlist"
         :label="medico.ds_medico"
         source-label="Procedimento"
         target-label="Seleção"
-        :options="procedimentos"
+        :options="listaProcedimento"
         :value="procedimento.foreign"
         searchable
         placeholder="Pesquisar"

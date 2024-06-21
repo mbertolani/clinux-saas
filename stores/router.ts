@@ -43,7 +43,7 @@ export const useRouterStore = defineStore({
         this.client = {
           cd_empresa: 1,
           ds_empresa: 'Genesis',
-          ds_portal_url: 'http://192.168.56.1:8282',
+          ds_portal_url: 'http://192.168.56.1/cgi-bin/dwserver.cgi',
           ds_portal_id: this.clientId
         }
       } else if (this.clientId === 'sedi2') {

@@ -48,13 +48,6 @@ const toolBarItens = [
     id: 'texto',
     cssClass: 'e-de-toolbar-btn'
   },
-  {
-    prefixIcon: 'e-upper-case',
-    tooltipText: 'Variáveis e Fórmulas',
-    text: 'Fórmula',
-    id: 'formula',
-    cssClass: 'e-de-toolbar-btn'
-  },
   'Separator',
   {
     prefixIcon: 'e-circle-info',
@@ -141,9 +134,6 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       break
     case 'texto':
       selecionarAutotexto()
-      break
-    case 'formula':
-      selecionarFormula()
       break
     case 'pendencia':
       editarPendencia(selectedData()?.cd_atendimento)
@@ -235,11 +225,6 @@ const actionMenu: ActionMenuItem[] = [
     name: 'Diff',
     title: 'Laudo Diff',
     action: () => { openDiff() }
-  },
-  {
-    name: 'Fórmula',
-    title: 'Laudo Fórmula',
-    action: () => { selecionarFormula() }
   }
 ]
 const idEditor = ref<number>(0)
@@ -317,6 +302,7 @@ watch(() => modelFilter.value.cd_fila, async () => {
   apiPage.value.applyFilter()
 })
 const selecionarFormula = (data?: any) => {
+  modal.close()
   modal.open(LaudoVariavel,
     {
       title: 'Variáveis e Fórmulas',
