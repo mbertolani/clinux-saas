@@ -235,7 +235,7 @@ const { user } = useAuthStore()
 const modal = useModal()
 const openForm = (codigo?: number) => {
   if (codigo) {
-    if (selectedNode().data?.dt_assinado) {
+    if (selectedData()?.dt_assinado) {
       laudoAssinado()
     } else {
       abrirLaudo(codigo)
@@ -253,21 +253,25 @@ const closeEditor = async () => {
 }
 const abrirLaudo = async (id: number) => {
   if (!id) return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: user.idmedico, cd_fila: modelFilter.value.cd_fila }) as any
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: selectedMedico(), cd_fila: modelFilter.value.cd_fila }) as any
   if (response.error) return
   apiEditor.value.clear()
   if (response.data) {
     apiEditor.value.load(response.data)
   } else {
-    const response = await useLaudo().carregarModelo(id, 0) as any
-    if (response.layout)
-      await apiEditor.value.load(response.layout)
+    // const response = await useLaudo().carregarModelo(id, 0) as any
+    // if (response.layout)
+    //   await apiEditor.value.load(response.layout)
+    // const response = await useLaudo().doModeloLayout(id)
+    // console.log('doModeloLayout', response.data)
+    // await apiEditor.value.load(Decode64(response?.data))
+    apiEditor.value.clear()
   }
   idEditor.value = id
 }
 const salvarLaudo = async () => {
   const texto = await apiEditor.value.save()
-  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: texto, ds_exame: selectedNodeIds().join(',') })
+  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: texto, ds_exame: selectedNodeIds().join(',') })
   if (!response.error) {
     useMessage().showMessage()
     closeEditor()
@@ -275,7 +279,7 @@ const salvarLaudo = async () => {
   }
 }
 const assinarLaudo = async () => {
-  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: user.idmedico, bb_html: await apiEditor.value.save() })
+  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: await apiEditor.value.save() })
   if (response) {
     useMessage().showMessage()
     closeEditor()
@@ -316,7 +320,7 @@ const selecionarFormula = (data?: any) => {
   )
 }
 const selecionarAutotexto = async (payload?: any) => {
-  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: user.idmedico, ds_texto: payload || '%' })
+  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: selectedMedico(), ds_texto: payload || '%' })
   if (response.error)
     return
   if (!response.data.length) {
@@ -363,11 +367,14 @@ const selectedNode = () => {
   }
   return selectedNode
 }
+const selectedMedico = () => {
+  return user.idmedico || selectedData()?.cd_medico
+}
 const laudoAssinado = async () => {
   if (!selectedNode())
     return
   const { cd_atendimento, cd_exame } = selectedNode().data
-  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: user.idmedico })// cd_atendimento: 1723321, cd_exame: 12834
+  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: selectedMedico() })// cd_atendimento: 1723321, cd_exame: 12834
   // const data = await convertToBase64Image(response as Blob)
   if (!response.error)
     modal.open(LaudoAssinado, {

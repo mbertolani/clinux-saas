@@ -141,6 +141,8 @@ export const useLaudo = () => {
     }
   }
   async function doModeloAbrir(cd_modelo: number) {
+    if (!cd_modelo)
+      return { data: null, error: null }
     const response = await post('doModeloAbrir', { cd_modelo })
     return {
       data: response.data[0]?.bb_modelo,

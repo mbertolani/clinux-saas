@@ -81,6 +81,10 @@ export default {
       // }).catch((e) => {
       //   console.error(e)
       // })
+      if (!payload) {
+        this.clear()
+        return
+      }
       const response = await useEditor().Import(payload)
       this.editor.open(response)
       this.editor.selection.moveToDocumentEnd()

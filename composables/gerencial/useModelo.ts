@@ -29,6 +29,7 @@ export const useModelo = () => {
     return Decode64(response?.bb_variavel)
   }
   const getFormulaData = async (id: number) => {
+    if (!id) return null
     const response = await useBaseStore('/laudo/modelo').get(id, 'bb_variavel')
     const data = Decode64(response?.bb_variavel).replace(/\\r?\\n|\\r/g, '')
     return data ? JSON.parse(data) : null
