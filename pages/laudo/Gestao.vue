@@ -229,7 +229,7 @@ const actionMenu: ActionMenuItem[] = [
   }
 ]
 const idEditor = ref<number>(0)
-const dataFormula = ref()
+const schemaFormula = ref()
 const showFormula = ref(false)
 const apiPage = ref(null)
 const apiEditor = ref(null)
@@ -309,8 +309,7 @@ const salvarFormula = async (data: any) => {
 }
 const abrirFormula = async (id: number) => {
   const response = id ? await useModelo().getFormulaData(id) : null
-  console.log('abrirFormula', response)
-  dataFormula.value = response
+  schemaFormula.value = response
   showFormula.value = response ? true : false
 }
 const selecionarAutotexto = async (payload?: any) => {
@@ -742,7 +741,7 @@ const openDiff = async () => {
     />
     <LaudoVariavel
       v-model="showFormula"
-      :schema="dataFormula"
+      :schema="schemaFormula"
       @submit="salvarFormula"
       @close="showFormula = false"
     />

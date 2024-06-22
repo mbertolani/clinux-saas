@@ -24,7 +24,6 @@ const salvar = async () => {
 
 const response = await useModelo().getFormula(props.id)
 const schema = ref(response)
-const data = ref('')
 // const schema = ref(response?.schema ? response.schema : response || '')
 // const data = ref(response?.data ? response.data : '')
 </script>
@@ -47,14 +46,9 @@ const data = ref('')
       />
     </template>
     <template #default>
-      <div style="display: flex; flex-direction: row; height: calc(100vh - 180px);">
-        <BaseMonacoEditor
-          v-model="schema"
-        />
-        <BaseMonacoEditor
-          v-model="data"
-        />
-      </div>
+      <BaseMonacoEditor
+        v-model="schema"
+      />
     </template>
   </DashboardModal>
 </template>

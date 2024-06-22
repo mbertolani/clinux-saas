@@ -4,7 +4,7 @@ import { FormKitSchema } from '@formkit/vue'
 
 defineProps<{
   // id?: number
-  data?: object
+  // data?: object
   schema?: FormKitSchemaDefinition
 }>()
 
@@ -18,49 +18,74 @@ const emit = defineEmits(['submit', 'close'])
 //   sn_fuma: false
 // })
 
-const _data = {
-  // sync: name => (node) => {
-  //   console.log('sync', name, node.name)
-  //   node.at('nr_peso')?.on('commit', (payload) => {
-  //     console.log('nr_peso', payload)
-  //     node.input((Number(getNode('nr_peso').value) * Number(getNode('nr_altura').value)) / 2.0)
-  //   })
-  //   node.at('nr_altura')?.on('commit', (payload) => {
-  //     console.log('nr_altura', payload)
-  //     node.input((Number(getNode('nr_peso').value) * Number(getNode('nr_altura').value)) / 2.0)
-  //   })
-  // },
-  imc: (node) => {
-    function calculaImc(node) {
-      const valor = (Number(getNode('nr_peso').value) * Number(getNode('nr_altura').value)) / 2.0
-      node.input(valor.toFixed(2).toString())
-    }
-    getNode('nr_altura')?.on('commit', () => {
-      calculaImc(node)
-    })
-    getNode('nr_peso')?.on('commit', () => {
-      calculaImc(node)
-    })
-  },
-  tempo: (node) => {
-    function calcula(node) {
-      // Obtenha os valores de data como strings
-      const dataAte = getNode('dt_ate').value
-      const dataDe = getNode('dt_de').value
-      // Use o resultado conforme necessário
-      node.input(`${dataAte} - ${dataDe}`)
-    }
-    getNode('dt_de')?.on('commit', () => {
-      calcula(node)
-    })
-    getNode('dt_ate')?.on('commit', () => {
-      calcula(node)
-    })
-  },
-  format: Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format,
-  stringify: JSON.stringify
-}
+// const _data = {
+//   imc: (node) => {
+//     function calculaImc(node) {
+//       const valor = (Number(getNode('nr_peso').value) * Number(getNode('nr_altura').value)) / 2.0
+//       node.input(valor.toFixed(2).toString())
+//     }
+//     getNode('nr_altura')?.on('commit', () => {
+//       calculaImc(node)
+//     })
+//     getNode('nr_peso')?.on('commit', () => {
+//       calculaImc(node)
+//     })
+//   },
+//   tempo: (node) => {
+//     function calcula(node) {
+//       // Obtenha os valores de data como strings
+//       const dataAte = getNode('dt_ate').value
+//       const dataDe = getNode('dt_de').value
+//       // Use o resultado conforme necessário
+//       node.input(`${dataAte} - ${dataDe}`)
+//     }
+//     getNode('dt_de')?.on('commit', () => {
+//       calcula(node)
+//     })
+//     getNode('dt_ate')?.on('commit', () => {
+//       calcula(node)
+//     })
+//   },
+//   format: Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format,
+//   stringify: JSON.stringify
+// }
 
+const data = { // this is already here, not from database
+  imcPlugin: (...fields) => (node) => {
+    const imc = () => {
+      node.input((Number(node.at(fields[0]).value) * Number(node.at(fields[1]).value)) / 2)
+    }
+    const fieldsNode = fields.map(field => node.at(field)).filter(val => val)
+    fieldsNode.forEach((fieldNode) => {
+      fieldNode.on('commit', () => {
+        imc()
+      })
+    })
+  },
+  arr: (...arr) => {
+    return arr
+  },
+  sumPlugin: (...fields) => (node) => {
+    console.log('sumPlugin', fields, node)
+    node.input(0)
+
+    const fieldsNode = fields.map(field => node.at(field)).filter(val => val)
+    const sum = () => {
+      const sumValue = fieldsNode
+        .map(fieldNode => fieldNode.value)
+        .filter(val => val)
+        .map(val => Number(val))
+        .reduce((acc, cur) => acc + cur, 0)
+
+      node.input(sumValue)
+    }
+    fieldsNode.forEach((fieldNode) => {
+      fieldNode.on('commit', () => {
+        sum()
+      })
+    })
+  }
+}
 const _schema: FormKitSchemaDefinition = [
   {
     $cmp: 'FormKit',
