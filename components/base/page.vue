@@ -90,7 +90,6 @@ const setColumnDefs = async () => {
 }
 const setMenu = async () => {
   const menu = await props.controller.getMenu()
-  // Cria uma cópia de props.actionMenu para manipulação
   const remainingActionMenuItems = [...props.actionMenu]
 
   const menuAction = menu?.map((item) => {
@@ -98,6 +97,8 @@ const setMenu = async () => {
     if (actionItemIndex !== -1) {
       // Atualiza a ação do item de menu
       item.action = remainingActionMenuItems[actionItemIndex].action
+      item.icon = remainingActionMenuItems[actionItemIndex].icon
+      item.title = remainingActionMenuItems[actionItemIndex].title || item.title
       // Remove o item correspondente de remainingActionMenuItems
       remainingActionMenuItems.splice(actionItemIndex, 1)
     }

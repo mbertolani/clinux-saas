@@ -25,16 +25,23 @@ export const useModelo = () => {
     return await useModelo().update(id, { bb_variavel: Encode64(payload) })
   }
   const getFormula = async (id: number) => {
-    const response = await useBaseStore('/laudo/modelo').get(id, 'bb_variavel')
+    const response = await useModelo().get(id, 'bb_variavel')
     return Decode64(response?.bb_variavel)
   }
   const getFormulaData = async (id: number) => {
-    if (!id) return null
-    const response = await useBaseStore('/laudo/modelo').get(id, 'bb_variavel')
-    const data = Decode64(response?.bb_variavel) // .replace(/\\r?\\n|\\r/g, '')
+    const data = await getFormula(id)
     return data ? JSON.parse(data) : null
   }
+  const getModelo = async (id: number) => {
+    const response = await useModelo().get(id, 'bb_modelo')
+    return Decode64(response.bb_modelo)
+  }
+  const setModelo = async (id: number, payload: string) => {
+    return await useModelo().update(id, { bb_modelo: payload })
+  }
   return {
+    getModelo,
+    setModelo,
     setFormula,
     getFormula,
     getFormulaData,

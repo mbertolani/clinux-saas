@@ -6,10 +6,13 @@ import type { ActionMenuItem } from '~/types/grid'
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'miEditarArquivo',
+    icon: 'i-mdi-file-edit-outline',
     action: () => abrirModelo()
   },
   {
     name: 'miEditarLayout',
+    title: 'Editar Layout',
+    icon: 'i-mdi-text-box-outline',
     action: () => {
       console.log('Rota')
     }
@@ -17,6 +20,7 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'miEditarFormula',
     title: 'Editar Fórmula',
+    icon: 'i-mdi-function-variant',
     action: () => {
       abrirFormula()
     }
@@ -51,34 +55,29 @@ const onSubmit = (data: any) => {
 //     }
 //   })
 // }
-const loadEditor = (editor) => {
-  apiEditor.value = editor
+const loadEditor = (payload) => {
+  apiEditor.value = payload
+}
+const openEditor = () => {
+  idEditor.value = apiPage.value.selectedNode()?.id
+  if (!idEditor.value)
+    useMessage().showError('Nenhum registro selecionado')
+  return idEditor.value > 0
 }
 const closeEditor = async () => {
   idEditor.value = 0
 }
 const abrirModelo = async () => {
-  idEditor.value = apiPage.value.getSelectedNodes()[0]?.id
-  if (!idEditor.value) {
-    useMessage().showError('Nenhum registro selecionado')
+  if (!openEditor())
     return
-  }
-  const response = await useModelo().get(idEditor.value, 'bb_modelo')
-  if (response?.bb_modelo) {
-    apiEditor.value.load(Decode64(response.bb_modelo))
-  } else {
-    apiEditor.value.clear()
-  }
+  const response = await useModelo().getModelo(idEditor.value)
+  apiEditor.value.load(response)
 }
 const salvarModelo = async () => {
   const payload = await apiEditor.value.save()
-  const response = await controller.update(idEditor.value, { bb_modelo: payload }) // payload.split(',')[1]
-  if (response) {
-    useMessage().showMessage('Modelo salvo com sucesso')
+  const response = await useModelo().setModelo(idEditor.value, payload) // await controller.update(idEditor.value, { bb_modelo: payload }) // payload.split(',')[1]
+  if (response)
     closeEditor()
-  } else {
-    useMessage().showError('Erro ao salvar modelo')
-  }
 }
 const abrirFormula = async () => {
   idFormula.value = Number(apiPage.value.getSelectedNodes()[0]?.id)
@@ -86,8 +85,6 @@ const abrirFormula = async () => {
     useMessage().showError('Nenhum registro selecionado')
   showMonaco.value = idFormula.value > 0
 }
-
-// mdi:text-box-outline
 </script>
 
 <template>
