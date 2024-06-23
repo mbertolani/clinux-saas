@@ -178,11 +178,9 @@ export default {
       ]
       this.container.toolbarClick = (args) => {
         if (args.item.id === 'CustomSave') {
-          console.log('CustomSave')
           this.$emit('save', this)
         }
         if (args.item.id === 'CustomClose') {
-          console.log('CustomClose')
           this.$emit('close', this)
         }
       }

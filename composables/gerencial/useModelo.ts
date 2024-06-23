@@ -39,7 +39,17 @@ export const useModelo = () => {
   const setModelo = async (id: number, payload: string) => {
     return await useModelo().update(id, { bb_modelo: payload })
   }
+  const getLayout = async (id: number) => {
+    const response = await useModalidade().get(id, 'bb_modalidade')
+    return Decode64(response.bb_modalidade)
+  }
+  const setLayout = async (id: number, payload: string) => {
+    return await useModalidade().update(id, { bb_modalidade: payload })
+  }
+
   return {
+    getLayout,
+    setLayout,
     getModelo,
     setModelo,
     setFormula,

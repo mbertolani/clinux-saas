@@ -13,17 +13,13 @@ const actionMenu: ActionMenuItem[] = [
     name: 'miEditarLayout',
     title: 'Editar Layout',
     icon: 'i-mdi-text-box-outline',
-    action: () => {
-      console.log('Rota')
-    }
+    action: () => abrirLayout()
   },
   {
     name: 'miEditarFormula',
     title: 'Editar Fórmula',
     icon: 'i-mdi-function-variant',
-    action: () => {
-      abrirFormula()
-    }
+    action: () => abrirFormula()
   }
 ]
 const title = 'Modelos'
@@ -43,57 +39,61 @@ const onSubmit = (data: any) => {
   showModal.value = false
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
-// const modal = useModal()
-// const openForm = (codigo?: number) => {
-//   modal.open(GerencialModelo, {
-//     id: Number(codigo),
-//     onClose: () => modal.close(),
-//     onSubmit: (id: number, data: any) => {
-//       const nodes = id ? { update: [data] } : { add: [data] }
-//       apiPage.value.applyTransaction(nodes)
-//       modal.close()
-//     }
-//   })
-// }
 const loadEditor = (payload) => {
   apiEditor.value = payload
 }
-const openEditor = () => {
-  idEditor.value = apiPage.value.selectedNode()?.id
-  if (!idEditor.value)
-    useMessage().showError('Nenhum registro selecionado')
-  return idEditor.value > 0
+const openEditor = (id, payload) => {
+  idEditor.value = id
+  apiEditor.value.load(payload)
 }
 const closeEditor = async () => {
   idEditor.value = 0
 }
+const saveEditor = async () => {
+  if (idEditor.value === apiPage.value.selectedNode()?.id)
+    await salvarModelo()
+  else
+    await salvarLayout()
+}
 const abrirModelo = async () => {
-  if (!openEditor())
-    return
-  const response = await useModelo().getModelo(idEditor.value)
-  apiEditor.value.load(response)
+  const id = apiPage.value.selectedNode()?.id
+  if (!id) return
+  const response = await useModelo().getModelo(id)
+  openEditor(id, response)
 }
 const salvarModelo = async () => {
   const payload = await apiEditor.value.save()
-  const response = await useModelo().setModelo(idEditor.value, payload) // await controller.update(idEditor.value, { bb_modelo: payload }) // payload.split(',')[1]
+  const response = await useModelo().setModelo(idEditor.value, payload)
   if (response)
     closeEditor()
 }
 const abrirFormula = async () => {
-  idFormula.value = Number(apiPage.value.getSelectedNodes()[0]?.id)
+  idFormula.value = Number(apiPage.value.selectedNode()?.id)
   if (!idFormula.value)
     useMessage().showError('Nenhum registro selecionado')
   showMonaco.value = idFormula.value > 0
+}
+const abrirLayout = async () => {
+  const id = apiPage.value.selectedData()?.cd_modalidade
+  if (!id) return
+  const response = await useModelo().getLayout(id)
+  openEditor(id, response)
+}
+const salvarLayout = async () => {
+  const payload = await apiEditor.value.save()
+  const response = await useModelo().setLayout(idEditor.value, payload)
+  if (response)
+    closeEditor()
 }
 </script>
 
 <template>
   <div>
     <BaseEditor
-      v-if="idEditor"
+      v-show="idEditor"
       @load="loadEditor($event)"
       @close="closeEditor()"
-      @save="salvarModelo()"
+      @save="saveEditor()"
     />
     <GerencialModeloVariavel
       v-if="showMonaco"
