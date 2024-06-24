@@ -2,16 +2,6 @@
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 import { useLaudo } from '~/composables/laudo/useLaudo'
-// import { getFieldName } from '~/utils/schema'
-// const model = defineModel() as any
-const emit = defineEmits(['submit'])
-
-// interface FiltroLaudo {
-//   nr_controle: number
-//   cd_modalidade: number
-//   cd_empresa: number
-//   cd_medico: number
-// }
 
 defineProps({
   filter: {
@@ -19,7 +9,8 @@ defineProps({
     required: false
   }
 })
-// const { filtro: model } = toRefs(props)
+const emit = defineEmits(['submit'])
+
 const { getMedico, getEmpresa, getModalidade, getEmpresas, getModalidades, find } = useLaudo()
 
 const data = reactive({
@@ -95,113 +86,113 @@ const data = reactive({
 //     getNode('cd_medico').props.options = items
 //   })
 // })
-const outerClass = 'md:col-span-2 !mb-2 lg:!mb-0'
-const outerClassTree = 'md:col-span-3 !mb-2 lg:!mb-0'
+// const outerClass: formClass(2) = 'md:col-span-2'
+// const outerClassTree = 'md:col-span-3'
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'dropdown',
     id: 'nr_periodo',
     name: 'nr_periodo',
-    label: 'Período',
+    placeholder: 'Período',
     bind: '$nr_periodo',
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'date',
     name: 'dt_de',
-    label: 'Data',
+    placeholder: 'Data',
     format: 'DD/MM/YYYY',
     valueFormat: 'YYYY-MM-DD',
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'date',
     name: 'dt_ate',
-    label: 'Até',
+    placeholder: 'Até',
     format: 'DD/MM/YYYY',
     valueFormat: 'YYYY-MM-DD',
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'number',
     id: 'nr_controle',
     name: 'ae.nr_controle',
-    label: 'Protocolo',
-    outerClass
+    placeholder: 'Protocolo',
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'cd_modalidade',
     name: 'sa.cd_modalidade',
-    label: 'Modalidade',
+    placeholder: 'Modalidade',
     bind: '$cd_modalidade',
     selectionRemovable: true,
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'cd_empresa',
     name: 'sa.cd_empresa',
-    label: 'Empresa',
+    placeholder: 'Empresa',
     bind: '$cd_empresa',
     if: 'false',
     selectionRemovable: true,
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'cd_medico',
     name: 'ae.cd_medico',
-    label: 'Médico',
+    placeholder: 'Médico',
     bind: '$cd_medico',
     selectionRemovable: true,
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'nr_aviso',
     name: 'ae.nr_aviso',
-    label: 'Aviso',
+    placeholder: 'Aviso',
     bind: '$nr_aviso',
     selectionRemovable: true,
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'nr_urgente',
     name: 'ae.nr_urgente',
-    label: 'Urgente',
+    placeholder: 'Urgente',
     bind: '$nr_urgente',
     selectionRemovable: true,
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'nr_status',
     name: 'nr_status',
-    label: 'Status',
+    placeholder: 'Status',
     if: 'true',
     bind: '$nr_status',
     selectionRemovable: true,
-    outerClass
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
     id: 'nr_edicao',
     name: 'nr_edicao',
-    label: 'Laudo',
+    placeholder: 'Laudo',
     bind: '$nr_edicao',
     selectionRemovable: true,
-    outerClass: outerClassTree
+    outerClass: formClass(3)
   },
   {
     $formkit: 'dropdown',
     id: 'cd_fila',
     name: 'cd_fila',
-    label: 'Fila',
+    placeholder: 'Fila',
     bind: '$cd_fila',
     selectionRemovable: true,
-    outerClass: outerClassTree
+    outerClass: formClass(3)
   }
 ]
 
@@ -235,7 +226,7 @@ const schema: FormKitSchemaDefinition = [
     @submit="emit('submit')"
   >
     <div class="flex justify-left pt-2">
-      <div class="grid gap-x-4 grid-cols-1 lg:grid-cols-12 w-full">
+      <div class="grid gap-x-2 grid-cols-1 lg:grid-cols-12 w-full">
         <FormKitSchema
           :schema
           :data

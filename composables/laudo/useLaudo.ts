@@ -10,8 +10,8 @@ export const useLaudo = () => {
   const setup = useSystemStore().setup
   const snMacOs = true
 
-  async function getMedicos(id: number) {
-    return getFieldList(await useMedico().find('modalidade', { cd_modalidade: id }))
+  async function getMedicos(cd_modalidade: number) {
+    return getFieldList(await useMedico().find('modalidade', { cd_modalidade }))
   }
   async function getEmpresas() {
     return getFieldList(await useEmpresa().getList())

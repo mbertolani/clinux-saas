@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useExame } from '~/composables/atendimento/useExame'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 
@@ -20,13 +19,10 @@ const onSubmit = async (_data: any) => {
   if (!response.error)
     emit('submit', response.data)
 }
-
-const data = reactive({
-  // cd_achado: {
-  //   disabled: '$cd_achado > 0'
-  // }
-})
-
+// const onSubmit = async (_data: any) => {
+//   _data.bb_portal_anexo = Encode64(_data.bb_portal_anexo)
+//   emit('submit', _data)
+// }
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
@@ -59,35 +55,11 @@ model.value.bb_achado = Decode64(model.value.bb_achado)
     title="Achado Crítico"
     @close="emit('close')"
   >
-    <FormKit
-      v-slot="{ state: { dirty } }"
+    <BaseFormLayout
+      :id
+      :schema
       :value="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
       @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema
-              :data
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
-          </div>
-        </div>
-      </div>
-    </FormKit>
+    />
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

@@ -12,6 +12,10 @@ const props = defineProps({
   title: {
     type: String,
     required: true
+  },
+  value: {
+    type: Object,
+    required: false
   }
 })
 
@@ -138,6 +142,7 @@ const onSubmit = async (...args) => {
       :id
       :schema
       :data
+      :value
       :controller="useModelo()"
       @submit="onSubmit"
     />

@@ -11,7 +11,7 @@ const props = defineProps({
   },
   controller: {
     type: Object,
-    required: true
+    required: false
   },
   schema: {
     type: Array as () => FormKitSchemaDefinition,
@@ -20,16 +20,28 @@ const props = defineProps({
   data: {
     type: Object,
     required: false
+  },
+  value: {
+    type: Object,
+    required: false
   }
 })
 
 const model = ref(null)
-model.value = props.id ? await props.controller.get(props.id, getFieldName(props.schema)) : {}
+
+if (props.controller)
+  model.value = props.id ? await props.controller.get(props.id, getFieldName(props.schema)) : props.value
+else
+  model.value = props.value
 
 const onSubmit = async (_data: any) => {
-  const item = (props.id) ? await props.controller.update(props.id, _data) : await props.controller.create(_data)
-  if (item)
-    emit('submit', item)
+  if (props.controller) {
+    const item = (props.id) ? await props.controller.update(props.id, _data) : await props.controller.create(_data)
+    if (item)
+      emit('submit', item)
+  } else {
+    emit('submit', _data)
+  }
 }
 </script>
 

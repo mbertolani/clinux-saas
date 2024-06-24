@@ -85,6 +85,10 @@ const salvarLayout = async () => {
   if (response)
     closeEditor()
 }
+const filter = ref()
+const filtrar = async () => {
+  apiPage.value.applyFilter()
+}
 </script>
 
 <template>
@@ -107,17 +111,30 @@ const salvarLayout = async () => {
       :header="{ title, icon: 'i-heroicons-film' }"
       :controller
       :action-menu
+      :filter
       @open-form="openForm"
     >
-      <template
-        v-if="false"
-        #filter
-      />
+      <template #filter>
+        <FormKit
+          ref="apiFilter"
+          v-model="filter"
+          type="form"
+          :actions="false"
+          @submit="filtrar"
+        >
+          <BaseLayout>
+            <FiltroEmpresa :cols="3" />
+            <FiltroModalidade :cols="3" />
+            <FiltroMedico :cols="3" />
+          </BaseLayout>
+        </FormKit>
+      </template>
     </BasePage>
     <GerencialModelo
       :id="id"
       v-model="showModal"
       :title
+      :value="filter"
       @submit="onSubmit"
       @close="showModal = false"
     />
