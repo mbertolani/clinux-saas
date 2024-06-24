@@ -168,63 +168,78 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acAnexo',
+    icon: 'i-mdi-file-image',
     action: () => { editarAnexo(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acChat',
+    icon: 'i-mdi-chat',
     action: () => { editarChat(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acProcedimento',
+    icon: 'i-healthicons-xray',
     action: () => { editarProcedimento() }
   },
   {
     name: 'acProcedencia',
+    icon: 'i-healthicons-hospital',
     action: () => { editarProcedencia() }
   },
   {
     name: 'acMedico',
+    icon: 'i-healthicons-doctor',
     action: () => { editarMedico() }
   },
   {
     name: 'acRevisor',
+    icon: 'i-healthicons-doctor-male',
     action: () => { editarRevisor() }
   },
   {
     name: 'acAuditor',
+    icon: 'i-healthicons-doctor-female',
     action: () => { editarAuditor() }
   },
   {
     name: 'acUrgencia',
+    icon: 'i-healthicons-ambulance',
     action: () => { editarUrgencia() }
   },
   {
     name: 'acCancelar',
+    icon: 'i-mdi-file-document-remove-outline',
     action: () => { cancelarLaudo() }
   },
   {
     name: 'acPendencia',
+    icon: 'i-mdi-alert',
     action: () => { editarPendencia(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acAchado',
+    icon: 'i-mdi-magnify',
     action: () => { editarAchado(selectedNodeId()) }
   },
   {
     name: 'acAuditar',
+    icon: 'i-mdi-account-check',
     action: () => { editarAuditoria(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acAssinado',
+    icon: 'i-mdi-file-pdf-outline',
     action: () => { laudoAssinado() }
   },
   {
     name: 'acDigitado',
+    icon: 'i-mdi-file-document-outline',
     action: () => { laudoAssinado() }
   },
   {
     name: 'Diff',
     title: 'Laudo Diff',
+    icon: 'i-mdi-file-compare',
     action: () => { openDiff() }
   }
 ]

@@ -29,16 +29,11 @@ const noClick = () => {
 
 <template>
   <UDashboardModal
-    :model-value="isOpen"
+    v-model="isOpen"
     prevent-close
     :title="config?.title"
     :description="config?.description"
     icon="i-heroicons-exclamation-circle"
-    :ui="{
-      // width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',
-      // icon: { base: 'text-red-500 dark:text-red-400' },
-      footer: { base: 'ml-16' }
-    }"
   >
     <template #footer>
       <UButton

@@ -46,17 +46,20 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'aprovar',
     title: 'Aprovar',
+    icon: 'i-mdi-check-circle-outline',
     action: () => { buttonAction('aprovar') }
   },
   {
     name: 'recusar',
     title: 'Recusar',
+    icon: 'i-mdi-close-circle-outline',
     action: () => { buttonAction('recusar') }
   },
   {
-    name: 'abrir',
-    title: 'Abrir',
-    action: () => { buttonAction('abrir') }
+    name: 'reiniciar',
+    title: 'Reiniciar',
+    icon: 'i-mdi-restore',
+    action: () => { buttonAction('reiniciar') }
   }
 ]
 </script>
