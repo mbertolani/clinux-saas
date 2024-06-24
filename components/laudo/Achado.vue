@@ -11,18 +11,10 @@ const props = defineProps({
     required: true
   }
 })
+
 const response = await useLaudo().execAchado({ cd_exame: props.id })
 const options = getFieldList(response.data)
-const onSubmit = async (_data: any) => {
-  // _data.bb_achado = _data.bb_achado ? Decode64(_data.bb_achado) : null
-  const response = await useLaudo().execAchado(_data)
-  if (!response.error)
-    emit('submit', response.data)
-}
-// const onSubmit = async (_data: any) => {
-//   _data.bb_portal_anexo = Encode64(_data.bb_portal_anexo)
-//   emit('submit', _data)
-// }
+
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
@@ -44,9 +36,15 @@ const schema: FormKitSchemaDefinition = [
   }
 
 ]
-const { get } = useExame()
+
+const onSubmit = async (_data: any) => {
+  const response = await useLaudo().execAchado(_data)
+  if (!response.error)
+    emit('submit', response.data)
+}
+
 const model = ref(null)
-model.value = await get(props.id, getFieldName(schema))
+model.value = props.id ? await useExame().get(props.id, getFieldName(schema)) : {}
 model.value.bb_achado = Decode64(model.value.bb_achado)
 </script>
 
