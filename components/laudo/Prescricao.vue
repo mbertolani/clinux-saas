@@ -233,20 +233,6 @@ const onSubmit = async (_data: any) => {
                   :data
                 />
               </FormKit>
-              <!-- <FormKit
-                id="repeater"
-                type="repeater"
-                name="material"
-                label="Material"
-                draggable="true"
-                outer-class="md:col-span-12"
-              >
-                <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-                  <FormKitSchema
-                    :schema="schemaFilho"
-                  />
-                </div>
-              </FormKit> -->
               <FormKitSchema
                 :schema="schemaRepeater"
                 :data
@@ -259,16 +245,6 @@ const onSubmit = async (_data: any) => {
             </div>
           </div>
         </div>
-        <!-- <div class="flex items-center justify-center">
-          <div class="container max-w-screen-lg mx-auto">
-            <BaseGridCore
-              v-if="false"
-              style="height: 200px; width: 100%;"
-              :column-defs
-              :row-data
-            />
-          </div>
-        </div> -->
       </FormKit>
     </template>
   </BaseForm>

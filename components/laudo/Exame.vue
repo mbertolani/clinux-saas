@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { getFieldName } from '~/utils/schema'
 
@@ -12,8 +11,6 @@ const props = defineProps({
     required: true
   }
 })
-const model = ref(null)
-const { get, update, create, getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useLaudo()
 
 const data = reactive({
   cd_modalidade: {
@@ -78,17 +75,15 @@ const schema: FormKitSchemaDefinition = [
     validation: 'required',
     outerClass: formClass(12)
   }
-
 ]
 
-model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
-
 const onSubmit = async (_data: any) => {
-  const item = (props.id) ? await update(props.id, _data) : await create(_data)
-  if (item) {
-    emit('submit', props.id, item.value)
-  }
+  emit('submit', _data)
 }
+
+const model = ref(null)
+const { get, getMedico, getEmpresa, getModalidade, getMedicos, getEmpresas, getModalidades } = useLaudo()
+model.value = props.id ? await get(props.id, getFieldName(schema)) : {}
 </script>
 
 <template>
@@ -96,35 +91,12 @@ const onSubmit = async (_data: any) => {
     title="Cadastro de Exames"
     @close="emit('close')"
   >
-    <FormKit
-      v-slot="{ state: { dirty } }"
-      v-model="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
+    <BaseFormLayout
+      :id
+      :schema
+      :data
+      :value="model"
       @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema
-              :data
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
-          </div>
-        </div>
-      </div>
-    </FormKit>
+    />
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

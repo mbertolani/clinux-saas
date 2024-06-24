@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { FormKitSchema } from '@formkit/vue'
 import { useAtendimento } from '~/composables/atendimento/useAtendimento'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 
@@ -12,19 +11,9 @@ const props = defineProps({
     required: true
   }
 })
+
 const response = await useLaudo().execAuditar({ cd_atendimento: props.id })
 const options = getFieldList(response.data)
-const onSubmit = async (_data: any) => {
-  const response = await useLaudo().execAuditar({ ..._data, bb_auditado: Encode64(_data.bb_auditado) })
-  if (!response.error)
-    emit('submit', response.data)
-}
-
-const data = reactive({
-  // cd_auditoria: {
-  //   disabled: '$cd_auditoria > 0'
-  // }
-})
 
 const schema: FormKitSchemaDefinition = [
   {
@@ -47,9 +36,15 @@ const schema: FormKitSchemaDefinition = [
   }
 
 ]
-const { get } = useAtendimento()
+
+const onSubmit = async (_data: any) => {
+  const response = await useLaudo().execAuditar({ ..._data, bb_auditado: Encode64(_data.bb_auditado) })
+  if (!response.error)
+    emit('submit', response.data)
+}
+
 const model = ref(null)
-model.value = await get(props.id, getFieldName(schema))
+model.value = props.id ? await useAtendimento().get(props.id, getFieldName(schema)) : {}
 model.value.bb_auditado = Decode64(model.value.bb_auditado)
 </script>
 
@@ -58,35 +53,11 @@ model.value.bb_auditado = Decode64(model.value.bb_auditado)
     title="Auditoria"
     @close="emit('close')"
   >
-    <FormKit
-      v-slot="{ state: { dirty } }"
+    <BaseFormLayout
+      :id
+      :schema
       :value="model"
-      dirty-behavior="compare"
-      type="form"
-      :actions="false"
       @submit="onSubmit"
-    >
-      <div class="flex items-center justify-center">
-        <div class="container max-w-screen-lg mx-auto">
-          <div class="grid gap-x-4 grid-cols-1 md:grid-cols-12">
-            <FormKitSchema
-              :schema
-              :data
-            />
-            <FormKit
-              type="submit"
-              label="Salvar"
-              :disabled="!dirty"
-            />
-          </div>
-        </div>
-      </div>
-    </FormKit>
+    />
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

@@ -8,7 +8,7 @@
 export default {
   methods: {
     convertMenuToLinks(menu) {
-      return menu.filter(item => item.action).reduce((acc, item) => {
+      return menu.filter(item => item.action || item.title === '-').reduce((acc, item) => {
         if (item.title === '-') {
           acc.push([]) // Inicia um novo array
         } else {

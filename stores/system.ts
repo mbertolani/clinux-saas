@@ -44,11 +44,11 @@ export const useSystemStore = defineStore('system', () => {
 
   function startLoading() {
     // console.log('startLoading', loading.value)
-    loading.value++
+    loading.value = 1
   }
   function finishLoading() {
     // console.log('finishLoading', loading.value)
-    loading.value--
+    loading.value = 0
   }
 
   watch
