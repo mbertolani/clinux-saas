@@ -8,12 +8,10 @@ export const usePrescricao = (id?: number) => {
   }
   async function getMateriais() {
     const response = getFieldList(await useMaterial().find('medicamento') as any)
-    console.log('getMateriais', response)
     return response
   }
   async function getUnidades(cd_material: number) {
     const response = getFieldList(await useMaterial().find('unidade', { cd_material }))
-    console.log('getUnidades', response)
     return response
   }
   async function getUnidade(id: number) {

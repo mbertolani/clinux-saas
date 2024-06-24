@@ -31,6 +31,7 @@ const data = reactive({
   cd_paciente: {
     optionLoader: async (id, cachedOption) => {
       if (cachedOption) return cachedOption
+      if (!id) return []
       return await getPaciente(id)
     },
     options: async ({ search }) => {
@@ -45,12 +46,12 @@ const data = reactive({
       return await getUnidade(id)
     },
     options: async (payload) => {
-      console.log(payload.node.parent.value)
+      if (!payload.node.parent.value.cd_material)
+        return []
       // if (!search) return []
       // if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
       // if (!model.value.material.cd_material) return []
-      const items = await getUnidades(payload.node.parent.value.cd_material)
-      return items
+      return await getUnidades(payload.node.parent.value.cd_material)
     }
   },
   cd_material: {
@@ -59,14 +60,8 @@ const data = reactive({
       if (!id) return []
       return await getMaterial(id)
     },
-    options: async (payload) => {
-      console.log(payload)
-      // if (!search) return []
-      // if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
-      // if (!model.value.material.cd_material) return []
-      const items = await getMateriais()
-      console.log(items)
-      return items
+    options: async () => {
+      return await getMateriais()
     }
   }
 })
@@ -212,7 +207,24 @@ const onSubmit = async (_data: any) => {
     title="Prescrição"
     @close="emit('close')"
   >
-    <template #default>
+    <BaseFormLayout
+      :id
+      :schema="schemaRepeater"
+      :value="model"
+      :data
+      @submit="onSubmit"
+    >
+      <FormKit
+        type="group"
+        name="prescricao"
+      >
+        <FormKitSchema
+          :schema="schema"
+          :data
+        />
+      </FormKit>
+    </BaseFormLayout>
+    <!-- <template #default>
       <FormKit
         v-slot="{ state: { dirty } }"
         :value="model"
@@ -246,7 +258,7 @@ const onSubmit = async (_data: any) => {
           </div>
         </div>
       </FormKit>
-    </template>
+    </template> -->
   </BaseForm>
 </template>
 
