@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DashboardModal from '@nuxt/ui-pro/components/dashboard/DashboardModal.vue'
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { formatDateTime } from '@/utils/masks'
 
 const props = defineProps({
   id: {
@@ -14,10 +15,6 @@ const originalVal = ref<string>('')
 const modifiedVal = ref<string>('')
 const _id = ref<number>(0)
 const _nomeFuncionario = ref<string>('')
-
-function formatDateTime(payload: string) {
-  return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
-}
 
 const columnDefs = [
   { field: 'dt_laudo', headerName: 'Data', width: 10, valueFormatter: p => formatDateTime(p.value) }

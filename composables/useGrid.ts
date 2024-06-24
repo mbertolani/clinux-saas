@@ -1,4 +1,5 @@
 import type { ItemDataType, ItemAlignment, DbGridColumn } from '@/types/grid'
+import { formatDateTime, formatDate, formatTime, formatCNPJ, formatCpf, formatCel, formatFone } from '@/utils/masks'
 
 export const useGrid = () => {
   const gridFontSize = 12
@@ -138,27 +139,27 @@ export const useGrid = () => {
   //   return new Date(parts[2], parts[1] - 1, parts[0])
   // }
   // 2024-06-08T21:57:41.262Z
-  function formatDateTime(payload: string) {
-    return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
-  }
-  function formatTime(payload: string) {
-    return payload?.replace(/(\d{2}):(\d{2}):(\d{2})/, '$1:$2')
-  }
-  function formatDate(payload: string) {
-    return payload?.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3/$2/$1')
-  }
-  function formatCNPJ(payload: string) {
-    return payload?.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
-  }
-  function formatFone(payload: string) {
-    return payload?.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
-  }
-  function formatCel(payload: string) {
-    return payload?.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4')
-  }
-  function formatCpf(payload: string) {
-    return payload?.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-  }
+  // function formatDateTime(payload: string) {
+  //   return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
+  // }
+  // function formatTime(payload: string) {
+  //   return payload?.replace(/(\d{2}):(\d{2}):(\d{2})/, '$1:$2')
+  // }
+  // function formatDate(payload: string) {
+  //   return payload?.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3/$2/$1')
+  // }
+  // function formatCNPJ(payload: string) {
+  //   return payload?.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  // }
+  // function formatFone(payload: string) {
+  //   return payload?.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
+  // }
+  // function formatCel(payload: string) {
+  //   return payload?.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4')
+  // }
+  // function formatCpf(payload: string) {
+  //   return payload?.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  // }
   // const getRows = async (data: any[]) => {
   //   const columns = await getCols()
   //   const response = data.map((item) => {

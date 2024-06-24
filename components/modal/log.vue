@@ -7,9 +7,7 @@ defineProps({
     default: () => []
   }
 })
-// function formatDateTime(payload: string) {
-//   return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
-// }
+
 const emit = defineEmits(['close'])
 const columnDefs = [
   { field: 'ds_log', headerName: 'Data', width: useGrid().dataTypeWidth('ftString', 32) },

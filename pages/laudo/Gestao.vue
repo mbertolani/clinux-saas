@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel } from '#components'
+import { BaseEditor, LaudoHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
@@ -231,11 +231,11 @@ const actionMenu: ActionMenuItem[] = [
     icon: 'i-mdi-file-pdf-outline',
     action: () => { laudoAssinado() }
   },
-  {
-    name: 'acDigitado',
-    icon: 'i-mdi-file-document-outline',
-    action: () => { laudoAssinado() }
-  },
+  // {
+  //   name: 'acDigitado',
+  //   icon: 'i-mdi-file-document-outline',
+  //   action: () => { laudoAssinado() }
+  // },
   {
     name: 'Diff',
     title: 'Laudo Diff',
@@ -383,7 +383,6 @@ const laudoAssinado = async () => {
     return
   const { cd_atendimento, cd_exame } = selectedNode().data
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: selectedMedico() })// cd_atendimento: 1723321, cd_exame: 12834
-  // const data = await convertToBase64Image(response as Blob)
   if (!response.error)
     modal.open(LaudoAssinado, {
       src: URL.createObjectURL(response.data),
@@ -740,15 +739,31 @@ const openDiff = async () => {
 
 <template>
   <div>
-    <BaseEditor
+    <div
       v-show="idEditor && !openLeo"
-      :tool-bar="{
-        items: toolBarItens,
-        click: toolBarClick
-      }"
-      @load="loadEditor($event)"
-      @texto="selecionarAutotexto"
-    />
+      class="grid gap-x-0 grid-cols-1 md:grid-cols-12"
+    >
+      <div class="md:col-span-9 row-span-3">
+        <BaseEditor
+          class="!p-0"
+          :tool-bar="{
+            items: toolBarItens,
+            click: toolBarClick
+          }"
+          @load="loadEditor($event)"
+          @texto="selecionarAutotexto"
+        />
+      </div>
+      <div class="md:col-span-3">
+        Painel
+      </div>
+      <div class="md:col-span-3">
+        Anexos
+      </div>
+      <div class="md:col-span-3">
+        <LaudoHistorico :id="1" />
+      </div>
+    </div>
     <LaudoLeo
       v-if="openLeo"
       :token="user.idleo"

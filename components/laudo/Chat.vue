@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { formatDateTime } from '@/utils/masks'
 
 const props = defineProps({
   id: {
@@ -7,9 +8,6 @@ const props = defineProps({
     required: true
   }
 })
-function formatDateTime(payload: string) {
-  return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
-}
 
 const rowData = ref()
 rowData.value = (await useLaudo().doChatLista({ cd_atendimento: props.id })).data
