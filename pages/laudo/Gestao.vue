@@ -78,7 +78,6 @@ const toolBarItens = [
     id: 'achado',
     cssClass: 'e-de-toolbar-btn'
   },
-  'Separator',
   {
     prefixIcon: 'e-folder-open',
     tooltipText: 'Cadastrar Anexos',
@@ -86,13 +85,13 @@ const toolBarItens = [
     id: 'anexo',
     cssClass: 'e-de-toolbar-btn'
   },
-  {
-    prefixIcon: 'e-sort-ascending',
-    tooltipText: 'Dicionário',
-    text: 'Dicionário',
-    id: 'dicionario',
-    cssClass: 'e-de-toolbar-btn'
-  },
+  // {
+  //   prefixIcon: 'e-sort-ascending',
+  //   tooltipText: 'Dicionário',
+  //   text: 'Dicionário',
+  //   id: 'dicionario',
+  //   cssClass: 'e-de-toolbar-btn'
+  // },
   'Separator',
   {
     prefixIcon: 'e-search',
@@ -118,7 +117,7 @@ const toolBarItens = [
   {
     prefixIcon: 'e-changes-track',
     tooltipText: 'Alterações do Laudo',
-    text: 'Diferença',
+    text: 'Versão',
     id: 'diff',
     cssClass: 'e-de-toolbar-btn'
   }
@@ -413,14 +412,20 @@ const updateNodes = (responses) => {
 const selectedMedico = () => {
   return user.idmedico || selectedData()?.cd_medico
 }
-const laudoAssinado = async () => {
+const laudoAssinado = async (aRetry: boolean = true) => {
   if (!selectedNode())
     return
-  const { cd_atendimento, cd_exame, ds_procedimento } = selectedNode().data
+  const { cd_atendimento, cd_exame, ds_paciente } = selectedNode().data
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: selectedMedico() })// cd_atendimento: 1723321, cd_exame: 12834
-  if (!response.error)
+  // incluir timeout para aguardar a geração do arquivo
+  if (!response.data.size && aRetry) {
+    useMessage().showMessage('Aguarde um instante...')
+    await new Promise(resolve => setTimeout(resolve, 3000))
+    laudoAssinado(false)
+    return
+  } else if (!response.error)
     modal.open(LaudoAssinado, {
-      title: ds_procedimento,
+      title: ds_paciente,
       src: URL.createObjectURL(response.data),
       onClose() {
         modal.close()
@@ -819,7 +824,12 @@ const proximoLaudo = async () => {
     closeEditor()
   }
 }
-const imprimirLaudo = async () => { }
+const imprimirLaudo = async () => {
+  const response = await assinarLaudo()
+  if (response) {
+    laudoAssinado()
+  }
+}
 </script>
 
 <template>
