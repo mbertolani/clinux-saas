@@ -10,16 +10,13 @@ const props = defineProps({
 })
 
 const columnDefs = [
-  { field: 'dt_data', headerName: 'Data', width: 85, valueFormatter: p => formatDateTime(p.value) },
+  // { field: 'dt_data', headerName: 'Data', width: 85, valueFormatter: p => formatDateTime(p.value) },
   // { field: 'ds_funcionario', headerName: 'Funcionário', width: 200 },
   {
     field: 'ds_mensagem',
-    headerName: 'Mensagem',
-    tooltipValueGetter: (params) => {
-      return `[Enviado por: ${params.data.ds_funcionario}] ${params.data.ds_mensagem}`
-    }
-    // cellRenderer: (params) => {
-    //   return `<div class="py-0 my-0"><b>${params.data.ds_funcionario}</b> [${formatDateTime(params.data.dt_data)}]</div><div>${params.data.ds_mensagem}</div>`
+    headerName: 'Mensagem'
+    // tooltipValueGetter: (params) => {
+    //   return `[Enviado por: ${params.data.ds_funcionario}] ${params.data.ds_mensagem}`
     // }
   }
 ]
@@ -33,6 +30,10 @@ const rowData = ref()
 useLaudo().doChatLista({ cd_atendimento: props.data.cd_atendimento }).then((response) => {
   rowData.value = response.data
 })
+
+const onRowDoubleClicked = async (params) => {
+  useMessage().showMessage(params.data.ds_mensagem, `Enviado por: ${params.data.ds_funcionario} em ${formatDateTime(params.data.dt_data)}`)
+}
 </script>
 
 <template>
@@ -42,6 +43,7 @@ useLaudo().doChatLista({ cd_atendimento: props.data.cd_atendimento }).then((resp
     :row-data
     :pagination="false"
     :tooltip-show-delay="500"
+    :on-row-double-clicked="onRowDoubleClicked"
     @first-data-rendered="onFirstDataRendered"
   />
 </template>

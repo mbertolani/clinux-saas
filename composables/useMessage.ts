@@ -22,17 +22,17 @@ export const useMessage = () => {
   const showDebug = (payload: any) => {
     debugMessage.value = payload
   }
-  const showError = (message?: string) => {
+  const showError = (message?: string, title?: string) => {
     useToast().add({
-      title: 'Erro',
+      title: title || 'Erro',
       color: 'red',
       description: message || 'Nenhum registro selecionado',
       icon: 'i-heroicons-exclamation-triangle'
     })
   }
-  const showMessage = (message?: string) => {
+  const showMessage = (message?: string, title?: string) => {
     useToast().add({
-      title: 'Aviso',
+      title: title || 'Aviso',
       color: 'green',
       description: message || 'Operação realizada com sucesso',
       icon: 'i-heroicons-check-circle'

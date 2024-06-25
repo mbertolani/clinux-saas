@@ -122,10 +122,13 @@ export default {
       return response as Blob
       // await useUseEditor().Export(payload as any)
     },
-    updateContainerSize() {
+    async updateContainerSize() {
       const containerPanel = document.getElementById('documentEditorContainer')
-      if (containerPanel)
+      if (containerPanel) {
+        await new Promise(resolve => setTimeout(resolve, 500))
         containerPanel.style.height = (window.innerHeight - 86) + 'px'
+        containerPanel.style.width = '100%'
+      }
       // - (document.getElementById('documenteditor_titlebar').offsetHeight + document.getElementById('documenteditor_toolbar').offsetHeight)
       // console.log(containerPanel?.style.height)
     },
@@ -253,8 +256,6 @@ export default {
   <ejs-documenteditor
     id="documentEditorContainer"
     ref="documentEditor"
-    class="p-4"
-    height="600"
     :service-url
     :enable-toolbar="enableToolbar"
     :readonly="readOnly"
