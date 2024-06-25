@@ -95,8 +95,8 @@ const toolBarItens = [
   },
   'Separator',
   {
-    prefixIcon: 'e-repeat',
-    tooltipText: 'Enviar para Revisão',
+    prefixIcon: 'e-search',
+    tooltipText: 'Selecionar Revisor',
     text: 'Revisar',
     id: 'revisar',
     cssClass: 'e-de-toolbar-btn'
@@ -311,6 +311,7 @@ const salvarLaudo = async () => {
     useMessage().showMessage()
     closeEditor()
     apiPage.value.applyTransaction({ update: response.data })
+    return true
   }
 }
 const assinarLaudo = async (aClose: boolean = true) => {
@@ -777,7 +778,23 @@ const openDiff = async () => {
     }
   })
 }
-const revisarLaudo = async () => { }
+const revisarLaudo = async () => {
+  const response = await useLaudo().execRevisao({ cd_atendimento: idGrid.value.cd_atendimento, cd_modalidade: idGrid.value.cd_modalidade })
+  if (response.error)
+    return
+  modal.open(ModalPesquisa, {
+    title: 'Médico Revisor',
+    data: response.data,
+    async onSubmit(cd_medico: number) {
+      const response = await useLaudo().execRevisao({ cd_atendimento: idGrid.value.cd_atendimento, cd_medico })
+      if (!response.error) {
+        salvarLaudo()
+        apiPage.value.applyTransaction({ update: response.data })
+        modal.close()
+      }
+    }
+  })
+}
 const transferirLaudo = async () => { }
 const proximoLaudo = async () => {
   const response = await assinarLaudo(false)

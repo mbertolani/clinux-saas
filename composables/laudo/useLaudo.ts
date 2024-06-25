@@ -292,6 +292,9 @@ export const useLaudo = () => {
   async function execRevisor(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }) {
     return await Post('laudo/laudo/exec/acRevisor', payload)
   }
+  async function execRevisao(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }) {
+    return await Post('laudo/laudo/exec/acRevisao', payload)
+  }
   async function execAuditor(payload: { cd_atendimento: number, cd_medico?: number, cd_modalidade?: number }) {
     return await Post('laudo/laudo/exec/acAuditor', payload)
   }
@@ -347,6 +350,7 @@ export const useLaudo = () => {
     bloquearLayout,
     execMedico,
     execRevisor,
+    execRevisao,
     execAuditor,
     execProcedimento,
     execCancelar,
