@@ -389,10 +389,11 @@ const selectedMedico = () => {
 const laudoAssinado = async () => {
   if (!selectedNode())
     return
-  const { cd_atendimento, cd_exame } = selectedNode().data
+  const { cd_atendimento, cd_exame, ds_procedimento } = selectedNode().data
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: selectedMedico() })// cd_atendimento: 1723321, cd_exame: 12834
   if (!response.error)
     modal.open(LaudoAssinado, {
+      title: ds_procedimento,
       src: URL.createObjectURL(response.data),
       onClose() {
         modal.close()
@@ -765,7 +766,7 @@ const openDiff = async () => {
       class="grid gap-x-0 grid-cols-1 md:grid-cols-12"
     >
       <BaseEditor
-        class="md:col-span-9 md:row-span-7 !p-0"
+        class="md:col-span-9 md:row-span-4 !p-0"
         :tool-bar="{
           items: toolBarItens,
           click: toolBarClick
@@ -776,21 +777,21 @@ const openDiff = async () => {
       <LaudoPainelData
         v-if="idEditor"
         :id="Number(idEditor)"
-        class="md:col-span-3 hidden md:block px-2 py-2"
+        class="md:col-span-3 px-2 pb-2"
       />
       <LaudoPainelChat
         v-if="idEditor"
-        class="md:col-span-3 md:row-span-2 hidden md:block px-2 pb-2"
+        class="md:col-span-3 px-2 pb-2"
         :data="idGrid"
       />
       <LaudoPainelAnexo
         v-if="idEditor"
-        class="md:col-span-3 md:row-span-2 hidden md:block px-2 pb-2"
+        class="md:col-span-3 px-2 pb-2"
         :data="idGrid"
       />
       <LaudoPainelHistorico
         v-if="idEditor"
-        class="md:col-span-3 md:row-span-2 hidden md:block px-2"
+        class="md:col-span-3 px-2"
         :data="idGrid"
       />
     </div>

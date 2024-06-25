@@ -5,6 +5,10 @@ defineProps({
   src: {
     type: String,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
   }
 })
 const emit = defineEmits(['close'])
@@ -12,7 +16,7 @@ const emit = defineEmits(['close'])
 
 <template>
   <ModalFullScreen
-    title="Laudo Assinado"
+    :title
     :fullscreen="true"
     @close="emit('close')"
   >

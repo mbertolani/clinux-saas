@@ -23,6 +23,7 @@ const onRowDoubleClicked = async (params) => {
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame })// cd_atendimento: 1723321, cd_exame: 12834
   if (!response.error)
     useModal().open(LaudoAssinado, {
+      title: params.data.ds_procedimento,
       src: URL.createObjectURL(response.data),
       onClose() {
         useModal().close()
@@ -36,8 +37,11 @@ const onRowDoubleClicked = async (params) => {
 const onFirstDataRendered = async ({ api }) => {
   api.sizeColumnsToFit()
 }
-const response = await doLaudoLista(props.data.cd_paciente)
-rowData.value = response.data
+// const response = await doLaudoLista(props.data.cd_paciente)
+// rowData.value = response.data
+doLaudoLista(props.data.cd_paciente).then((response) => {
+  rowData.value = response.data
+})
 </script>
 
 <template>
