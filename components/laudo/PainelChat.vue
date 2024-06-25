@@ -16,7 +16,7 @@ const columnDefs = [
     field: 'ds_mensagem',
     headerName: 'Mensagem',
     tooltipValueGetter: (params) => {
-      return `[${params.data.ds_funcionario}] ${params.data.ds_mensagem}`
+      return `[Enviado por: ${params.data.ds_funcionario}] ${params.data.ds_mensagem}`
     }
     // cellRenderer: (params) => {
     //   return `<div class="py-0 my-0"><b>${params.data.ds_funcionario}</b> [${formatDateTime(params.data.dt_data)}]</div><div>${params.data.ds_mensagem}</div>`

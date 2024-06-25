@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoPainelData, LaudoPainelChat, LaudoPainelAnexo, LaudoExame } from '#components'
+import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoPainelData, LaudoPainelChat, LaudoPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
@@ -795,7 +795,19 @@ const revisarLaudo = async () => {
     }
   })
 }
-const transferirLaudo = async () => { }
+const transferirLaudo = async () => {
+  modal.open(LaudoTransferencia, {
+    id: idGrid.value.cd_atendimento,
+    onClose() {
+      modal.close()
+    },
+    async onSubmit(data) {
+      apiPage.value.applyTransaction({ update: data })
+      modal.close()
+      closeEditor()
+    }
+  })
+}
 const proximoLaudo = async () => {
   const response = await assinarLaudo(false)
   if (!response)
