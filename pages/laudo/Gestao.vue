@@ -8,7 +8,7 @@ const toolBarItens = [
   {
     prefixIcon: 'e-arrow-left',
     tooltipText: 'Fechar Editor',
-    text: 'Sair',
+    text: 'Voltar',
     id: 'close',
     cssClass: 'e-de-toolbar-btn'
   },
@@ -17,6 +17,20 @@ const toolBarItens = [
     tooltipText: 'Salvar Documento',
     text: 'Salvar',
     id: 'save',
+    cssClass: 'e-de-toolbar-btn'
+  },
+  {
+    prefixIcon: 'e-edit',
+    tooltipText: 'Assinar Laudo',
+    text: 'Assinar',
+    id: 'assinar',
+    cssClass: 'e-de-toolbar-btn'
+  },
+  {
+    prefixIcon: 'e-arrow-right',
+    tooltipText: 'Assinar e Próximo',
+    text: 'Próximo',
+    id: 'proximo',
     cssClass: 'e-de-toolbar-btn'
   },
   'Separator',
@@ -88,17 +102,10 @@ const toolBarItens = [
     cssClass: 'e-de-toolbar-btn'
   },
   {
-    prefixIcon: 'e-edit',
-    tooltipText: 'Assinar Laudo',
-    text: 'Assinar',
-    id: 'assinar',
-    cssClass: 'e-de-toolbar-btn'
-  },
-  {
-    prefixIcon: 'e-redo',
-    tooltipText: 'Assinar e Próximo',
-    text: 'Próximo',
-    id: 'proximo',
+    prefixIcon: 'e-send',
+    tooltipText: 'Transferir e Sair',
+    text: 'Transferir',
+    id: 'transferir',
     cssClass: 'e-de-toolbar-btn'
   },
   {
@@ -109,9 +116,9 @@ const toolBarItens = [
     cssClass: 'e-de-toolbar-btn'
   },
   {
-    prefixIcon: 'e-undo',
+    prefixIcon: 'e-changes-track',
     tooltipText: 'Alterações do Laudo',
-    text: 'Diff',
+    text: 'Diferença',
     id: 'diff',
     cssClass: 'e-de-toolbar-btn'
   }
@@ -131,10 +138,12 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       openImagem()
       break
     case 'modelo':
-      selecionarModelo()
+      if (!await selecionarModelo())
+        useMessage().showMessage('Modelo não encontrado !')
       break
     case 'texto':
-      selecionarAutotexto()
+      if (!await selecionarAutotexto())
+        useMessage().showMessage('Auto-Texto não encontrado !')
       break
     case 'pendencia':
       editarPendencia(selectedData()?.cd_atendimento)
@@ -149,16 +158,19 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       console.log('dicionario')
       break
     case 'revisar':
-      console.log('revisar')
+      revisarLaudo()
       break
     case 'assinar':
       assinarLaudo()
       break
+    case 'transferir':
+      transferirLaudo()
+      break
     case 'proximo':
-      console.log('proximo')
+      proximoLaudo()
       break
     case 'imprimir':
-      console.log('imprimir')
+      imprimirLaudo()
       break
     case 'diff':
       openDiff()
@@ -287,7 +299,9 @@ const abrirLaudo = async (id: number) => {
   if (response.data) {
     apiEditor.value.load(response.data)
   } else {
-    selecionarModelo()
+    const modelo = await selecionarModelo()
+    if (!modelo)
+      apiEditor.value.clear()
   }
 }
 const salvarLaudo = async () => {
@@ -299,13 +313,15 @@ const salvarLaudo = async () => {
     apiPage.value.applyTransaction({ update: response.data })
   }
 }
-const assinarLaudo = async () => {
+const assinarLaudo = async (aClose: boolean = true) => {
   const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: await apiEditor.value.save() })
   if (response) {
     useMessage().showMessage()
-    closeEditor()
+    if (aClose)
+      closeEditor()
     apiPage.value.applyTransaction({ update: response.data })
   }
+  return response
 }
 const dataInicio = new Date()
 dataInicio.setDate(dataInicio.getDate() - 90)
@@ -365,6 +381,7 @@ const selecionarAutotexto = async (payload?: any) => {
       }
     )
   }
+  return true
 }
 const selectedNodeIds = (): number[] => {
   return apiPage.value.getSelectedNodes().map(node => Number(node.id))
@@ -382,6 +399,15 @@ const selectedNode = () => {
     return
   }
   return selectedNode
+}
+const updateNodes = (responses) => {
+  let nodes = []
+  responses.forEach((response) => {
+    if (!response.error)
+      nodes = nodes.concat(response.data)
+  })
+  apiPage.value.applyTransaction({ update: nodes })
+  modal.close()
 }
 const selectedMedico = () => {
   return user.idmedico || selectedData()?.cd_medico
@@ -420,9 +446,11 @@ const selecionarModelo = async () => {
   const response = await useLaudo().doModeloLista({ cd_exame: idEditor.value }) as any
   if (response.error)
     return
+  if (!response.data.length)
+    return
   if (response.data.length === 1) {
     carregarModelo(response.data[0].cd_modelo)
-    return
+    return true
   }
   modal.open(ModalPesquisa, {
     title: 'Modelos de Laudo',
@@ -434,15 +462,7 @@ const selecionarModelo = async () => {
       modal.close()
     }
   })
-}
-const updateNodes = (responses) => {
-  let nodes = []
-  responses.forEach((response) => {
-    if (!response.error)
-      nodes = nodes.concat(response.data)
-  })
-  apiPage.value.applyTransaction({ update: nodes })
-  modal.close()
+  return true
 }
 const editarProcedimento = async () => {
   if (!selectedNode())
@@ -757,6 +777,20 @@ const openDiff = async () => {
     }
   })
 }
+const revisarLaudo = async () => { }
+const transferirLaudo = async () => { }
+const proximoLaudo = async () => {
+  const response = await assinarLaudo(false)
+  if (!response)
+    return
+  const proximo = await useLaudo().doLaudoProximo()
+  if (proximo.cd_exame) {
+    abrirLaudo(proximo.cd_exame)
+  } else {
+    closeEditor()
+  }
+}
+const imprimirLaudo = async () => { }
 </script>
 
 <template>

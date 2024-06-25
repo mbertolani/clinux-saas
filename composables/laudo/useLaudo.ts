@@ -127,8 +127,9 @@ export const useLaudo = () => {
   async function doLaudoFiltroRevisao() {
     return await post('doLaudoFiltroRevisao')
   }
-  async function doLaudoProximo() {
-    return await post('doLaudoProximo')
+  async function doLaudoProximo(): Promise<{ cd_exame: number, cd_atendimento: number }> {
+    const response = await post('doLaudoProximo')
+    return response?.data[0]
   }
   async function doModeloLayout(cd_exame: number) {
     const response = await post('doModeloLayout', { cd_exame })
