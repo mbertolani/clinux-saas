@@ -80,10 +80,7 @@ export const useLaudo = () => {
   }
   async function doLaudoDados(cd_exame: number) {
     const response = await post('doLaudoDados', { cd_exame })
-    return {
-      data: response.data[0]?.bb_dados ? Buffer.from(response.data[0].bb_dados, 'base64') : '',
-      error: response.error
-    }
+    return response ? response.data[0] : null
   }
   async function doLaudoAgrupar(cd_exame: number) {
     return await post('doLaudoAgrupar', { cd_exame })

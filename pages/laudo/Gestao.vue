@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel } from '#components'
+import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoPainelData, LaudoPainelChat, LaudoPainelAnexo, LaudoExame } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
@@ -231,18 +231,25 @@ const actionMenu: ActionMenuItem[] = [
     icon: 'i-mdi-file-pdf-outline',
     action: () => { laudoAssinado() }
   },
-  // {
-  //   name: 'acDigitado',
-  //   icon: 'i-mdi-file-document-outline',
-  //   action: () => { laudoAssinado() }
-  // },
+  {
+    name: 'acDigitado',
+    icon: 'i-mdi-file-document-outline',
+    action: null
+  },
   {
     name: 'Diff',
     title: 'Laudo Diff',
     icon: 'i-mdi-file-compare',
     action: () => { openDiff() }
+  },
+  {
+    name: 'acExame',
+    title: 'Editar Exame',
+    icon: 'i-mdi-format-list-bulleted',
+    action: () => { editarExame(selectedNodeId()) }
   }
 ]
+const idGrid = ref()
 const idEditor = ref<number>(0)
 const schemaFormula = ref()
 const showFormula = ref(false)
@@ -276,6 +283,7 @@ const abrirLaudo = async (id: number) => {
   if (response.error)
     return
   idEditor.value = id
+  idGrid.value = selectedData()
   if (response.data) {
     apiEditor.value.load(response.data)
   } else {
@@ -632,6 +640,19 @@ const editarChat = async (id: number) => {
       }
     })
 }
+const editarExame = async (id: number) => {
+  if (!id) return
+  modal.open(LaudoExame, {
+    id,
+    async onSubmit(data) {
+      apiPage.value.applyTransaction({ update: data })
+      modal.close()
+    },
+    onClose() {
+      modal.close()
+    }
+  })
+}
 const appendColumnDefs = [
   {
     field: 'Sinalizadores',
@@ -743,26 +764,35 @@ const openDiff = async () => {
       v-show="idEditor && !openLeo"
       class="grid gap-x-0 grid-cols-1 md:grid-cols-12"
     >
-      <div class="md:col-span-9 row-span-3">
-        <BaseEditor
-          class="!p-0"
-          :tool-bar="{
-            items: toolBarItens,
-            click: toolBarClick
-          }"
-          @load="loadEditor($event)"
-          @texto="selecionarAutotexto"
-        />
-      </div>
-      <div class="md:col-span-3">
-        Painel
-      </div>
-      <div class="md:col-span-3">
-        Anexos
-      </div>
-      <div class="md:col-span-3">
-        <LaudoHistorico :id="1" />
-      </div>
+      <BaseEditor
+        class="md:col-span-9 md:row-span-7 !p-0"
+        :tool-bar="{
+          items: toolBarItens,
+          click: toolBarClick
+        }"
+        @load="loadEditor($event)"
+        @texto="selecionarAutotexto"
+      />
+      <LaudoPainelData
+        v-if="idEditor"
+        :id="Number(idEditor)"
+        class="md:col-span-3 hidden md:block px-2 py-2"
+      />
+      <LaudoPainelChat
+        v-if="idEditor"
+        class="md:col-span-3 md:row-span-2 hidden md:block px-2 pb-2"
+        :data="idGrid"
+      />
+      <LaudoPainelAnexo
+        v-if="idEditor"
+        class="md:col-span-3 md:row-span-2 hidden md:block px-2 pb-2"
+        :data="idGrid"
+      />
+      <LaudoPainelHistorico
+        v-if="idEditor"
+        class="md:col-span-3 md:row-span-2 hidden md:block px-2"
+        :data="idGrid"
+      />
     </div>
     <LaudoLeo
       v-if="openLeo"

@@ -43,7 +43,8 @@ export function formClass(cols: number) {
 export function getFieldName(schema) {
   return schema.reduce((acc, item) => {
     if (item.name) {
-      acc.push(item.name)
+      if (item.$formkit !== 'group')
+        acc.push(item.name)
     }
     if (item.children) {
       acc.push(...getFieldName(item.children))

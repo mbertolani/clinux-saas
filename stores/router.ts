@@ -11,7 +11,8 @@ export const useRouterStore = defineStore({
 
   getters: {
     clientName: state => state.client?.ds_empresa,
-    apiUrl: state => state.client?.ds_portal_url
+    apiUrl: state => state.client?.ds_portal_url,
+    teleLaudo: state => ['telelaudo', 'local', 'sedi2', 'localhost'].includes(state.clientId)
   },
 
   actions: {

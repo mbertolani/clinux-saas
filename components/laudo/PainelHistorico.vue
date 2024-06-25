@@ -4,8 +4,8 @@ import { LaudoAssinado } from '#components'
 import { formatDateTime } from '@/utils/masks'
 
 const props = defineProps({
-  id: {
-    type: Number,
+  data: {
+    type: Object,
     required: true
   }
 })
@@ -15,12 +15,6 @@ const columnDefs = [
   { field: 'dt_data', headerName: 'Data', width: 90, valueFormatter: p => formatDateTime(p.value) },
   { field: 'ds_procedimento', headerName: 'Procedimento', width: 200 }
 ]
-const gridOptions = {
-  suppressHorizontalScroll: true,
-  autoSizeStrategy: {
-    type: 'fitGridWidth'
-  }
-}
 
 const onRowDoubleClicked = async (params) => {
   // const response = await doAnexoDownload(params.data.cd_documento)
@@ -39,8 +33,10 @@ const onRowDoubleClicked = async (params) => {
 //   const response = await doAnexoDownload(data.cd_documento)
 //   rowImage.value = response.stream.data instanceof Blob ? URL.createObjectURL(response.stream.data) : ''
 // }
-
-const response = await doLaudoLista(props.id)
+const onFirstDataRendered = async ({ api }) => {
+  api.sizeColumnsToFit()
+}
+const response = await doLaudoLista(props.data.cd_paciente)
 rowData.value = response.data
 </script>
 
@@ -50,7 +46,7 @@ rowData.value = response.data
     :column-defs
     :row-data
     :pagination="false"
-    :grid-options
     :on-row-double-clicked="onRowDoubleClicked"
+    @first-data-rendered="onFirstDataRendered"
   />
 </template>

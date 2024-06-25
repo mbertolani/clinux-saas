@@ -24,7 +24,7 @@ const gridOptions = {
   }
 }
 const listaAnexos = async () => {
-  const response = await doAnexoLista({ cd_atendimento: props.id })
+  const response = await doAnexoLista()
   if (!response.error) {
     rowData.value = response.data
   }
