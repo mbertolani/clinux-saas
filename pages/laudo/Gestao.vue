@@ -313,8 +313,11 @@ const salvarLaudo = async () => {
     return true
   }
 }
-const assinarLaudo = async (aClose: boolean = true) => {
-  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: await apiEditor.value.save() })
+const assinarLaudo = async (aClose: boolean = true, aTipo: number = 0) => {
+  if (!aTipo)
+    if (await classificarLaudo())
+      return
+  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: await apiEditor.value.save(), cd_tipo: aTipo })
   if (response) {
     useMessage().showMessage()
     if (aClose)
@@ -829,6 +832,24 @@ const imprimirLaudo = async () => {
   if (response) {
     laudoAssinado()
   }
+}
+const classificarLaudo = async () => {
+  const response = await useLaudo().doLaudoFiltroTipo(selectedData().cd_modalidade)
+  if (!response.data.length) {
+    return false
+  }
+  modal.open(ModalPesquisa, {
+    title: 'Classificar Laudo',
+    data: response.data,
+    onSubmit(id) {
+      assinarLaudo(true, id)
+      modal.close()
+    },
+    onCancel() {
+      modal.close()
+    }
+  })
+  return true
 }
 </script>
 
