@@ -2,8 +2,8 @@
 import type { DocumentEditor, DocumentEditorContainer } from '@syncfusion/ej2-vue-documenteditor' // CustomToolbarItemModel, ToolbarItem
 import { registerLicense } from '@syncfusion/ej2-base'
 import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
+import { useStorage } from '@vueuse/core'
 import { ptBr } from '~/utils/editor'
-
 // registerLicense('Mgo+DSMBMAY9C3t2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5Vd0diWX9ZcHZRQWRf')
 // registerLicense(useRuntimeConfig().public.syncfusionKey)
 
@@ -32,6 +32,7 @@ export default {
   emits: ['load', 'save', 'close', 'texto'],
   data() {
     return {
+      sfdt: '',
       // serviceUrl: 'http://localhost:6002/api/documenteditor/'
       serviceUrl: 'https://editor.telelaudo.com.br/api/documenteditor/'
       // https://github.com/SyncfusionExamples/EJ2-Document-Editor-Web-Services
@@ -57,30 +58,34 @@ export default {
     this.$emit('load', this)
     this.setToolBar()
     window.addEventListener('resize', this.updateContainerSize)
+    window.addEventListener('beforeunload', this.saveDraft)
     setTimeout(() => {
       this.updateContainerSize()
     }, 100)
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.updateContainerSize)
+    window.removeEventListener('beforeunload', this.saveDraft)
+    // this.saveDraft
   },
   methods: {
+    close() {
+      useStorage('draft', null).value = null
+    },
+    change() {
+      return this.editor.serialize() !== this.sfdt
+    },
+    show() {
+      this.editor.focusIn()
+      this.updateContainerSize()
+      this.sfdt = this.editor.serialize()
+      this.loadDraft()
+    },
     clear() {
       this.editor.openBlank()
-      this.updateContainerSize()
+      this.show()
     },
-    async load(payload) {
-      this.updateContainerSize()
-      // const formData = new FormData()
-      // formData.append('name', 'laudo.rtf')
-      // formData.append('contents', new Blob([payload], { type: 'application/rtf' }))
-      // const response = await $fetch('Import', {
-      //   baseURL: this.serviceUrl,
-      //   method: 'POST',
-      //   body: formData
-      // }).catch((e) => {
-      //   console.error(e)
-      // })
+    async load(payload?: string) {
       if (!payload) {
         this.clear()
         return
@@ -88,6 +93,7 @@ export default {
       const response = await useEditor().Import(payload)
       this.editor.open(response)
       this.editor.selection.moveToDocumentEnd()
+      this.show()
     },
     async paste(payload) {
       const sfdt = await useEditor().Import(payload)
@@ -119,8 +125,21 @@ export default {
       }).catch((e) => {
         console.error(e)
       })
+      this.sfdt = this.editor.serialize()
       return response as Blob
-      // await useUseEditor().Export(payload as any)
+    },
+    saveDraft() {
+      useStorage('draft', this.editor.serialize())
+    },
+    loadDraft() {
+      if (useStorage('draft', null).value) {
+        this.editor.open(JSON.parse(useStorage('draft', null).value))
+        // this.sfdt = this.editor.serialize()
+        useMessage().showMessage('Rascunho recuperado !')
+        return true
+      } else {
+        return false
+      }
     },
     async updateContainerSize() {
       const containerPanel = document.getElementById('documentEditorContainer')

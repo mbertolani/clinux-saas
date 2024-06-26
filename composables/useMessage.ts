@@ -2,9 +2,9 @@ const debugMessage = ref()
 const isOpen = ref()
 const config = ref({
   title: 'Aviso',
-  description: 'Deseja confirmar a operação ?',
-  okButton: 'Confirmar',
-  noButton: 'Cancelar',
+  description: 'Deseja confirmar ?',
+  okButton: 'Sim',
+  noButton: 'Não',
   okClick: null,
   noClick: null // () => { propsDialog.value.visible = false }
 })

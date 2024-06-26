@@ -283,9 +283,19 @@ const openForm = (codigo?: number) => {
 const loadEditor = (editor) => {
   apiEditor.value = editor
 }
-const closeEditor = async () => {
+const closeEditor = async (aChange: boolean = true) => {
+  if (aChange && apiEditor.value.change()) {
+    useMessage().openDialog({
+      title: 'Edição de Laudo',
+      description: 'Deseja salvar as alterações ?',
+      okClick: () => salvarLaudo(),
+      noClick: () => closeEditor(false)
+    })
+    return
+  }
   useLaudo().doLaudoSair(idEditor.value)
   idEditor.value = 0
+  apiEditor.value.close()
 }
 const abrirLaudo = async (id: number) => {
   if (!id)

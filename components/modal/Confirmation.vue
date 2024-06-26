@@ -10,7 +10,7 @@ const okClick = () => {
   emit('yes')
 }
 const noClick = () => {
-  // config.value.noClick()
+  config.value?.noClick()
   closeDialog()
   emit('no')
 }
@@ -37,13 +37,13 @@ const noClick = () => {
   >
     <template #footer>
       <UButton
-        :label="config?.okButton"
+        :label="config?.okButton || 'Sim'"
         :loading="loading"
         @click="okClick()"
       />
       <UButton
         color="white"
-        :label="config?.noButton"
+        :label="config?.noButton || 'Não'"
         @click="noClick()"
       />
     </template>
