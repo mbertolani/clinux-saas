@@ -28,12 +28,16 @@ const filtrar = async () => {
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acAnexo',
+    title: 'Anexos',
+    icon: Icones.anexo,
     action: () => {
       console.log('Anexo')
     }
   },
   {
     name: 'acRota',
+    title: 'Rotas',
+    icon: Icones.rota,
     action: () => {
       console.log('Rota')
     }

@@ -29,7 +29,7 @@ const onSubmit = async (_data: any) => {
 
 <template>
   <BaseForm
-    title="Associar Salas"
+    :title="medico.ds_medico"
     @close="emit('close')"
   >
     <FormKit
@@ -41,7 +41,6 @@ const onSubmit = async (_data: any) => {
       <FormKit
         name="Salas"
         type="transferlist"
-        :label="medico.ds_medico"
         source-label="Sala"
         target-label="Seleção"
         :options="Salas"

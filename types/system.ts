@@ -111,7 +111,9 @@ export const Icones: Record<string, string> = {
   gestao: 'i-mdi-monitor-dashboard',
   prescricao: 'i-heroicons-beaker',
   auditoria: 'i-mdi-account-card',
-  atendimento: 'i-mdi-account-card'
+  atendimento: 'i-mdi-account-card',
+  rota: 'i-mdi-truck-delivery',
+  anexo: 'i-mdi-paperclip'
 }
 
 export const mainMenu = [

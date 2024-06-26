@@ -89,7 +89,7 @@ const setColumnDefs = async () => {
   return mergedColumns
 }
 const setMenu = async () => {
-  const menu = await props.controller.getMenu()
+  const menu = [] // await props.controller.getMenu()
   const remainingActionMenuItems = [...props.actionMenu]
 
   const menuAction = menu?.map((item) => {

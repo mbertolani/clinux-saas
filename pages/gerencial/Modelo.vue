@@ -7,6 +7,7 @@ import { Icones } from '~/types/system'
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'miEditarArquivo',
+    title: 'Editar Arquivo',
     icon: 'i-mdi-file-edit-outline',
     action: () => abrirModelo()
   },
@@ -49,6 +50,7 @@ const openEditor = (id, payload) => {
 }
 const closeEditor = async () => {
   idEditor.value = 0
+  apiEditor.value.close()
 }
 const saveEditor = async () => {
   if (idEditor.value === apiPage.value.selectedNode()?.id)

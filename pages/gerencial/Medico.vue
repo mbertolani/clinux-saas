@@ -29,11 +29,13 @@ const associarSala = (codigo?: number) => {
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acProcedimento',
+    title: 'Associar Procedimento',
     icon: Icones.procedimento,
     action: () => { associarProcedimento(apiPage.value.selectedData()?.cd_medico) }
   },
   {
     name: 'acSala',
+    title: 'Associar Sala',
     icon: Icones.sala,
     action: () => { associarSala(apiPage.value.selectedData()?.cd_medico) }
   }

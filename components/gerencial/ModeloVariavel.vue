@@ -13,24 +13,20 @@ const props = defineProps({
 })
 
 const salvar = async () => {
-  // const payload = {
-  //   schema: schema.value,
-  //   data: data.value
-  // }
   const response = await useModelo().setFormula(props.id, schema.value)
   if (response)
     emit('close')
 }
 
-const response = await useModelo().getFormula(props.id)
-const schema = ref(response)
-// const schema = ref(response?.schema ? response.schema : response || '')
-// const data = ref(response?.data ? response.data : '')
+const [modelo, schema] = await Promise.all([
+  useModelo().get(props.id, 'ds_modelo'),
+  useModelo().getFormula(props.id)
+])
 </script>
 
 <template>
   <DashboardModal
-    title="Formulário"
+    :title="modelo.ds_modelo"
     :fullscreen="true"
   >
     <template #footer>

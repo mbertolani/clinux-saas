@@ -1,23 +1,44 @@
 <script lang="ts" setup>
-import { GerencialProcedimento } from '#components'
+import { GerencialProcedimento, GerencialProcedimentoModelo } from '#components'
 import { useProcedimento } from '~/composables/gerencial/useProcedimento'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
 
 const title = 'Procedimentos'
 const apiPage = ref(null)
-const actionMenu: ActionMenuItem[] = []
 const controller = useProcedimento()
 const showModal = ref(false)
 const id = ref(0)
 const filter = ref()
+const modal = useModal()
+
 const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
 }
+
 const onSubmit = (data: any) => {
   showModal.value = false
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
+}
+
+const actionMenu: ActionMenuItem[] = [
+  {
+    name: 'acModelo',
+    title: 'Associar Modelo',
+    icon: Icones.modelo,
+    action: () => {
+      associarModelo(apiPage.value.selectedNode()?.id)
+    }
+  }
+]
+const associarModelo = (codigo?: number) => {
+  modal.open(GerencialProcedimentoModelo, {
+    id: Number(codigo),
+    onClose() {
+      modal.close()
+    }
+  })
 }
 </script>
 

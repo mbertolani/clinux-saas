@@ -25,16 +25,11 @@ const onSubmit = async (_data: any) => {
   await Promise.all(operations)
   emit('close')
 }
-// const atualizaProcedimento = async (node) => {
-//   node.on('commit', async (context: any) => {
-//     listaProcedimento.value = await getProcedimentos(context.payload)
-//   })
-// }
 </script>
 
 <template>
   <BaseForm
-    title="Associar Procedimentos"
+    :title="medico.ds_medico"
     @close="emit('close')"
   >
     <FormKit
@@ -43,17 +38,9 @@ const onSubmit = async (_data: any) => {
       :actions="false"
       @submit="onSubmit"
     >
-      <!-- <FormKit
-        id="cd_modalidade"
-        type="dropdown"
-        label="Modalidade"
-        name="cd_modalidade"
-        :options="listaModalidade"
-      /> -->
       <FormKit
         name="procedimentos"
         type="transferlist"
-        :label="medico.ds_medico"
         source-label="Procedimento"
         target-label="Seleção"
         :options="listaProcedimento"

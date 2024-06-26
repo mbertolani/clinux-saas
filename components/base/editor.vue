@@ -133,12 +133,11 @@ export default {
     },
     loadDraft() {
       if (useStorage('draft', null).value) {
-        this.editor.open(JSON.parse(useStorage('draft', null).value))
-        // this.sfdt = this.editor.serialize()
-        useMessage().showMessage('Rascunho recuperado !')
-        return true
-      } else {
-        return false
+        useMessage().openDialog({
+          title: 'Rascunho Encontrado',
+          description: 'Deseja recuperar o texto digitado ?',
+          okClick: () => this.editor.open(JSON.parse(useStorage('draft', null).value))
+        })
       }
     },
     async updateContainerSize() {
