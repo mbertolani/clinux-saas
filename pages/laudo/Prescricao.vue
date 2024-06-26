@@ -2,6 +2,7 @@
 import { LaudoPrescricao } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import type { ActionMenuItem } from '~/types/grid'
+import { Icones } from '~/types/system'
 
 const apiPage = ref(null)
 const controller = usePrescricao()
@@ -67,7 +68,7 @@ const actionMenu: ActionMenuItem[] = [
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title: 'Médicos', icon: 'i-heroicons-beaker' }"
+    :header="{ title: 'Prescrição', icon: Icones.prescricao }"
     :controller
     :action-menu
     :row-class-rules

@@ -37,7 +37,7 @@ export const useLaudo = () => {
   async function Post(url: string, body?: object) {
     return await useHttp(`${url}`, { method: 'post', body, fileUpload: false })
   }
-  async function doLaudoAbrir(payload: { cd_exame: number, cd_medico: number, cd_fila: number }) {
+  async function doLaudoAbrir(payload: { cd_exame: number, cd_fila: number }) {
     const response = await post('doLaudoAbrir', payload)
     return {
       data: response.data ? Decode64(response?.data[0]?.bb_laudo) : '',
@@ -46,7 +46,6 @@ export const useLaudo = () => {
   }
   async function doLaudoGravar(payload: {
     cd_exame: number
-    cd_medico: number
     bb_laudo?: string
     bb_html: string
     ds_exame?: string
@@ -103,7 +102,6 @@ export const useLaudo = () => {
   }
   async function doLaudoAssinar(payload: {
     cd_exame: number
-    cd_medico: number
     cd_tipo?: number
     ds_exame?: string
     sn_remoto?: boolean
@@ -161,7 +159,7 @@ export const useLaudo = () => {
   async function autoTexto() {
     return await post('xxx')
   }
-  async function doLaudoFiltroTexto(payload: { cd_exame: number, cd_medico: number, ds_texto: string }) {
+  async function doLaudoFiltroTexto(payload: { cd_exame: number, ds_texto: string }) {
     return await post('doLaudoFiltroTexto', payload)
   }
   // Protocolo
@@ -325,7 +323,7 @@ export const useLaudo = () => {
     const { data, error } = await post('doFuncionarioAcesso', { ds_form: 'ATE_LAUDO_EXE_CABECALHO' }) as any
     return !error && data.length > 0
   }
-  async function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_medico?: number, cd_paciente?: number }) {
+  async function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_paciente?: number }) {
     return await useHttp(`laudo/laudo?filename=laudo.pdf&cmd=acAssinado`, { method: 'post', body: payload, fileDownload: true })
   }
   async function doChatLista(payload: { cd_atendimento: number, sn_medico?: boolean }) {

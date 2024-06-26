@@ -3,6 +3,7 @@ import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAudi
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
+import { Icones } from '~/types/system'
 
 const toolBarItens = [
   {
@@ -267,7 +268,6 @@ const showFormula = ref(false)
 const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
-const { user } = useAuthStore()
 const modal = useModal()
 const openForm = (codigo?: number) => {
   if (codigo) {
@@ -300,7 +300,7 @@ const closeEditor = async (aChange: boolean = true) => {
 const abrirLaudo = async (id: number) => {
   if (!id)
     return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_medico: selectedMedico(), cd_fila: modelFilter.value.cd_fila }) as any
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_fila: modelFilter.value.cd_fila }) as any
   if (response.error)
     return
   idEditor.value = id
@@ -315,7 +315,7 @@ const abrirLaudo = async (id: number) => {
 }
 const salvarLaudo = async () => {
   const texto = await apiEditor.value.save()
-  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: texto, ds_exame: selectedNodeIds().join(',') })
+  const response = await useLaudo().doLaudoGravar({ cd_exame: idEditor.value, bb_html: texto, ds_exame: selectedNodeIds().join(',') })
   if (!response.error) {
     useMessage().showMessage()
     closeEditor()
@@ -327,7 +327,7 @@ const assinarLaudo = async (aClose: boolean = true, aTipo: number = 0) => {
   if (!aTipo)
     if (await classificarLaudo())
       return
-  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, cd_medico: selectedMedico(), bb_html: await apiEditor.value.save(), cd_tipo: aTipo })
+  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, bb_html: await apiEditor.value.save(), cd_tipo: aTipo })
   if (response) {
     useMessage().showMessage()
     if (aClose)
@@ -365,7 +365,7 @@ const abrirFormula = async (id: number) => {
   showFormula.value = response ? true : false
 }
 const selecionarAutotexto = async (payload?: any) => {
-  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, cd_medico: selectedMedico(), ds_texto: payload || '%' })
+  const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, ds_texto: payload || '%' })
   if (response.error)
     return
   if (!response.data.length) {
@@ -422,14 +422,11 @@ const updateNodes = (responses) => {
   apiPage.value.applyTransaction({ update: nodes })
   modal.close()
 }
-const selectedMedico = () => {
-  return user.idmedico || selectedData()?.cd_medico
-}
 const laudoAssinado = async (aRetry: boolean = true) => {
   if (!selectedNode())
     return
   const { cd_atendimento, cd_exame, ds_paciente } = selectedNode().data
-  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame, cd_medico: selectedMedico() })// cd_atendimento: 1723321, cd_exame: 12834
+  const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame })// cd_atendimento: 1723321, cd_exame: 12834
   // incluir timeout para aguardar a geração do arquivo
   if (!response.data.size && aRetry) {
     useMessage().showMessage('Aguarde um instante...')
@@ -901,7 +898,7 @@ const classificarLaudo = async () => {
     </div>
     <LaudoLeo
       v-if="openLeo"
-      :token="user.idleo"
+      :token="useAuthStore().user.idleo"
       @laudo-capturado="capturarLeo"
     />
     <LaudoVariavel
@@ -913,7 +910,7 @@ const classificarLaudo = async () => {
     <BasePage
       v-show="!idEditor"
       ref="apiPage"
-      :header="{ title: 'Laudos', icon: 'i-heroicons-document-text' }"
+      :header="{ title: 'Gestão', icon: Icones.gestao }"
       :controller
       :append-column-defs
       :merge-column-defs

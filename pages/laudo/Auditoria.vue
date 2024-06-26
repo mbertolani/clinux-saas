@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { Icones } from '~/types/system'
 
 const title = 'Auditoria'
 const apiPage = ref(null)
@@ -14,7 +15,8 @@ const loadEditor = (editor) => {
 <template>
   <BaseReport
     ref="apiPage"
-    :header="{ title, icon: 'i-heroicons-document-text' }"
+    title="Auditoria"
+    :header="{ title, icon: Icones.auditoria }"
     :controller
   >
     <BaseEditor
