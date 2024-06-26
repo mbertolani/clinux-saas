@@ -63,12 +63,23 @@ export function getFieldItem(item: object, value?: string, label?: string) {
 }
 export function getFieldList(list, value?: string, label?: string) {
   return list
-    ? list.map((result) => {
+    ? getFieldOrder(list.map((result) => {
       return getFieldItem(result, value, label)
-    })
+    }), 'label')
     : []
 }
 
+export function getFieldOrder(lista: any[], propriedade: string): any[] {
+  return lista.sort((a, b) => {
+    if (a[propriedade] < b[propriedade]) {
+      return -1
+    }
+    if (a[propriedade] > b[propriedade]) {
+      return 1
+    }
+    return 0
+  })
+}
 export function StrToNull(obj) {
   for (const key in obj) {
     if (obj[key] === '') {

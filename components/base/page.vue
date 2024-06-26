@@ -254,12 +254,7 @@ watch(inputSearch, () => {
           </template>
         </UInput>
       </template>
-      <div
-        v-if="$slots.filter"
-        class="mt-2"
-      >
-        <slot name="filter" />
-      </div>
+      <slot name="filter" />
     </UPageHeader>
     <UPageBody class="mt-2">
       <BaseGrid

@@ -2,6 +2,7 @@
 import { GerencialFuncionario } from '#components'
 import { useFuncionario } from '~/composables/gerencial/useFuncionario'
 import type { ActionMenuItem } from '~/types/grid'
+import { Icones } from '~/types/system'
 
 const title = 'Funcionário'
 const apiPage = ref(null)
@@ -34,7 +35,7 @@ const onSubmit = (data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: 'i-heroicons-identification' }"
+    :header="{ title, icon: Icones.funcionario }"
     :controller
     :action-menu
     @open-form="openForm"

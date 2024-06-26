@@ -72,12 +72,7 @@ const actionMenu: ActionMenuItem[] = [
     :action-menu
     :row-class-rules
     @open-form="openForm"
-  >
-    <template
-      v-if="false"
-      #filter
-    />
-  </BasePage>
+  />
 </template>
 
 <style>

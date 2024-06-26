@@ -95,16 +95,41 @@ export interface Alert extends ID<number> {
   timeout?: number
 }
 
+export const Icones: Record<string, string> = {
+  empresa: 'i-mdi-building',
+  sala: 'i-mdi-home-city',
+  usuario: 'i-mdi-account-key',
+  funcionario: 'i-mdi-badge-account-horizontal-outline',
+  medico: 'i-mdi-doctor',
+  modalidade: 'i-mdi-desktop-mac',
+  procedimento: 'i-mdi-radiology-box-outline',
+  modelo: 'i-mdi-file-document-edit',
+  calendario: 'i-mdi-calendar',
+  horario: 'i-mdi-clock',
+  layout: 'i-mdi-printer',
+  sistema: 'i-mdi-application',
+  gestao: 'i-mdi-monitor-dashboard',
+  prescricao: 'i-heroicons-beaker',
+  auditoria: 'i-mdi-account-card',
+  atendimento: 'i-mdi-account-card'
+}
+
 export const mainMenu = [
   {
     label: 'Gerencial',
     children: [
-      { label: 'Empresa', to: '/gerencial/empresa', icon: 'i-heroicons-building-office' },
-      { label: 'Funcionário', to: '/gerencial/funcionario', icon: 'i-heroicons-identification' },
-      { label: 'Sala', to: '/gerencial/sala', icon: 'i-heroicons-identification' },
-      { label: 'Médico', to: '/gerencial/medico', icon: 'i-heroicons-user-group' },
-      { label: 'Procedimento', to: '/gerencial/procedimento', icon: 'i-heroicons-queue-list' },
-      { label: 'Modelo', to: '/gerencial/modelo', icon: 'i-heroicons-film' }
+      { label: 'Empresa', to: '/gerencial/empresa', icon: Icones.empresa },
+      { label: 'Sala', to: '/gerencial/sala', icon: Icones.sala },
+      { label: 'Funcionário', to: '/gerencial/funcionario', icon: Icones.funcionario },
+      // { label: 'Usuário', to: '/gerencial/usuario', icon: Icones.usuario },
+      { label: 'Médico', to: '/gerencial/medico', icon: Icones.medico },
+      { label: 'Modalidade', to: '/gerencial/modalidade', icon: Icones.modalidade },
+      { label: 'Procedimento', to: '/gerencial/procedimento', icon: Icones.procedimento },
+      { label: 'Laudo', to: '/gerencial/modelo', icon: Icones.modelo },
+      // { label: 'Calendário', to: '/gerencial/calendario', icon: Icones.calendario },
+      { label: 'Agenda', to: '/gerencial/horario', icon: Icones.horario },
+      { label: 'Impressora', to: '/gerencial/layout', icon: Icones.layout },
+      { label: 'Sistema', to: '/gerencial/formulario', icon: Icones.sistema }
     ]
   },
   // {
@@ -119,7 +144,7 @@ export const mainMenu = [
   {
     label: 'Laudo',
     children: [
-      { label: 'Gestão', to: '/laudo/gestao', icon: 'i-heroicons-document-text' },
+      { label: 'Gestão', to: '/laudo/gestao', icon: 'i-mdi-monitor-dashboard' },
       { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' },
       { label: 'Auditoria', to: '/laudo/auditoria', icon: 'i-mdi-account-card' }
     ]

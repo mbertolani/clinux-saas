@@ -16,20 +16,19 @@ defineProps({
     required: false
   }
 })
-const emit = defineEmits(['submit', 'close'])
 </script>
 
 <template>
   <FormKit
     :value="filter"
-    dirty-behavior="compare"
     type="form"
     :data="data"
     :actions="false"
-    @submit="emit('submit')"
   >
-    <FormKitSchema
-      :schema="schema as FormKitSchemaDefinition"
-    />
+    <BaseLayout>
+      <FormKitSchema
+        :schema="schema as FormKitSchemaDefinition"
+      />
+    </BaseLayout>
   </FormKit>
 </template>

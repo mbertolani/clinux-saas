@@ -2,6 +2,7 @@
 import { GerencialEmpresa, GerencialEmpresaFiltro } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import type { ActionMenuItem } from '~/types/grid'
+import { Icones } from '~/types/system'
 
 const title = 'Empresas'
 const apiPage = ref(null)
@@ -19,10 +20,7 @@ const onSubmit = (data: any) => {
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
 
-const apiFilter = ref(null)
-const modelFilter = ref({
-  'em.sn_empresa': true
-})
+const filter = ref()
 const filtrar = async () => {
   apiPage.value.applyFilter()
 }
@@ -82,19 +80,15 @@ const actionMenu: ActionMenuItem[] = [
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: 'i-heroicons-queue-list' }"
+    :header="{ title, icon: Icones.empresa }"
     :controller
     :action-menu
-    :filter="modelFilter"
+    :filter
     @open-form="openForm"
   >
-    <template
-      v-if="false"
-      #filter
-    >
+    <template #filter>
       <GerencialEmpresaFiltro
-        ref="apiFilter"
-        v-model="modelFilter"
+        v-model="filter"
         @submit="filtrar"
       />
     </template>

@@ -1,20 +1,23 @@
-<script lang="ts" setup>
-import { GerencialProcedimento } from '#components'
-import { useProcedimento } from '~/composables/gerencial/useProcedimento'
+<script setup lang="ts">
+import { GerencialHorario, GerencialHorarioFiltro } from '#components'
+import { useHorario } from '~/composables/gerencial/useHorario'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
 
-const title = 'Procedimentos'
+const title = 'Agenda'
 const apiPage = ref(null)
-const actionMenu: ActionMenuItem[] = []
-const controller = useProcedimento()
+const controller = useHorario()
 const showModal = ref(false)
 const id = ref(0)
 const filter = ref()
+
+const actionMenu: ActionMenuItem[] = []
+
 const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
 }
+
 const onSubmit = (data: any) => {
   showModal.value = false
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
@@ -24,19 +27,19 @@ const onSubmit = (data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: Icones.procedimento }"
+    :header="{ title, icon: Icones.horario }"
     :controller
     :action-menu
     :filter
     @open-form="openForm"
   >
     <template #filter>
-      <GerencialProcedimentoFiltro
+      <GerencialHorarioFiltro
         v-model="filter"
       />
     </template>
     <template #form>
-      <GerencialProcedimento
+      <GerencialHorario
         :id
         v-model="showModal"
         :title

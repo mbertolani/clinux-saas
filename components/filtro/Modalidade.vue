@@ -26,7 +26,7 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'dropdown',
     id: 'modalidade',
-    name: 'cd_modalidade',
+    name: 'mo.cd_modalidade',
     placeholder: 'Modalidade',
     bind: '$cd_modalidade',
     selectionRemovable: true,

@@ -2,6 +2,7 @@
 import { GerencialMedico, GerencialMedicoProcedimento, GerencialMedicoSala } from '#components'
 import { useMedico } from '~/composables/gerencial/useMedico'
 import type { ActionMenuItem } from '~/types/grid'
+import { Icones } from '~/types/system'
 
 const title = 'Médico'
 const apiPage = ref(null)
@@ -28,11 +29,12 @@ const associarSala = (codigo?: number) => {
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'acProcedimento',
+    icon: Icones.procedimento,
     action: () => { associarProcedimento(apiPage.value.selectedData()?.cd_medico) }
   },
   {
     name: 'acSala',
-    icon: 'i-heroicons-office-building',
+    icon: Icones.sala,
     action: () => { associarSala(apiPage.value.selectedData()?.cd_medico) }
   }
 ]
@@ -49,7 +51,7 @@ const onSubmit = (data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: 'i-heroicons-user-group' }"
+    :header="{ title, icon: Icones.medico }"
     :controller
     :action-menu
     @open-form="openForm"

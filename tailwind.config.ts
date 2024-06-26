@@ -15,7 +15,9 @@ export default <Partial<Config>>{
     })
   ],
   content: [
-    './public/index.html',
+    './formkit.theme.ts',
+    './app.vue',
+    // './public/index.html',
     './components/**/*.vue',
     './layouts/**/*.vue',
     './pages/**/*.vue',

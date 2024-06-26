@@ -1,20 +1,19 @@
 <script lang="ts" setup>
-import { GerencialProcedimento } from '#components'
-import { useProcedimento } from '~/composables/gerencial/useProcedimento'
-import type { ActionMenuItem } from '~/types/grid'
+import { GerencialUsuario } from '#components'
+import { useUsuario } from '~/composables/gerencial/useUsuario'
 import { Icones } from '~/types/system'
 
-const title = 'Procedimentos'
+const title = 'Usuários'
 const apiPage = ref(null)
-const actionMenu: ActionMenuItem[] = []
-const controller = useProcedimento()
+const controller = useUsuario()
 const showModal = ref(false)
 const id = ref(0)
-const filter = ref()
+
 const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
 }
+
 const onSubmit = (data: any) => {
   showModal.value = false
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
@@ -24,19 +23,12 @@ const onSubmit = (data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: Icones.procedimento }"
+    :header="{ title, icon: Icones.usuario }"
     :controller
-    :action-menu
-    :filter
     @open-form="openForm"
   >
-    <template #filter>
-      <GerencialProcedimentoFiltro
-        v-model="filter"
-      />
-    </template>
     <template #form>
-      <GerencialProcedimento
+      <GerencialUsuario
         :id
         v-model="showModal"
         :title

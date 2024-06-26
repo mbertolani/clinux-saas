@@ -82,12 +82,12 @@ export default defineNuxtConfig({
   formkit: {
     autoImport: true
   },
-  tailwindcss: {
-    config: {
-      content: ['./formkit.theme.ts', './app.vue'],
-      darkMode: 'class'
-    }
-  },
+  // tailwindcss: {
+  //   config: {
+  //     content: ['./formkit.theme.ts', './app.vue']
+  //     darkMode: 'class'
+  //   }
+  // },
   runtimeConfig: {
     apiKey: '', // Default to an empty string, automatically set at runtime using process.env.NUXT_API_KEY
     public: {

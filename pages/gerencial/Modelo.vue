@@ -2,6 +2,7 @@
 import { BaseEditor, GerencialModelo, GerencialModeloVariavel } from '#components'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
+import { Icones } from '~/types/system'
 
 const actionMenu: ActionMenuItem[] = [
   {
@@ -108,7 +109,7 @@ const filtrar = async () => {
     <BasePage
       v-show="!idEditor"
       ref="apiPage"
-      :header="{ title, icon: 'i-heroicons-film' }"
+      :header="{ title, icon: Icones.modelo }"
       :controller
       :action-menu
       :filter
@@ -116,7 +117,6 @@ const filtrar = async () => {
     >
       <template #filter>
         <FormKit
-          ref="apiFilter"
           v-model="filter"
           type="form"
           :actions="false"

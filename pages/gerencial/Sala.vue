@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { GerencialSala } from '#components'
 import { useSala } from '~/composables/gerencial/useSala'
+import { Icones } from '~/types/system'
 
 const title = 'Salas'
 const apiPage = ref(null)
@@ -22,7 +23,7 @@ const onSubmit = (data: any) => {
 <template>
   <BasePage
     ref="apiPage"
-    :header="{ title, icon: 'i-heroicons-queue-list' }"
+    :header="{ title, icon: Icones.sala }"
     :controller
     @open-form="openForm"
   >
