@@ -38,14 +38,15 @@ const gridOptions = {
 const onRowDoubleClicked = (params) => {
   emit(params.node.data.id ? 'submit' : 'cancel', params.node.data.id, params.node.data)
 }
-const onInputKeyDown = (event) => {
-  if (event.key === 'Enter') {
-    const selected = gridRef.value?.coreApi?.api.getDisplayedRowAtIndex(0)
-    if (selected) {
-      emit('submit', selected.data.id, selected.data)
-    }
-  }
-}
+// const onInputKeyDown = (event) => {
+//   if (event.key === 'Enter') {
+//     const selected = gridRef.value?.coreApi?.api.getDisplayedRowAtIndex(0)
+//     if (selected) {
+//       emit('submit', selected.data.id, selected.data)
+//     }
+//   }
+// }
+// @keydown.enter="onInputKeyDown"
 const onCellKeyDown = ({ event }) => {
   if (event.key === 'Enter') {
     const selected = gridRef.value?.coreApi?.api.getSelectedNodes()[0]
@@ -69,13 +70,12 @@ watch(inputSearch, () => {
   >
     <UInput
       v-model="inputSearch"
-      placeholder="Pesquisa..."
+      :placeholder="title"
       icon="i-heroicons-magnifying-glass-20-solid"
       autocomplete="off"
       input-class="uppercase"
       class="py-2 px-2"
       :ui="{ icon: { trailing: { pointer: '' } } }"
-      @keydown.enter="onInputKeyDown"
     />
     <BaseGridCore
       ref="gridRef"

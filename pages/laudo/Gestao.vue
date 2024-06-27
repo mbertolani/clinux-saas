@@ -300,7 +300,7 @@ const closeEditor = async (aChange: boolean = true) => {
 const abrirLaudo = async (id: number) => {
   if (!id)
     return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_fila: modelFilter.value.cd_fila }) as any
+  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_fila: modelFilter.value.cd_fila, ds_exame: selectedNodeIds().join(',') }) as any
   if (response.error)
     return
   idEditor.value = id
@@ -602,6 +602,12 @@ const editarProcedencia = async () => {
     }
   })
 }
+
+const cancelarLaudos = async (cd_motivo?: number) => {
+  updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+    return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
+  })))
+}
 const cancelarLaudo = async () => {
   if (!selectedNode())
     return
@@ -609,18 +615,19 @@ const cancelarLaudo = async () => {
   const response = await useLaudo().execCancelar({ cd_exame })
   if (response.error)
     return
+  if (!response.data.length) {
+    useMessage().openDialog({
+      title: 'Edição de laudo',
+      description: 'Confirmar exclusão ?',
+      okClick: () => cancelarLaudos()
+    })
+    return
+  }
   modal.open(ModalPesquisa, {
-    title: 'Cancelar Laudo',
+    title: 'Apagar Laudo...',
     data: response.data,
     async onSubmit(cd_motivo) {
-      // const response = await useLaudo().execCancelar({ cd_exame, cd_motivo })
-      // if (!response.error) {
-      //   apiPage.value.applyTransaction({ update: response.data })
-      //   modal.close()
-      // }
-      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
-        return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
-      })))
+      cancelarLaudos(cd_motivo)
     }
   })
 }

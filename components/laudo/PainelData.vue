@@ -18,6 +18,10 @@ useLaudo().doLaudoDados(props.id).then((data) => {
       value: formatDate(data.dt_data)
     },
     {
+      label: 'Protocolo',
+      value: data.nr_controle
+    },
+    {
       label: 'ID',
       value: `PID: ${data.ds_patientuid} AN: ${data.ds_accession}`,
       hide: !data.ds_patientuid || !data.ds_accession
@@ -51,7 +55,7 @@ useLaudo().doLaudoDados(props.id).then((data) => {
     {
       label: 'Observação',
       value: data.ds_observacao,
-      hide: !teleLaudo
+      hide: !teleLaudo || !data.ds_observacao
     }
   ].filter(p => !p.hide)
 })

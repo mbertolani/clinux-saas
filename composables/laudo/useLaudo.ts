@@ -37,7 +37,7 @@ export const useLaudo = () => {
   async function Post(url: string, body?: object) {
     return await useHttp(`${url}`, { method: 'post', body, fileUpload: false })
   }
-  async function doLaudoAbrir(payload: { cd_exame: number, cd_fila: number }) {
+  async function doLaudoAbrir(payload: { cd_exame: number, cd_fila: number, ds_exame?: string }) {
     const response = await post('doLaudoAbrir', payload)
     return {
       data: response.data ? Decode64(response?.data[0]?.bb_laudo) : '',
