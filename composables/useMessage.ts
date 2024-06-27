@@ -1,3 +1,5 @@
+import { Messages } from '~/types/system'
+
 const debugMessage = ref()
 const isOpen = ref()
 const config = ref({
@@ -26,7 +28,7 @@ export const useMessage = () => {
     useToast().add({
       title: title || 'Erro',
       color: 'red',
-      description: message || 'Nenhum registro selecionado',
+      description: message || Messages.MSG_FNF_GRID,
       icon: 'i-heroicons-exclamation-triangle'
     })
   }
@@ -34,7 +36,7 @@ export const useMessage = () => {
     useToast().add({
       title: title || 'Aviso',
       color: 'green',
-      description: message || 'Operação realizada com sucesso',
+      description: message || Messages.MSG_SYS_OK,
       icon: 'i-heroicons-check-circle'
     })
   }

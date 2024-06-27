@@ -68,7 +68,7 @@ export const AG_GRID_LOCALE_PT_BR = {
 
   // Other
   loadingOoo: 'Carregando...',
-  noRowsToShow: 'Nenhum registro para mostrar',
+  noRowsToShow: 'Nenhum registro encontrado',
   enabled: 'Habilitado',
 
   // Menu

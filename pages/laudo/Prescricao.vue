@@ -2,7 +2,7 @@
 import { LaudoPrescricao } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import type { ActionMenuItem } from '~/types/grid'
-import { Icones } from '~/types/system'
+import { Icones, Messages } from '~/types/system'
 
 const apiPage = ref(null)
 const controller = usePrescricao()
@@ -33,7 +33,7 @@ const commandAction = async (action) => {
 
 const buttonAction = async (action: string) => {
   if (!apiPage.value.getSelectedNodes().length) {
-    showError('Nenhum registro selecionado')
+    showError(Messages.MSG_FNF_GRID)
     return
   }
   useMessage().openDialog({

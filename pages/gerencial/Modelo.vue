@@ -2,7 +2,7 @@
 import { BaseEditor, GerencialModelo, GerencialModeloVariavel } from '#components'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import type { ActionMenuItem } from '~/types/grid'
-import { Icones } from '~/types/system'
+import { Icones, Messages } from '~/types/system'
 
 const actionMenu: ActionMenuItem[] = [
   {
@@ -73,7 +73,7 @@ const salvarModelo = async () => {
 const abrirFormula = async () => {
   idFormula.value = Number(apiPage.value.selectedNode()?.id)
   if (!idFormula.value)
-    useMessage().showError('Nenhum registro selecionado')
+    useMessage().showError(Messages.MSG_FNF_GRID)
   showMonaco.value = idFormula.value > 0
 }
 const abrirLayout = async () => {

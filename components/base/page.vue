@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ModalDelete, ModalLog } from '#components'
 import type { ActionMenuItem } from '~/types/grid'
+import { Messages } from '~/types/system'
 import { StrToNull } from '~/utils/schema'
 
 const props = defineProps({
@@ -127,12 +128,12 @@ const buttonEdit = () => {
   if (selectedNode) {
     actionEdit(selectedNode)
   } else {
-    showError('Nenhum registro selecionado')
+    showError(Messages.MSG_FNF_GRID)
   }
 }
 const buttonDelete = async () => {
   if (!apiGrid.value.getSelectedNodes().length) {
-    showError('Nenhum registro selecionado')
+    showError(Messages.MSG_FNF_GRID)
     return
   }
   if (props.actionDelete) {
@@ -161,7 +162,7 @@ const buttonDelete = async () => {
 const buttonLog = async () => {
   const selectedNode = apiGrid.value.getSelectedNodes()[0]
   if (!selectedNode) {
-    showError('Nenhum registro selecionado')
+    showError(Messages.MSG_FNF_GRID)
     return
   }
   modal.open(ModalLog, {

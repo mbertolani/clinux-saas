@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useAnexo } from '~/composables/atendimento/useAnexo'
+import { Messages } from '~/types/system'
 
 const props = defineProps({
   id: {
@@ -69,7 +70,7 @@ const deleteAnexo = (api) => {
 
 const buttonDelete = async (api) => {
   if (!api.getSelectedNodes().length) {
-    showError('Nenhum registro selecionado')
+    showError(Messages.MSG_FNF_GRID)
     return
   }
   useMessage().openDialog({

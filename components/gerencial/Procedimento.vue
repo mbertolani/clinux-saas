@@ -90,8 +90,8 @@ const schema: FormKitSchemaDefinition = [
     selectionRemovable: true,
     debounce: 500,
     bind: '$cd_grupo',
-    outerClass: formClass(6),
-    emptyMessage: 'Nenhum registro encontrado !'
+    outerClass: formClass(6)
+    // emptyMessage: 'Nenhum registro encontrado !'
   },
 
   {
