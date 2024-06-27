@@ -204,7 +204,7 @@ export const Messages: Record<string, string> = {
   MSG_PACIENTE_INF: 'O paciente possui informações complementares !'
 }
 export const Icones: Record<string, string> = {
-  empresa: 'i-mdi-building',
+  empresa: 'i-healthicons-hospital', // i-mdi-building',
   sala: 'i-mdi-home-city',
   usuario: 'i-mdi-account-key',
   funcionario: 'i-mdi-badge-account-horizontal-outline',
@@ -218,10 +218,32 @@ export const Icones: Record<string, string> = {
   sistema: 'i-mdi-application',
   gestao: 'i-mdi-monitor-dashboard',
   prescricao: 'i-heroicons-beaker',
-  auditoria: 'i-mdi-account-card',
-  atendimento: 'i-mdi-account-card',
+  // auditoria: 'i-mdi-account-card',
   rota: 'i-mdi-truck-delivery',
-  anexo: 'i-mdi-paperclip'
+  anexo: 'i-mdi-paperclip', // i-mdi-file-image
+  chat: 'i-mdi-chat',
+  procedencia: 'i-mdi-map-marker',
+  revisor: 'i-healthicons-doctor-male',
+  auditor: 'i-healthicons-doctor-female',
+  urgencia: 'i-healthicons-ambulance',
+  atendimento: 'i-mdi-account',
+  exame: 'i-mdi-account-file',
+  laudo: 'i-mdi-file-document-edit',
+  pendencia: 'i-mdi-alert',
+  achado: 'i-mdi-magnify',
+  auditoria: 'i-mdi-account-check',
+  save: 'i-mdi-content-save',
+  delete: 'i-mdi-delete',
+  edit: 'i-mdi-pencil',
+  cancel: 'i-mdi-close',
+  search: 'i-mdi-magnify',
+  print: 'i-mdi-printer',
+  download: 'i-mdi-download',
+  upload: 'i-mdi-upload',
+  laudo_del: 'i-mdi-file-document-remove',
+  laudo_pdf: 'i-mdi-file-pdf',
+  laudo_txt: 'i-mdi-file-document',
+  laudo_dif: 'i-mdi-file-compare'
 }
 
 export const mainMenu = [

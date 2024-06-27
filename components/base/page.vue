@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ModalDelete, ModalLog } from '#components'
-import type { ActionMenuItem } from '~/types/grid'
+// import type { ActionMenuItem } from '~/types/grid'
 import { Messages } from '~/types/system'
 import { StrToNull } from '~/utils/schema'
 
@@ -18,9 +18,9 @@ const props = defineProps({
     default: null
   },
   actionMenu: {
-    type: Array as () => ActionMenuItem[],
+    type: Array,
     required: false,
-    default: () => ([])
+    default: () => []
   },
   filter: {
     type: Object,
@@ -74,7 +74,7 @@ const emit = defineEmits(['openForm'])
 const apiGrid = ref(null)
 const rowData = ref([])
 const columnDefs = ref([])
-const menu = ref(null)
+// const menu = ref(null)
 const modal = useModal()
 const { showError, showMessage } = useMessage()
 
@@ -89,30 +89,30 @@ const setColumnDefs = async () => {
   })
   return mergedColumns
 }
-const setMenu = async () => {
-  const menu = [] // await props.controller.getMenu()
-  const remainingActionMenuItems = [...props.actionMenu]
+// const setMenu = async () => {
+//   const menu = [] // await props.controller.getMenu()
+//   const remainingActionMenuItems = [...props.actionMenu]
 
-  const menuAction = menu?.map((item) => {
-    const actionItemIndex = remainingActionMenuItems.findIndex(action => action.name === item.name)
-    if (actionItemIndex !== -1) {
-      // Atualiza a ação do item de menu
-      item.action = remainingActionMenuItems[actionItemIndex].action
-      item.icon = remainingActionMenuItems[actionItemIndex].icon
-      item.title = remainingActionMenuItems[actionItemIndex].title || item.title
-      // Remove o item correspondente de remainingActionMenuItems
-      remainingActionMenuItems.splice(actionItemIndex, 1)
-    }
-    return item
-  }) || []
+//   const menuAction = menu?.map((item) => {
+//     const actionItemIndex = remainingActionMenuItems.findIndex(action => action.name === item.name)
+//     if (actionItemIndex !== -1) {
+//       // Atualiza a ação do item de menu
+//       item.action = remainingActionMenuItems[actionItemIndex].action
+//       item.icon = remainingActionMenuItems[actionItemIndex].icon
+//       item.title = remainingActionMenuItems[actionItemIndex].title || item.title
+//       // Remove o item correspondente de remainingActionMenuItems
+//       remainingActionMenuItems.splice(actionItemIndex, 1)
+//     }
+//     return item
+//   }) || []
 
-  // Concatena os itens restantes de actionMenu que não foram encontrados
-  const result = menuAction.concat(remainingActionMenuItems)
-  return result.length ? result : props.actionMenu
-}
+//   // Concatena os itens restantes de actionMenu que não foram encontrados
+//   const result = menuAction.concat(remainingActionMenuItems)
+//   return result.length ? result : props.actionMenu
+// }
 rowData.value = await setRowData()
 columnDefs.value = await setColumnDefs()
-menu.value = await setMenu()
+// menu.value = await setMenu()
 const buttonSearch = async () => {
   rowData.value = await setRowData()
   // apiGrid.value?.selectFirst()
@@ -265,8 +265,8 @@ watch(inputSearch, () => {
         :on-row-double-clicked="onRowDoubleClicked"
         :on-cell-key-down="onCellKeyDown"
         :row-class-rules
-        :http="props.controller"
-        :menu
+        :http="controller"
+        :menu="actionMenu"
       />
     </UPageBody>
     <slot name="form" />

@@ -37,7 +37,10 @@ export const useHttp = async (
       status: 'success'
     }
   } catch (e) {
-    useMessage().showError(e?.response?._data?.error || 'Erro de conexão com o servidor')
+    if (fileDownload)
+      useMessage().showError('Falha no download do arquivo')
+    else
+      useMessage().showError(e?.response?._data?.error || 'Falha de conexão com o servidor')
     return {
       data: null,
       error: e?.response?._data,

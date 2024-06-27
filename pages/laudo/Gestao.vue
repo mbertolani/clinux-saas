@@ -2,7 +2,6 @@
 import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoPainelData, LaudoPainelChat, LaudoPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useModelo } from '~/composables/gerencial/useModelo'
-import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
 
 const toolBarItens = [
@@ -177,88 +176,111 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       break
   }
 }
-const actionMenu: ActionMenuItem[] = [
+const actionMenu = [
   {
     name: 'acAnexo',
-    icon: 'i-mdi-file-image',
+    title: 'Documentos',
+    icon: Icones.anexo,
     action: () => { editarAnexo(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acChat',
-    icon: 'i-mdi-chat',
+    title: 'Mensagens',
+    icon: Icones.chat,
     action: () => { editarChat(selectedData()?.cd_atendimento) }
   },
   {
-    name: 'acProcedimento',
-    icon: 'i-healthicons-xray',
-    action: () => { editarProcedimento() }
-  },
-  {
-    name: 'acProcedencia',
-    icon: 'i-healthicons-hospital',
-    action: () => { editarProcedencia() }
+    title: '-'
   },
   {
     name: 'acMedico',
-    icon: 'i-healthicons-doctor',
+    title: 'Alterar Médico',
+    icon: Icones.medico,
     action: () => { editarMedico() }
   },
   {
     name: 'acRevisor',
-    icon: 'i-healthicons-doctor-male',
+    title: 'Alterar Revisor',
+    icon: Icones.revisor,
     action: () => { editarRevisor() }
   },
   {
     name: 'acAuditor',
-    icon: 'i-healthicons-doctor-female',
+    title: 'Alterar Auditor',
+    icon: Icones.auditor,
     action: () => { editarAuditor() }
   },
   {
     name: 'acUrgencia',
-    icon: 'i-healthicons-ambulance',
+    title: 'Alterar Urgência',
+    icon: Icones.urgencia,
     action: () => { editarUrgencia() }
   },
   {
-    name: 'acCancelar',
-    icon: 'i-mdi-file-document-remove-outline',
-    action: () => { cancelarLaudo() }
+    name: 'acProcedencia',
+    title: 'Alterar Procedência',
+    icon: Icones.procedencia,
+    action: () => { editarProcedencia() }
+  },
+  {
+    name: 'acProcedimento',
+    title: 'Alterar Procedimento',
+    icon: Icones.procedimento,
+    action: () => { editarProcedimento() }
+  },
+  {
+    title: '-'
+  },
+  {
+    name: 'acExame',
+    title: 'Atendimento',
+    icon: Icones.atendimento,
+    action: () => { editarExame(selectedNodeId()) }
   },
   {
     name: 'acPendencia',
-    icon: 'i-mdi-alert',
+    title: 'Pendência',
+    icon: Icones.pendencia,
     action: () => { editarPendencia(selectedData()?.cd_atendimento) }
   },
   {
     name: 'acAchado',
-    icon: 'i-mdi-magnify',
+    title: 'Achado Crítico',
+    icon: Icones.achado,
     action: () => { editarAchado(selectedNodeId()) }
   },
   {
     name: 'acAuditar',
-    icon: 'i-mdi-account-check',
+    title: 'Auditoria',
+    icon: Icones.auditoria,
     action: () => { editarAuditoria(selectedData()?.cd_atendimento) }
   },
   {
+    title: '-'
+  },
+  {
+    name: 'acCancelar',
+    title: 'Cancelar Laudo',
+    icon: Icones.laudo_del,
+    action: () => { cancelarLaudo() }
+  },
+  {
     name: 'acAssinado',
-    icon: 'i-mdi-file-pdf-outline',
-    action: () => { laudoAssinado() }
+    title: 'Laudo Assinado',
+    icon: Icones.laudo_pdf,
+    action: () => { laudoAssinado(selectedNode().data) }
   },
   {
     name: 'acDigitado',
-    icon: 'i-mdi-file-document-outline',
+    title: 'Laudo Digitado',
+    icon: Icones.laudo_txt,
     action: null
   },
   {
     name: 'Diff',
-    title: 'Laudo Diff',
-    icon: 'i-mdi-file-compare',
+    title: 'Laudo Versão',
+    icon: Icones.laudo_dif,
     action: () => { openDiff() }
-  },
-  {
-    name: 'acExame',
-    title: 'Editar Exame',
-    icon: 'i-mdi-format-list-bulleted',
-    action: () => { editarExame(selectedNodeId()) }
   }
 ]
 const idGrid = ref()
@@ -269,15 +291,11 @@ const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useLaudo()
 const modal = useModal()
-const openForm = (codigo?: number) => {
-  if (codigo) {
-    if (selectedData()?.dt_assinado) {
-      laudoAssinado()
-    } else {
-      abrirLaudo(codigo)
-    }
+const openForm = () => {
+  if (selectedData()?.dt_assinado) {
+    laudoAssinado(selectedNode().data)
   } else {
-    abrirLaudo(codigo)
+    abrirLaudo(selectedNodeId(), selectedNodeIds().join(','))
   }
 }
 const loadEditor = (editor) => {
@@ -297,13 +315,13 @@ const closeEditor = async (aChange: boolean = true) => {
   idEditor.value = 0
   apiEditor.value.close()
 }
-const abrirLaudo = async (id: number) => {
-  if (!id)
+const abrirLaudo = async (cd_exame: number, ds_exame?: string) => {
+  if (!cd_exame)
     return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame: id, cd_fila: modelFilter.value.cd_fila, ds_exame: selectedNodeIds().join(',') }) as any
+  const response = await useLaudo().doLaudoAbrir({ cd_exame, cd_fila: modelFilter.value.cd_fila, ds_exame }) as any
   if (response.error)
     return
-  idEditor.value = id
+  idEditor.value = cd_exame
   idGrid.value = selectedData()
   if (response.data) {
     apiEditor.value.load(response.data)
@@ -422,25 +440,26 @@ const updateNodes = (responses) => {
   apiPage.value.applyTransaction({ update: nodes })
   modal.close()
 }
-const laudoAssinado = async (aRetry: boolean = true) => {
+const laudoAssinado = async (data: any) => {
   if (!selectedNode())
     return
-  const { cd_atendimento, cd_exame, ds_paciente } = selectedNode().data
+  const { cd_atendimento, cd_exame, ds_paciente } = data
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame })// cd_atendimento: 1723321, cd_exame: 12834
   // incluir timeout para aguardar a geração do arquivo
-  if (!response.data.size && aRetry) {
-    useMessage().showMessage('Aguarde um instante...')
-    await new Promise(resolve => setTimeout(resolve, 3000))
-    laudoAssinado(false)
-    return
-  } else if (!response.error)
-    modal.open(LaudoAssinado, {
-      title: ds_paciente,
-      src: URL.createObjectURL(response.data),
-      onClose() {
-        modal.close()
-      }
-    })
+  if (response.error) return
+  // if (!response.data?.size && aRetry) {
+  //   useMessage().showMessage('Aguarde um instante...')
+  //   await new Promise(resolve => setTimeout(resolve, 3000))
+  //   laudoAssinado(false)
+  //   return
+  // } else if (!response.error)
+  modal.open(LaudoAssinado, {
+    title: ds_paciente,
+    src: URL.createObjectURL(response.data),
+    onClose() {
+      modal.close()
+    }
+  })
 }
 const carregarModelo = async (id: number) => {
   // const layout = await useLaudo().doModeloLayout(id)
@@ -571,7 +590,7 @@ const editarUrgencia = async () => {
   if (response.error)
     return
   modal.open(ModalPesquisa, {
-    title: 'Alterar Revisor',
+    title: 'Alterar Urgência',
     data: response.data,
     async onSubmit(cd_urgente) {
       // const response = await useLaudo().execUrgencia({ cd_atendimento, cd_urgente })
@@ -604,9 +623,10 @@ const editarProcedencia = async () => {
 }
 
 const cancelarLaudos = async (cd_motivo?: number) => {
-  updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
-    return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
-  })))
+  // updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+  //   return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
+  // })))
+  return useLaudo().execCancelar({ cd_exame: selectedData().cd_exame, cd_motivo })
 }
 const cancelarLaudo = async () => {
   if (!selectedNode())
@@ -617,14 +637,14 @@ const cancelarLaudo = async () => {
     return
   if (!response.data.length) {
     useMessage().openDialog({
-      title: 'Edição de laudo',
+      title: 'Apagar Laudo',
       description: 'Confirmar exclusão ?',
       okClick: () => cancelarLaudos()
     })
     return
   }
   modal.open(ModalPesquisa, {
-    title: 'Apagar Laudo...',
+    title: 'Apagar Laudo',
     data: response.data,
     async onSubmit(cd_motivo) {
       cancelarLaudos(cd_motivo)
@@ -844,7 +864,9 @@ const proximoLaudo = async () => {
 const imprimirLaudo = async () => {
   const response = await assinarLaudo()
   if (response) {
-    laudoAssinado()
+    console.log('imprimirLaudo', response)
+    await new Promise(resolve => setTimeout(resolve, 3000))
+    laudoAssinado(response)
   }
 }
 const classificarLaudo = async () => {

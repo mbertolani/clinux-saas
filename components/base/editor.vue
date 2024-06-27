@@ -136,7 +136,8 @@ export default {
         useMessage().openDialog({
           title: 'Rascunho Encontrado',
           description: 'Deseja recuperar o texto digitado ?',
-          okClick: () => this.editor.open(JSON.parse(useStorage('draft', null).value))
+          okClick: () => this.editor.open(JSON.parse(useStorage('draft', null).value)),
+          noClick: () => this.close()
         })
       }
     },
