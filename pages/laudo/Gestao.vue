@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoPainelData, LaudoPainelChat, LaudoPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import { Icones } from '~/types/system'
 
@@ -177,6 +178,21 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
   }
 }
 const actionMenu = [
+  {
+    name: 'acPaciente',
+    title: 'Localizar Paciente',
+    icon: Icones.paciente,
+    action: () => { selecionarPaciente() }
+  },
+  {
+    name: 'acHistorico',
+    title: 'Histórico do Paciente',
+    icon: Icones.calendario,
+    action: () => { exibirHistorico() }
+  },
+  {
+    title: '-'
+  },
   {
     name: 'acAnexo',
     title: 'Documentos',
@@ -364,7 +380,8 @@ const modelFilter = ref({
   'sa.cd_modalidade': null,
   'sa.cd_empresa': null,
   'ae.cd_medico': null,
-  'cd_fila': null
+  'cd_fila': null,
+  'cd_paciente': null
 })
 const apiFilter = ref(null)
 const filtrar = async () => {
@@ -373,6 +390,10 @@ const filtrar = async () => {
 watch(() => modelFilter.value.cd_fila, async () => {
   apiPage.value.applyFilter()
 })
+const exibirHistorico = async () => {
+  modelFilter.value.cd_paciente = modelFilter.value.cd_paciente ? null : selectedData().cd_paciente
+  apiPage.value.applySearch()
+}
 const salvarFormula = async (data: any) => {
   await apiEditor.value?.searchReplace(data)
   showFormula.value = false
@@ -513,6 +534,21 @@ const editarProcedimento = async () => {
       updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
         return useLaudo().execProcedimento({ cd_exame: node.id, cd_procedimento })
       })))
+    }
+  })
+}
+const selecionarPaciente = async () => {
+  modal.open(ModalPesquisa, {
+    title: 'Localizar Paciente',
+    data: [],
+    api: usePaciente().getPacientes,
+    onSubmit(cd_paciente) {
+      modal.close()
+      modelFilter.value.cd_paciente = cd_paciente
+      apiPage.value.applySearch()
+    },
+    onCancel() {
+      modal.close()
     }
   })
 }

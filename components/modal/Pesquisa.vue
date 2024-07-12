@@ -7,25 +7,30 @@ const props = defineProps({
   data: {
     type: Array,
     required: true
+  },
+  api: {
+    type: Function,
+    required: false
   }
 })
-function getFieldList(list) {
-  return list
-    ? list.map((result) => {
-      return getFieldItem(result)
-    })
-    : []
-}
-function getFieldItem(item) {
-  return item
-    ? {
-        id: Object.values(item)[0],
-        label: Object.values(item)[1]
-      }
-    : {}
-}
+// function getFieldList(list) {
+//   return list
+//     ? list.map((result) => {
+//       return getFieldItem(result)
+//     })
+//     : []
+// }
+// function getFieldItem(item) {
+//   return item
+//     ? {
+//         id: Object.values(item)[0],
+//         label: Object.values(item)[1]
+//       }
+//     : {}
+// }
 const emit = defineEmits(['cancel', 'submit'])
-const rowData = getFieldList(props.data)
+const rowData = ref()
+rowData.value = getFieldList(props.data)
 const columnDefs = [
   { field: 'label', headerName: 'Descrição', width: 400 }
 ]
@@ -36,7 +41,7 @@ const gridOptions = {
   }
 }
 const onRowDoubleClicked = (params) => {
-  emit(params.node.data.id ? 'submit' : 'cancel', params.node.data.id, params.node.data)
+  emit(params.node.data.value ? 'submit' : 'cancel', params.node.data.value, params.node.data)
 }
 // const onInputKeyDown = (event) => {
 //   if (event.key === 'Enter') {
@@ -51,7 +56,7 @@ const onCellKeyDown = ({ event }) => {
   if (event.key === 'Enter') {
     const selected = gridRef.value?.coreApi?.api.getSelectedNodes()[0]
     if (selected) {
-      emit('submit', selected.data.id, selected.data)
+      emit('submit', selected.data.value, selected.data)
     }
   }
 }
@@ -60,6 +65,13 @@ const inputSearch = ref('')
 watch(inputSearch, () => {
   gridRef.value?.applyFilterChanged(inputSearch.value)
 })
+const apiSearch = async (event) => {
+  if (event.key === 'Enter') {
+    if (props.api) {
+      rowData.value = getFieldList(await props.api(inputSearch.value, 'cd_paciente', 'ds_paciente'))
+    }
+  }
+}
 </script>
 
 <template>
@@ -76,6 +88,7 @@ watch(inputSearch, () => {
       input-class="uppercase"
       class="py-2 px-2"
       :ui="{ icon: { trailing: { pointer: '' } } }"
+      @keydown="apiSearch"
     />
     <BaseGridCore
       ref="gridRef"

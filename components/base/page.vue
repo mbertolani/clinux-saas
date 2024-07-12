@@ -66,6 +66,9 @@ defineExpose({
   applyFilter: () => {
     props.controller.getView(StrToNull(props.filter))
     apiGrid.value?.selectFirst()
+  },
+  applySearch: () => {
+    buttonSearch()
   }
 })
 

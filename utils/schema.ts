@@ -68,6 +68,13 @@ export function getFieldList(list, value?: string, label?: string) {
     }), 'label')
     : []
 }
+export function getFieldListOrder(list, value?: string, label?: string) {
+  return list
+    ? list.map((result) => {
+      return getFieldItem(result, value, label)
+    })
+    : []
+}
 
 export function getFieldOrder(lista: any[], propriedade: string): any[] {
   return lista.sort((a, b) => {
