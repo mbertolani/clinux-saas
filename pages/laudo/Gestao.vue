@@ -989,6 +989,7 @@ const classificarLaudo = async () => {
           ref="apiFilter"
           v-model="modelFilter"
           @submit="filtrar"
+          @historico="exibirHistorico"
         />
       </template>
     </BasePage>

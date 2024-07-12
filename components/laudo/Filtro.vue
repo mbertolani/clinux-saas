@@ -3,13 +3,14 @@ import type { FormKitSchemaDefinition } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 
-defineProps({
-  filter: {
-    type: Object,
-    required: false
-  }
-})
-const emit = defineEmits(['submit'])
+const model = defineModel({ type: Object })
+// defineProps({
+//   filter: {
+//     type: Object,
+//     required: false
+//   }
+// })
+const emit = defineEmits(['submit', 'historico'])
 
 const { getMedico, getEmpresa, getModalidade, getEmpresas, getModalidades, find } = useLaudo()
 
@@ -220,7 +221,6 @@ const schema: FormKitSchemaDefinition = [
 <template>
   <FormKit
     id="apiForm"
-    :value="filter"
     type="form"
     :actions="false"
     @submit="emit('submit')"
@@ -231,6 +231,16 @@ const schema: FormKitSchemaDefinition = [
           :schema
           :data
         />
+        <UButton
+          v-if="model.cd_paciente"
+          class="col-span-12"
+          color="primary"
+          icon="i-mdi-trash-can"
+          block
+          @click="emit('historico')"
+        >
+          Desativar Histórico
+        </UButton>
       </div>
     </div>
   </FormKit>
