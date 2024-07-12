@@ -219,6 +219,7 @@ export const Icones: Record<string, string> = {
   gestao: 'i-mdi-monitor-dashboard',
   prescricao: 'i-heroicons-beaker',
   // auditoria: 'i-mdi-account-card',
+  paciente: 'i-mdi-account',
   rota: 'i-mdi-truck-delivery',
   anexo: 'i-mdi-paperclip', // i-mdi-file-image
   chat: 'i-mdi-chat',
@@ -264,15 +265,12 @@ export const mainMenu = [
       { label: 'Sistema', to: '/gerencial/formulario', icon: Icones.sistema }
     ]
   },
-  // {
-  //   label: 'Atendimento'
-  //   // children: [
-  //   //   { label: 'Agendamento', to: '/login', disabled: true },
-  //   //   { label: 'Atendimento', to: '/login', disabled: true },
-  //   //   { label: 'Paciente', to: '/login', disabled: true },
-  //   //   { label: 'Médico', to: '/login', disabled: true }
-  //   // ]
-  // },
+  {
+    label: 'Atendimento',
+    children: [
+      { label: 'Paciente', to: '/atendimento/paciente', icon: Icones.paciente }
+    ]
+  },
   {
     label: 'Laudo',
     children: [

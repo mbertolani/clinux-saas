@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   //   }
   // },
   ssr: false,
+
   // router: {
   //   options: {
   //     hashMode: true
@@ -17,13 +18,17 @@ export default defineNuxtConfig({
   routeRules: {
     '/clinux/**': { ssr: false }
   },
+
   build: {
     transpile: process.env.NODE_ENV === 'production' ? ['@syncfusion'] : []
   },
+
   extends: [process.env.NUXT_UI_PRO_PATH || '@nuxt/ui-pro'],
+
   plugins: [
     { src: '~/plugins/base64.ts' }
   ],
+
   modules: [
     '@formkit/auto-animate',
     '@formkit/nuxt',
@@ -39,6 +44,7 @@ export default defineNuxtConfig({
     // 'nuxt-icon',
     'nuxt-monaco-editor'
   ],
+
   // hooks: {
   //   // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
   //   'components:extend': (components) => {
@@ -52,9 +58,11 @@ export default defineNuxtConfig({
   ui: {
     icons: ['heroicons', 'simple-icons', 'mdi', 'healthicons', 'lucide']
   },
+
   colorMode: {
     disableTransition: true
   },
+
   // routeRules: {
   //   '/api/search.json': { prerender: true },
   //   '/docs': { redirect: '/docs/getting-started', prerender: false }
@@ -62,9 +70,11 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true
   },
+
   typescript: {
     strict: false
   },
+
   eslint: {
     config: {
       stylistic: {
@@ -73,15 +83,19 @@ export default defineNuxtConfig({
       }
     }
   },
+
   imports: {
     dirs: [resolve('./stores'), '~/stores']
   },
+
   pinia: {
     storesDirs: ['~/stores/**', '#/stores/**', '@/stores/**']
   },
+
   formkit: {
     autoImport: true
   },
+
   // tailwindcss: {
   //   config: {
   //     content: ['./formkit.theme.ts', './app.vue']
@@ -96,13 +110,7 @@ export default defineNuxtConfig({
       // apiBaseURL: process.env.NODE_ENV === 'production' ? 'https://sedi2.zapto.org/dwcluster' : 'https://sedi2.zapto.org/dwcluster'
     }
   },
-  monacoEditor: {
-    locale: 'en',
-    componentName: {
-      codeEditor: 'MonacoEditor',
-      diffEditor: 'MonacoDiffEditor'
-    }
-  }
+
   // auth: {
   //   isEnabled: true,
   //   baseURL: process.env.AUTH_ORIGIN,
@@ -147,4 +155,13 @@ export default defineNuxtConfig({
   //     crossOriginEmbedderPolicy: process.env.NODE_ENV === 'development' ? 'unsafe-none' : 'require-corp'
   //   }
   // }
+  monacoEditor: {
+    locale: 'en',
+    componentName: {
+      codeEditor: 'MonacoEditor',
+      diffEditor: 'MonacoDiffEditor'
+    }
+  },
+
+  compatibilityDate: '2024-07-11'
 })
