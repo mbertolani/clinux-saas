@@ -245,7 +245,8 @@ export const Icones: Record<string, string> = {
   laudo_del: 'i-mdi-file-document-remove',
   laudo_pdf: 'i-mdi-file-pdf',
   laudo_txt: 'i-mdi-file-document',
-  laudo_dif: 'i-mdi-file-compare'
+  laudo_dif: 'i-mdi-file-compare',
+  grupo: 'i-mdi-group'
 }
 
 export const mainMenu = [

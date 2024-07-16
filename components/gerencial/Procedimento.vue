@@ -28,11 +28,11 @@ const data = reactive({
       if (!id) return []
       return await getGrupo(id)
     },
-    options: async ({ search, options }) => {
-      if (!search) return []
-      if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
-      if (!model.value.cd_modalidade) return []
-      return await getGrupos(model.value.cd_modalidade)
+    options: async () => {
+      // if (!search) return []
+      // if (options.some(option => option.label.toLowerCase().includes(search.toLowerCase()))) return options
+      if (!getNode('cd_modalidade').value) return []
+      return await getGrupos(getNode('cd_modalidade').value as number)
     }
 
   }

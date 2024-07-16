@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { GerencialProcedimento, GerencialProcedimentoModelo } from '#components'
+import { GerencialProcedimento, GerencialModalidadeGrupo, GerencialProcedimentoModelo } from '#components'
 import { useProcedimento } from '~/composables/gerencial/useProcedimento'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
@@ -29,6 +29,20 @@ const actionMenu: ActionMenuItem[] = [
     icon: Icones.modelo,
     action: () => {
       associarModelo(apiPage.value.selectedNode()?.id)
+    }
+  },
+  {
+    name: 'acGrupo',
+    title: 'Grupos de Procedimentos',
+    icon: Icones.grupo,
+    action: () => {
+      modal.open(GerencialModalidadeGrupo, {
+        title: 'Grupos de Procedimentos',
+        pid: apiPage.value.selectedData()?.cd_modalidade,
+        onClose() {
+          modal.close()
+        }
+      })
     }
   }
 ]

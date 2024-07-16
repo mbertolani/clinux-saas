@@ -69,7 +69,7 @@ defineShortcuts({
         color="red"
         label="Apagar"
         :loading="loading"
-        @click="onSuccess"
+        @click="onSuccess()"
       />
       <UButton
         color="white"

@@ -99,6 +99,9 @@ export const useBaseStore = (
   const getList = async () => {
     return await Get('list')
   }
+  const getTitle = async () => {
+    return await Get('title')
+  }
   const download = async (id: number, fieldname: string, filename: string) => {
     return await useHttp(`${url}/${id}?fieldname=${fieldname}&filename=${filename}`, {
       method: 'put',
@@ -118,6 +121,7 @@ export const useBaseStore = (
     getList,
     getView,
     getMenu,
+    getTitle,
     find,
     exec,
     download

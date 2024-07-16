@@ -53,8 +53,12 @@ const selectedNode = () => {
   }
   return node
 }
+const selectedId = () => {
+  return Number(selectedNode()?.id)
+}
 
 defineExpose({
+  selectedId,
   selectedData,
   selectedNode,
   getSelectedNodes: () => {
