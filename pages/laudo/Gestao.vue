@@ -194,6 +194,18 @@ const actionMenu = [
     title: '-'
   },
   {
+    name: 'acDicom',
+    title: 'Imagens',
+    icon: Icones.imagem,
+    action: () => {
+      if (selectedData()?.dt_assinado) {
+        openImagem()
+      } else {
+        useMessage().showMessage('Laudo não assinado !')
+      }
+    }
+  },
+  {
     name: 'acAnexo',
     title: 'Documentos',
     icon: Icones.anexo,

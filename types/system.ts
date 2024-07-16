@@ -221,7 +221,8 @@ export const Icones: Record<string, string> = {
   // auditoria: 'i-mdi-account-card',
   paciente: 'i-mdi-account',
   rota: 'i-mdi-truck-delivery',
-  anexo: 'i-mdi-paperclip', // i-mdi-file-image
+  anexo: 'i-mdi-paperclip',
+  imagem: 'i-mdi-file-image',
   chat: 'i-mdi-chat',
   procedencia: 'i-mdi-map-marker',
   revisor: 'i-healthicons-doctor-male',
