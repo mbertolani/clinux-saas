@@ -72,7 +72,7 @@ defineExpose({
   }
 })
 
-const emit = defineEmits(['openForm'])
+const emit = defineEmits(['openForm', 'selectionChanged'])
 
 const apiGrid = ref(null)
 const rowData = ref([])
@@ -176,6 +176,7 @@ const buttonLog = async () => {
   })
 }
 const onRowDoubleClicked = async params => actionEdit(params.node.id)
+const onSelectionChanged = () => emit('selectionChanged', selectedData())
 
 const onCellKeyDown = ({ event, api }) => {
   switch (event.key) {
@@ -267,6 +268,7 @@ watch(inputSearch, () => {
         :column-defs
         :on-row-double-clicked="onRowDoubleClicked"
         :on-cell-key-down="onCellKeyDown"
+        :on-selection-changed="onSelectionChanged"
         :row-class-rules
         :http="controller"
         :menu="actionMenu"

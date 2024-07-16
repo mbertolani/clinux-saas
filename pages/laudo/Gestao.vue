@@ -923,6 +923,8 @@ const classificarLaudo = async () => {
   })
   return true
 }
+const avisoVip = ref()
+const selectionChanged = params => avisoVip.value = params.ds_vip
 </script>
 
 <template>
@@ -982,6 +984,7 @@ const classificarLaudo = async () => {
       :action-menu
       :filter="modelFilter"
       :action-delete="cancelarLaudo"
+      @selection-changed="selectionChanged"
       @open-form="openForm"
     >
       <template #filter>
@@ -991,6 +994,12 @@ const classificarLaudo = async () => {
           @submit="filtrar"
           @historico="exibirHistorico"
         />
+        <div
+          v-if="avisoVip"
+          class="bg-blue-500 text-white px-2 py-2 rounded"
+        >
+          {{ avisoVip }}
+        </div>
       </template>
     </BasePage>
   </div>
