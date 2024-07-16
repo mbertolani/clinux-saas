@@ -221,6 +221,7 @@ const schema: FormKitSchemaDefinition = [
 <template>
   <FormKit
     id="apiForm"
+    v-model="model"
     type="form"
     :actions="false"
     @submit="emit('submit')"

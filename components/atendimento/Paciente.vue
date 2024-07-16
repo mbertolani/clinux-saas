@@ -37,6 +37,12 @@ const schema: FormKitSchemaDefinition = [
     outerClass: formClass(3)
   },
   {
+    $formkit: 'text',
+    name: 'ds_vip',
+    label: 'Vip',
+    outerClass: formClass(12)
+  },
+  {
     $formkit: 'toggle',
     name: 'sn_ativo',
     label: 'Ativo ?',
