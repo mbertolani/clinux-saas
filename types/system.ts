@@ -246,7 +246,11 @@ export const Icones: Record<string, string> = {
   laudo_pdf: 'i-mdi-file-pdf',
   laudo_txt: 'i-mdi-file-document',
   laudo_dif: 'i-mdi-file-compare',
-  grupo: 'i-mdi-group'
+  grupo: 'i-mdi-group',
+  many2one: 'i-mdi-relation-many-to-one',
+  many2many: 'i-mdi-relation-many-to-many',
+  one2many: 'i-mdi-relation-one-to-many',
+  transfer: 'i-mdi-transfer'
 }
 
 export const mainMenu = [

@@ -82,7 +82,7 @@ cancelar()
     @close="emit('onClose')"
   >
     <div
-      class="bg-emerald-600 text-white px-1.5 py-1.5 rounded"
+      class="bg-emerald-600 text-white px-1.5 py-1.5 rounded text-center"
     >
       {{ Object.values(parentID)[0] }}
     </div>

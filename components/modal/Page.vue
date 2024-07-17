@@ -79,6 +79,17 @@ const excluir = async () => {
   if (response)
     gridRef.value?.coreApi.api.applyTransaction({ remove: [nodeData.value] })
 }
+const showLog = ref(false)
+const dataLog = ref()
+const log = async () => {
+  const selectedNode = gridRef.value?.coreApi.api.getSelectedNodes()[0]
+  if (!selectedNode) {
+    showError(Messages.MSG_FNF_GRID)
+    return
+  }
+  dataLog.value = await props.controller.getLog(selectedNode.id)
+  showLog.value = true
+}
 const getRowId = ({ data }) => Object.values(data)[0]
 </script>
 
@@ -89,6 +100,7 @@ const getRowId = ({ data }) => Object.values(data)[0]
     @close="emit('close')"
   >
     <div
+      v-if="pid > 0"
       class="bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center"
     >
       {{ Object.values(parentID)[0] }}
@@ -141,6 +153,14 @@ const getRowId = ({ data }) => Object.values(data)[0]
           :outer-class="formClass(2)"
           @click="confirmarExclusao()"
         />
+        <FormKit
+          type="button"
+          label="Log"
+          prefix-icon="time"
+          input-class="w-full justify-center"
+          :outer-class="formClass(2)"
+          @click="log()"
+        />
       </div>
     </FormKit>
     <BaseGridCore
@@ -159,6 +179,11 @@ const getRowId = ({ data }) => Object.values(data)[0]
       @success="excluir"
       @close="confirmarDelete = false"
     />
-    <ModalLog />
+    <ModalLog
+      v-if="showLog"
+      v-model="showLog"
+      :row-data="dataLog"
+      @close="showLog = false"
+    />
   </BaseForm>
 </template>

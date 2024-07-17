@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaFiltro } from '#components'
+import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaFiltro, AtendimentoProcedencia } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
@@ -46,16 +46,34 @@ const actionMenu: ActionMenuItem[] = [
     name: 'acProcedimento',
     title: 'Procedimentos',
     icon: Icones.procedimento,
-    action: () => {
-      associarProcedimento()
-    }
+    action: () => associarProcedimento()
+
+  },
+  {
+    name: 'acProcedencia',
+    title: 'Cadastro de Procedência',
+    icon: Icones.procedencia,
+    action: () => showCadastroProcedencia.value = true
+  },
+  {
+    name: 'acEmpresaProcedencia',
+    title: 'Associar Procedência',
+    icon: Icones.procedencia,
+    action: () => associarProcedencia()
   }
 ]
+const showCadastroProcedencia = ref(false)
+const showProcedencia = ref(false)
 const showProcedimento = ref(false)
 const associarProcedimento = () => {
   id.value = apiPage.value.selectedId()
   showProcedimento.value = true
 }
+const associarProcedencia = () => {
+  id.value = apiPage.value.selectedId()
+  showProcedencia.value = true
+}
+
 // const modal = useModal()
 // const openForm = (codigo?: number) => {
 //   modal.open(GerencialEmpresa, {
@@ -125,6 +143,11 @@ const associarProcedimento = () => {
       :id
       v-model="showProcedimento"
       @close="showProcedimento=false"
+    />
+    <AtendimentoProcedencia
+      v-if="showCadastroProcedencia"
+      v-model="showCadastroProcedencia"
+      @close="showCadastroProcedencia=false"
     />
   </div>
 </template>
