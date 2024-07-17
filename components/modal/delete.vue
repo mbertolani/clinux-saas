@@ -56,7 +56,7 @@ defineShortcuts({
 <template>
   <UDashboardModal
     title="Confirmar exclusão"
-    description="Tem certeza que deseja apagar este registro?"
+    description="Deseja apagar o registro selecionado ?"
     icon="i-heroicons-exclamation-circle"
     :ui="{
       // width: 'sm:max-w-xl md:max-w-2xl lg:max-w-4xl',

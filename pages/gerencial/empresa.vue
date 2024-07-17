@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GerencialEmpresa, GerencialEmpresaFiltro } from '#components'
+import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaFiltro } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
@@ -41,8 +41,21 @@ const actionMenu: ActionMenuItem[] = [
     action: () => {
       console.log('Rota')
     }
+  },
+  {
+    name: 'acProcedimento',
+    title: 'Procedimentos',
+    icon: Icones.procedimento,
+    action: () => {
+      associarProcedimento()
+    }
   }
 ]
+const showProcedimento = ref(false)
+const associarProcedimento = () => {
+  id.value = apiPage.value.selectedId()
+  showProcedimento.value = true
+}
 // const modal = useModal()
 // const openForm = (codigo?: number) => {
 //   modal.open(GerencialEmpresa, {
@@ -82,28 +95,36 @@ const actionMenu: ActionMenuItem[] = [
 </script>
 
 <template>
-  <BasePage
-    ref="apiPage"
-    :header="{ title, icon: Icones.empresa }"
-    :controller
-    :action-menu
-    :filter
-    @open-form="openForm"
-  >
-    <template #filter>
-      <GerencialEmpresaFiltro
-        v-model="filter"
-        @submit="filtrar"
-      />
-    </template>
-    <template #form>
-      <GerencialEmpresa
-        :id
-        v-model="showModal"
-        :title
-        @submit="onSubmit"
-        @close="showModal = false"
-      />
-    </template>
-  </BasePage>
+  <div>
+    <BasePage
+      ref="apiPage"
+      :header="{ title, icon: Icones.empresa }"
+      :controller
+      :action-menu
+      :filter
+      @open-form="openForm"
+    >
+      <template #filter>
+        <GerencialEmpresaFiltro
+          v-model="filter"
+          @submit="filtrar"
+        />
+      </template>
+      <template #form>
+        <GerencialEmpresa
+          :id
+          v-model="showModal"
+          :title
+          @submit="onSubmit"
+          @close="showModal = false"
+        />
+      </template>
+    </BasePage>
+    <GerencialEmpresaProcedimento
+      v-if="showProcedimento"
+      :id
+      v-model="showProcedimento"
+      @close="showProcedimento=false"
+    />
+  </div>
 </template>

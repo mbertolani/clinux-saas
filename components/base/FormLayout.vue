@@ -55,21 +55,17 @@ const onSubmit = async (_data: any) => {
     :actions="false"
     @submit="onSubmit"
   >
-    <div class="flex items-center justify-center">
-      <div class="container max-w-screen-lg mx-auto">
-        <div class="grid gap-x-2 grid-cols-1 md:grid-cols-12">
-          <slot />
-          <FormKitSchema
-            :schema
-            :data
-          />
-          <FormKit
-            type="submit"
-            label="Salvar"
-            :disabled="!dirty"
-          />
-        </div>
-      </div>
+    <div class="grid gap-x-2 grid-cols-1 md:grid-cols-12">
+      <slot />
+      <FormKitSchema
+        :schema
+        :data
+      />
+      <FormKit
+        type="submit"
+        label="Salvar"
+        :disabled="!dirty"
+      />
     </div>
   </FormKit>
 </template>

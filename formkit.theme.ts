@@ -1004,7 +1004,7 @@ const classes: Record<string, Record<string, boolean>> = {
   },
   'submit__outer': {
     'group': true,
-    'max-w-[20em]': true,
+    'max-w-[20em]': false,
     'min-w-0': true,
     'grow': true,
     'mb-2': true,

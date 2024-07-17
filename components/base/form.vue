@@ -2,7 +2,7 @@
 defineProps({
   title: {
     type: String,
-    required: true
+    required: false
   },
   fullscreen: {
     type: Boolean,
@@ -19,9 +19,9 @@ const onClose = () => {
   }
   if (getNode('form-kit').context.state.dirty) {
     useMessage().openDialog({
-      description: 'Deseja sair sem salvar ?',
-      okClick: () => { useMessage().closeDialog(), emit('close') },
-      noClick: () => { useMessage().closeDialog() }
+      description: 'Dados foram modificados ! Deseja salvar ?',
+      noClick: () => { useMessage().closeDialog(), emit('close') },
+      okClick: () => { useMessage().closeDialog() }
     })
   } else {
     emit('close')
