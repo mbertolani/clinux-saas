@@ -250,7 +250,8 @@ export const Icones: Record<string, string> = {
   many2one: 'i-mdi-relation-many-to-one',
   many2many: 'i-mdi-relation-many-to-many',
   one2many: 'i-mdi-relation-one-to-many',
-  transfer: 'i-mdi-transfer'
+  transfer: 'i-mdi-transfer',
+  sla: 'i-mdi-timer-sand'
 }
 
 export const mainMenu = [

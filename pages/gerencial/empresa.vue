@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaFiltro, AtendimentoProcedencia } from '#components'
+import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaProcedencia, GerencialEmpresaFiltro, SetupProcedencia, SetupSla } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
-import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
 
 const title = 'Empresas'
@@ -25,7 +24,7 @@ const filtrar = async () => {
   apiPage.value.applyFilter()
 }
 
-const actionMenu: ActionMenuItem[] = [
+const actionMenu = [
   {
     name: 'acAnexo',
     title: 'Anexos',
@@ -43,28 +42,48 @@ const actionMenu: ActionMenuItem[] = [
     }
   },
   {
-    name: 'acProcedimento',
-    title: 'Procedimentos',
-    icon: Icones.procedimento,
-    action: () => associarProcedimento()
-
+    title: '-'
   },
   {
     name: 'acProcedencia',
-    title: 'Cadastro de Procedência',
+    title: 'Cadastrar Procedência',
     icon: Icones.procedencia,
     action: () => showCadastroProcedencia.value = true
+  },
+  {
+    name: 'acSla',
+    title: 'Cadastrar Sla',
+    icon: Icones.sla,
+    action: () => showCadastroSla.value = true
+  },
+  {
+    title: '-'
+  },
+  {
+    name: 'acProcedimento',
+    title: 'Associar Procedimento',
+    icon: Icones.procedimento,
+    action: () => associarProcedimento()
+
   },
   {
     name: 'acEmpresaProcedencia',
     title: 'Associar Procedência',
     icon: Icones.procedencia,
     action: () => associarProcedencia()
+  },
+  {
+    name: 'acEmpresaSla',
+    title: 'Associar Sla',
+    icon: Icones.sla,
+    action: () => associarSla()
   }
 ]
+const showCadastroSla = ref(false)
 const showCadastroProcedencia = ref(false)
 const showProcedencia = ref(false)
 const showProcedimento = ref(false)
+const showSla = ref(false)
 const associarProcedimento = () => {
   id.value = apiPage.value.selectedId()
   showProcedimento.value = true
@@ -72,6 +91,10 @@ const associarProcedimento = () => {
 const associarProcedencia = () => {
   id.value = apiPage.value.selectedId()
   showProcedencia.value = true
+}
+const associarSla = () => {
+  id.value = apiPage.value.selectedId()
+  showSla.value = true
 }
 
 // const modal = useModal()
@@ -144,10 +167,21 @@ const associarProcedencia = () => {
       v-model="showProcedimento"
       @close="showProcedimento=false"
     />
-    <AtendimentoProcedencia
+    <GerencialEmpresaProcedencia
+      v-if="showProcedencia"
+      :id
+      v-model="showProcedencia"
+      @close="showProcedencia=false"
+    />
+    <SetupProcedencia
       v-if="showCadastroProcedencia"
       v-model="showCadastroProcedencia"
       @close="showCadastroProcedencia=false"
+    />
+    <SetupSla
+      v-if="showCadastroSla"
+      v-model="showCadastroSla"
+      @close="showCadastroSla=false"
     />
   </div>
 </template>

@@ -53,7 +53,7 @@ const selectedNode = () => {
   }
   return node
 }
-const selectedId = () => {
+const selectedId = (): number => {
   return Number(selectedNode()?.id)
 }
 

@@ -10,7 +10,7 @@ const props = defineProps({
     type: String,
     required: true
   },
-  pid: {
+  id: {
     type: Number,
     required: false
   },
@@ -40,13 +40,6 @@ const gridOptions = {
   }
 }
 
-const onCellKeyDown = ({ event }) => {
-  switch (event.key) {
-    case 'Delete':
-      // buttonDelete(api)
-      break
-  }
-}
 const onRowDoubleClicked = async (params) => {
   value.value = params.data
 }
@@ -84,7 +77,7 @@ const dataLog = ref()
 const log = async () => {
   const selectedNode = gridRef.value?.coreApi.api.getSelectedNodes()[0]
   if (!selectedNode) {
-    showError(Messages.MSG_FNF_GRID)
+    useMessage().showError(Messages.MSG_FNF_GRID)
     return
   }
   dataLog.value = await props.controller.getLog(selectedNode.id)
@@ -95,12 +88,11 @@ const getRowId = ({ data }) => Object.values(data)[0]
 
 <template>
   <BaseForm
-    :fullscreen="true"
     :title
     @close="emit('close')"
   >
     <div
-      v-if="pid > 0"
+      v-if="id > 0"
       class="bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center"
     >
       {{ Object.values(parentID)[0] }}
@@ -172,7 +164,6 @@ const getRowId = ({ data }) => Object.values(data)[0]
       :pagination="false"
       :grid-options
       :on-row-double-clicked="onRowDoubleClicked"
-      :on-cell-key-down="onCellKeyDown"
     />
     <ModalDelete
       v-model="confirmarDelete"

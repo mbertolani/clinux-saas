@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { FormKitSchemaDefinition } from '@formkit/core'
-import { useEmpresaProcedimento } from '~/composables/gerencial/useEmpresaProcedimento'
-import { useProcedimento } from '~/composables/gerencial/useProcedimento'
+import { useEmpresaProcedencia } from '~/composables/gerencial/useEmpresaProcedencia'
+import { useProcedencia } from '~/composables/atendimento/useProcedencia'
 import { Icones } from '~/types/system'
 
 const props = defineProps({
@@ -11,45 +11,46 @@ const props = defineProps({
   }
 })
 
-const title = 'Associação Empresa x Procedimento'
-const controller = useEmpresaProcedimento(props.id)
+const title = 'Associação Empresa x Procedência'
+const controller = useEmpresaProcedencia(props.id)
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
-    name: 'cd_depara'
+    name: 'cd_codigo'
   },
   {
     $formkit: 'dropdown',
-    name: 'cd_procedimento',
-    label: 'Procedimento',
-    bind: '$cd_procedimento',
+    name: 'cd_procedencia',
+    label: 'Procedência',
+    bind: '$cd_procedencia',
     validation: 'required',
     outerClass: formClass(12)
   },
   {
     $formkit: 'text',
-    name: 'ds_codigo_externo',
+    name: 'ds_codigo',
     label: 'Código',
     validation: 'required',
     outerClass: formClass(2)
   },
   {
     $formkit: 'text',
-    name: 'ds_procedimento_externo',
+    name: 'ds_descricao',
     label: 'Descrição',
     validation: 'required',
     outerClass: formClass(10)
   }
 ]
-const { get, getAll } = useProcedimento()
+const { get, getAll } = useProcedencia()
 const data = reactive({
-  cd_procedimento: {
+  cd_procedencia: {
     optionLoader: async (id) => {
       if (!id) return []
-      return getFieldItem(await get(id, 'cd_procedimento,ds_procedimento'))
+      return getFieldItem(await get(id, 'cd_procedencia,ds_procedencia'))
     },
     options: async () => {
-      return getFieldList(await getAll(), 'cd_procedimento', 'ds_procedimento')
+      console.log('options')
+      return getFieldList(await getAll(), 'cd_procedencia', 'ds_procedencia')
     }
 
   }
@@ -62,7 +63,7 @@ const data = reactive({
     :title
     :schema
     :data
-    :icon="Icones.procedimento"
+    :icon="Icones.procedencia"
     :controller
   />
 </template>
