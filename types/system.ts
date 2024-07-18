@@ -210,7 +210,7 @@ export const Icones: Record<string, string> = {
   funcionario: 'i-mdi-badge-account-horizontal-outline',
   medico: 'i-mdi-doctor',
   modalidade: 'i-mdi-desktop-mac',
-  procedimento: 'i-mdi-radiology-box-outline',
+  procedimento: 'i-mdi-monitor-account',
   modelo: 'i-mdi-file-document-edit',
   calendario: 'i-mdi-calendar',
   horario: 'i-mdi-clock',

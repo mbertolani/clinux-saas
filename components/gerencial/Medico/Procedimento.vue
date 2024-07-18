@@ -8,11 +8,11 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['close'])
-const { getProcedimento, getProcedimentos, get, useMedicoProcedimento } = useMedico(props.id)
+const { getProcedimento, getProcedimentos, useMedicoProcedimento } = useMedico(props.id)
 const [procedimento, listaProcedimento, medico] = await Promise.all([
   getProcedimento(),
   getProcedimentos(),
-  get(props.id, 'ds_medico')
+  useMedicoProcedimento.getTitle()
 ])
 
 const onSubmit = async (_data: any) => {
@@ -29,9 +29,15 @@ const onSubmit = async (_data: any) => {
 
 <template>
   <BaseForm
-    :title="medico.ds_medico"
+    title="Associação Médico x Procedimento"
     @close="emit('close')"
   >
+    <div
+      v-if="id > 0"
+      class="bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center"
+    >
+      {{ medico.ds_guerra }}
+    </div>
     <FormKit
       v-slot="{ state: { dirty } }"
       type="form"
@@ -41,7 +47,7 @@ const onSubmit = async (_data: any) => {
       <FormKit
         name="procedimentos"
         type="transferlist"
-        source-label="Procedimento"
+        source-label="Lista"
         target-label="Seleção"
         :options="listaProcedimento"
         :value="procedimento.foreign"

@@ -12,7 +12,7 @@ export const useMedico = (id?: number) => {
       foreign: response.map((item: any) => item.cd_procedimento)
     }
   }
-  async function getSala() {
+  async function getMedicoSala() {
     const response = await useMedicoSala.getAll()
     return {
       primary: response,
@@ -29,7 +29,7 @@ export const useMedico = (id?: number) => {
   //   return getFieldList(await useModalidade().getAll())
   // }
   return {
-    getSala,
+    getMedicoSala,
     getSalas,
     getProcedimento,
     getProcedimentos,

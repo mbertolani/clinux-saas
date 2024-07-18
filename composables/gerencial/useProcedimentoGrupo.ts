@@ -1,5 +1,5 @@
-export const useProcedimentoGrupo = (id?: number) => {
+export const useProcedimentoGrupo = () => {
   return {
-    ...useBaseStore(`/gerencial/modalidade/${id}/grupo`)
+    ...useBaseStore(`/gerencial/procedimento_grupo`)
   }
 }

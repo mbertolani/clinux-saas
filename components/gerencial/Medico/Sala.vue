@@ -8,16 +8,16 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['close'])
-const { getSala, getSalas, get, useMedicoSala } = useMedico(props.id)
-const [Sala, Salas, medico] = await Promise.all([
-  getSala(),
+const { getMedicoSala, getSalas, useMedicoSala } = useMedico(props.id)
+const [MedicoSala, listaSalas, Medico] = await Promise.all([
+  getMedicoSala(),
   getSalas(),
-  get(props.id, 'ds_medico')
+  useMedicoSala.getTitle()
 ])
 
 const onSubmit = async (_data: any) => {
-  const insert = _data.Salas.filter(item => !Sala.foreign.includes(item))
-  const remove = Sala.primary.filter(item => !_data.Salas.includes(item.cd_sala))
+  const insert = _data.lista.filter(item => !MedicoSala.foreign.includes(item))
+  const remove = MedicoSala.primary.filter(item => !_data.lista.includes(item.cd_sala))
   const operations = [
     ...insert.map(item => useMedicoSala.create({ cd_medico: props.id, cd_sala: item })),
     ...remove.map(item => useMedicoSala.remove(item.cd_codigo))
@@ -29,9 +29,15 @@ const onSubmit = async (_data: any) => {
 
 <template>
   <BaseForm
-    :title="medico.ds_medico"
+    title="Associação Médico x Sala"
     @close="emit('close')"
   >
+    <div
+      v-if="id > 0"
+      class="bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center"
+    >
+      {{ Medico.ds_guerra }}
+    </div>
     <FormKit
       v-slot="{ state: { dirty } }"
       type="form"
@@ -39,12 +45,12 @@ const onSubmit = async (_data: any) => {
       @submit="onSubmit"
     >
       <FormKit
-        name="Salas"
+        name="lista"
         type="transferlist"
-        source-label="Sala"
+        source-label="Lista"
         target-label="Seleção"
-        :options="Salas"
-        :value="Sala.foreign"
+        :options="listaSalas"
+        :value="MedicoSala.foreign"
         searchable
         placeholder="Pesquisar"
       />

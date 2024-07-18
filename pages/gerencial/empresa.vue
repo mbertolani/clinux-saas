@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaProcedencia, GerencialEmpresaFiltro, SetupProcedencia, SetupSla } from '#components'
+import { GerencialEmpresa, GerencialEmpresaProcedimento, GerencialEmpresaSla, GerencialEmpresaProcedencia, GerencialEmpresaFiltro, SetupProcedencia, SetupSla } from '#components'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import { Icones } from '~/types/system'
 
@@ -46,13 +46,13 @@ const actionMenu = [
   },
   {
     name: 'acProcedencia',
-    title: 'Cadastrar Procedência',
+    title: 'Procedências',
     icon: Icones.procedencia,
     action: () => showCadastroProcedencia.value = true
   },
   {
     name: 'acSla',
-    title: 'Cadastrar Sla',
+    title: 'Slas',
     icon: Icones.sla,
     action: () => showCadastroSla.value = true
   },
@@ -77,6 +77,12 @@ const actionMenu = [
     title: 'Associar Sla',
     icon: Icones.sla,
     action: () => associarSla()
+  },
+  {
+    name: 'acEmpresaMedico',
+    title: 'Associar Médico',
+    icon: Icones.medico,
+    action: () => associarMedico()
   }
 ]
 const showCadastroSla = ref(false)
@@ -84,6 +90,7 @@ const showCadastroProcedencia = ref(false)
 const showProcedencia = ref(false)
 const showProcedimento = ref(false)
 const showSla = ref(false)
+const showMedico = ref(false)
 const associarProcedimento = () => {
   id.value = apiPage.value.selectedId()
   showProcedimento.value = true
@@ -95,6 +102,10 @@ const associarProcedencia = () => {
 const associarSla = () => {
   id.value = apiPage.value.selectedId()
   showSla.value = true
+}
+const associarMedico = () => {
+  id.value = apiPage.value.selectedId()
+  showMedico.value = true
 }
 
 // const modal = useModal()
@@ -172,6 +183,18 @@ const associarSla = () => {
       :id
       v-model="showProcedencia"
       @close="showProcedencia=false"
+    />
+    <GerencialEmpresaSla
+      v-if="showSla"
+      :id
+      v-model="showSla"
+      @close="showSla=false"
+    />
+    <GerencialEmpresaMedico
+      v-if="showMedico"
+      :id
+      v-model="showMedico"
+      @close="showMedico=false"
     />
     <SetupProcedencia
       v-if="showCadastroProcedencia"

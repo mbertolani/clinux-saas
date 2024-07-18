@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useProcedimentoGrupo } from '~/composables/gerencial/useProcedimentoGrupo'
+import { useModalidadeGrupo } from '~/composables/gerencial/useModalidadeGrupo'
 import { ModalDelete, ModalLog } from '#components'
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const emit = defineEmits(['onClose'])
 const getRowId = ({ data }) => Object.values(data)[0]
 const inputSearch = ref('')
 const gridRef = ref()
-const controller = useProcedimentoGrupo(props.pid)
+const controller = useModalidadeGrupo(props.pid)
 const [rowData, columnDefs, parentID] = await Promise.all([
   controller.getAll(),
   controller.getGrid(),

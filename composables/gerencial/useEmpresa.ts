@@ -1,4 +1,5 @@
-export const useEmpresa = () => {
+export const useEmpresa = (id?: number) => {
+  const useEmpresaSla = useBaseStore(`/gerencial/empresa/${id}/sla`)
   async function getBancos() {
     return getFieldList(await useBaseStore('/financeiro/banco').getList())
   }
@@ -11,8 +12,24 @@ export const useEmpresa = () => {
   async function getBanco(id: number) {
     return getFieldItem(await useBaseStore('/financeiro/banco').get(id, 'cd_banco,ds_banco'))
   }
-
+  async function getEmpresaSla() {
+    const response = await useEmpresaSla.getAll()
+    return {
+      primary: response,
+      foreign: response.map((item: any) => item.cd_sla)
+    }
+  }
+  async function getSla() {
+    return getFieldList(await await useBaseStore('/gerencial/sla').getAll(), 'cd_sla', 'ds_sla')
+  }
+  async function getSlaTitle() {
+    return (await useEmpresaSla.getTitle()).ds_empresa
+  }
   return {
+    useEmpresaSla,
+    getEmpresaSla,
+    getSla,
+    getSlaTitle,
     getBanco,
     getBancos,
     getEstoque,

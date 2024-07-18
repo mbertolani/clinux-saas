@@ -29,9 +29,15 @@ const onSubmit = async (_data: any) => {
 
 <template>
   <BaseForm
-    :title="procedimento.ds_procedimento"
+    title="Associação Procedimento x Modelo"
     @close="emit('close')"
   >
+    <div
+      v-if="id > 0"
+      class="bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center"
+    >
+      {{ procedimento.ds_procedimento }}
+    </div>
     <FormKit
       v-slot="{ state: { dirty } }"
       type="form"
