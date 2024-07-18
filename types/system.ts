@@ -251,7 +251,8 @@ export const Icones: Record<string, string> = {
   many2many: 'i-mdi-relation-many-to-many',
   one2many: 'i-mdi-relation-one-to-many',
   transfer: 'i-mdi-transfer',
-  sla: 'i-mdi-timer-sand'
+  sla: 'i-mdi-timer-sand',
+  password: 'i-mdi-lock'
 }
 
 export const mainMenu = [
@@ -261,7 +262,7 @@ export const mainMenu = [
       { label: 'Empresa', to: '/gerencial/empresa', icon: Icones.empresa },
       { label: 'Sala', to: '/gerencial/sala', icon: Icones.sala },
       { label: 'Funcionário', to: '/gerencial/funcionario', icon: Icones.funcionario },
-      // { label: 'Usuário', to: '/gerencial/usuario', icon: Icones.usuario },
+      { label: 'Usuário', to: '/gerencial/usuario', icon: Icones.usuario },
       { label: 'Médico', to: '/gerencial/medico', icon: Icones.medico },
       { label: 'Modalidade', to: '/gerencial/modalidade', icon: Icones.modalidade },
       { label: 'Procedimento', to: '/gerencial/procedimento', icon: Icones.procedimento },
