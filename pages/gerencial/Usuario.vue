@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { GerencialUsuario, GerencialUsuarioEmpresa, ModalPassword } from '#components'
+import { GerencialUsuario, SetupUsuarioGrupo, GerencialUsuarioEmpresa, GerencialUsuarioPermissao, ModalPassword } from '#components'
 import { useUsuario } from '~/composables/gerencial/useUsuario'
 import { Icones } from '~/types/system'
 
@@ -9,6 +9,8 @@ const controller = useUsuario()
 const showModal = ref(false)
 const id = ref(0)
 const modal = useModal()
+const showCadastroGrupo = ref(false)
+const showCadastroPermissao = ref(false)
 const actionMenu = [
   {
     name: 'acEmpresa',
@@ -25,6 +27,18 @@ const actionMenu = [
     action: () => {
       alterarSenha(apiPage.value.selectedNode()?.id)
     }
+  },
+  {
+    name: 'acGrupo',
+    title: 'Grupos',
+    icon: Icones.grupo,
+    action: () => showCadastroGrupo.value = true
+  },
+  {
+    name: 'acPermissao',
+    title: 'Permissão',
+    icon: Icones.acesso,
+    action: () => showCadastroPermissao.value = true
   }
 ]
 
@@ -62,21 +76,33 @@ const onSubmit = (data: any) => {
 </script>
 
 <template>
-  <BasePage
-    ref="apiPage"
-    :header="{ title, icon: Icones.usuario }"
-    :controller
-    :action-menu
-    @open-form="openForm"
-  >
-    <template #form>
-      <GerencialUsuario
-        :id
-        v-model="showModal"
-        :title
-        @submit="onSubmit"
-        @close="showModal = false"
-      />
-    </template>
-  </BasePage>
+  <div>
+    <BasePage
+      ref="apiPage"
+      :header="{ title, icon: Icones.usuario }"
+      :controller
+      :action-menu
+      @open-form="openForm"
+    >
+      <template #form>
+        <GerencialUsuario
+          :id
+          v-model="showModal"
+          :title
+          @submit="onSubmit"
+          @close="showModal = false"
+        />
+      </template>
+    </BasePage>
+    <SetupUsuarioGrupo
+      v-if="showCadastroGrupo"
+      v-model="showCadastroGrupo"
+      @close="showCadastroGrupo=false"
+    />
+    <GerencialUsuarioPermissao
+      v-if="showCadastroPermissao"
+      v-model="showCadastroPermissao"
+      @close="showCadastroPermissao=false"
+    />
+  </div>
 </template>

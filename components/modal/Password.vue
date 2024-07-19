@@ -14,7 +14,6 @@ const onSubmit = async (data) => {
 <template>
   <ModalFullScreen
     :title
-    template
     @close="emit('close')"
   >
     <!-- <UInput
