@@ -19,7 +19,15 @@ export const useProcedimento = (id?: number) => {
   const getGrupo = async (id: number) => {
     return getFieldItem(await useBaseStore('/gerencial/procedimento_grupo').get(id, 'cd_grupo,ds_grupo'))
   }
+  const getItemList = async () => {
+    return getFieldList(await useBaseStore('/gerencial/procedimento').getList())
+  }
+  const getItem = async (id: number) => {
+    return getFieldItem(await useBaseStore('/gerencial/procedimento').get(id, 'cd_procedimento,ds_procedimento'))
+  }
   return {
+    getItemList,
+    getItem,
     getModelo,
     getModelos,
     getGrupos,

@@ -25,7 +25,15 @@ export const useEmpresa = (id?: number) => {
   async function getSlaTitle() {
     return (await useEmpresaSla.getTitle()).ds_empresa
   }
+  const getItemList = async () => {
+    return getFieldList(await useBaseStore('/gerencial/empresa').getList())
+  }
+  const getItem = async (id: number) => {
+    return getFieldItem(await useBaseStore('/gerencial/empresa').get(id, 'cd_empresa,ds_empresa'))
+  }
   return {
+    getItemList,
+    getItem,
     useEmpresaSla,
     getEmpresaSla,
     getSla,

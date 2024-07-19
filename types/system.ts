@@ -207,7 +207,7 @@ export const Icones: Record<string, string> = {
   empresa: 'i-healthicons-hospital', // i-mdi-building',
   sala: 'i-mdi-home-city',
   usuario: 'i-mdi-account-key',
-  funcionario: 'i-mdi-badge-account-horizontal-outline',
+  funcionario: 'i-mdi-account',
   medico: 'i-mdi-doctor',
   modalidade: 'i-mdi-desktop-mac',
   procedimento: 'i-mdi-monitor-account',
@@ -218,7 +218,6 @@ export const Icones: Record<string, string> = {
   sistema: 'i-mdi-application',
   gestao: 'i-mdi-monitor-dashboard',
   prescricao: 'i-heroicons-beaker',
-  // auditoria: 'i-mdi-account-card',
   paciente: 'i-mdi-account',
   rota: 'i-mdi-truck-delivery',
   anexo: 'i-mdi-paperclip',
@@ -228,7 +227,7 @@ export const Icones: Record<string, string> = {
   revisor: 'i-healthicons-doctor-male',
   auditor: 'i-healthicons-doctor-female',
   urgencia: 'i-healthicons-ambulance',
-  atendimento: 'i-mdi-account',
+  atendimento: 'i-mdi-account-group',
   exame: 'i-mdi-account-file',
   laudo: 'i-mdi-file-document-edit',
   pendencia: 'i-mdi-alert',
@@ -253,7 +252,10 @@ export const Icones: Record<string, string> = {
   transfer: 'i-mdi-transfer',
   sla: 'i-mdi-timer-sand',
   password: 'i-mdi-lock',
-  acesso: 'i-mdi-gate'
+  acesso: 'i-mdi-gate',
+  fila: 'i-mdi-archive-cog',
+  convenio: 'i-mdi-shield-account',
+  plano: 'i-mdi-credit-card-outline'
 }
 
 export const mainMenu = [
@@ -268,7 +270,6 @@ export const mainMenu = [
       { label: 'Modalidade', to: '/gerencial/modalidade', icon: Icones.modalidade },
       { label: 'Procedimento', to: '/gerencial/procedimento', icon: Icones.procedimento },
       { label: 'Laudo', to: '/gerencial/modelo', icon: Icones.modelo },
-      // { label: 'Calendário', to: '/gerencial/calendario', icon: Icones.calendario },
       { label: 'Agenda', to: '/gerencial/horario', icon: Icones.horario },
       { label: 'Impressora', to: '/gerencial/layout', icon: Icones.layout },
       { label: 'Sistema', to: '/gerencial/formulario', icon: Icones.sistema }
@@ -283,9 +284,10 @@ export const mainMenu = [
   {
     label: 'Laudo',
     children: [
-      { label: 'Gestão', to: '/laudo/gestao', icon: 'i-mdi-monitor-dashboard' },
-      { label: 'Prescrição', to: '/laudo/prescricao', icon: 'i-heroicons-beaker' },
-      { label: 'Auditoria', to: '/laudo/auditoria', icon: 'i-mdi-account-card' }
+      { label: 'Gestão', to: '/laudo/gestao', icon: Icones.gestao },
+      { label: 'Prescrição', to: '/laudo/prescricao', icon: Icones.prescricao },
+      { label: 'Auditoria', to: '/laudo/auditoria', icon: Icones.auditoria },
+      { label: 'Fila de Trabalho', to: '/laudo/fila', icon: Icones.fila }
     ]
   },
   // {

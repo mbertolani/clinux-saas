@@ -25,10 +25,15 @@ export const useMedico = (id?: number) => {
   async function getSalas() {
     return getFieldList(await useSala().getAll(), 'cd_sala', 'ds_sala')
   }
-  // async function getModalidade() {
-  //   return getFieldList(await useModalidade().getAll())
-  // }
+  const getItemList = async () => {
+    return getFieldList(await useBaseStore('/gerencial/medico').getList())
+  }
+  const getItem = async (id: number) => {
+    return getFieldItem(await useBaseStore('/gerencial/medico').get(id, 'cd_medico,ds_medico'))
+  }
   return {
+    getItemList,
+    getItem,
     getMedicoSala,
     getSalas,
     getProcedimento,
