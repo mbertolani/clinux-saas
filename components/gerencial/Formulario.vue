@@ -3,7 +3,8 @@ import type { FormKitSchemaDefinition } from '@formkit/core'
 import { useFormulario } from '~/composables/gerencial/useFormulario'
 
 const emit = defineEmits(['submit', 'close'])
-
+const moduloOptions = await useFormulario().findModulo()
+const masterOptions = await useFormulario().findMaster()
 defineProps({
   id: {
     type: Number,
@@ -22,10 +23,32 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'text',
     name: 'ds_form',
-    label: 'Descrição',
+    label: 'Classe',
     outerClass: formClass(12)
+  },
+  {
+    $formkit: 'text',
+    name: 'ds_caption',
+    label: 'Descrição',
+    inputClass: '!normal-case',
+    outerClass: formClass(12)
+  },
+  {
+    $formkit: 'dropdown',
+    name: 'cd_modulo',
+    label: 'Módulo',
+    options: moduloOptions,
+    outerClass: formClass(6)
+  },
+  {
+    $formkit: 'dropdown',
+    name: 'cd_pai',
+    label: 'Janela',
+    options: masterOptions,
+    outerClass: formClass(6)
   }
 ]
+const data = ref({})
 const onSubmit = async (...args) => {
   emit('submit', ...args)
 }
@@ -39,6 +62,7 @@ const onSubmit = async (...args) => {
     <BaseFormLayout
       :id
       :schema
+      :data
       :controller="useFormulario()"
       @submit="onSubmit"
     />

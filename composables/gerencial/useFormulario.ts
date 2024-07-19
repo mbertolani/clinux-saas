@@ -23,8 +23,37 @@ export const useFormulario = () => {
     const response = await useBaseStore('/gerencial/formulario').exec('operacao', { cd_form, cd_grupo, cd_operacao })
     return response.map(item => item.cd_form)
   }
+  const convertModuloForm = (origem) => {
+    const grupos = origem.reduce((acc, item) => {
+      if (!acc[item.ds_modulo]) {
+        acc[item.ds_modulo] = []
+      }
+      acc[item.ds_modulo].push(item)
+      return acc
+    }, {})
+
+    return Object.keys(grupos).map(group => ({
+      group,
+      options: grupos[group].map(item => ({
+        label: item.ds_caption,
+        value: item.cd_form
+      }))
+    }))
+  }
+  const findJanela = async () => {
+    return convertModuloForm(await useFormulario().find('janela'))
+  }
+  const findModulo = async () => {
+    return getFieldListOrder(await useBaseStore('/gerencial/formulario').find('modulo'))
+  }
+  const findMaster = async () => {
+    return convertModuloForm(await useBaseStore('/gerencial/formulario').find('master'))
+  }
   return {
     findOperacao,
+    findModulo,
+    findMaster,
+    findJanela,
     getCadastro,
     setCadastro,
     getOperacao,

@@ -4,24 +4,7 @@ import { useUsuarioGrupo } from '~/composables/gerencial/useUsuarioGrupo'
 
 const emit = defineEmits(['close'])
 
-function formGroupList(origem) {
-  const grupos = origem.reduce((acc, item) => {
-    if (!acc[item.ds_modulo]) {
-      acc[item.ds_modulo] = []
-    }
-    acc[item.ds_modulo].push(item)
-    return acc
-  }, {})
-
-  return Object.keys(grupos).map(group => ({
-    group,
-    options: grupos[group].map(item => ({
-      label: item.ds_caption,
-      value: item.cd_form
-    }))
-  }))
-}
-const janelas = formGroupList(await useFormulario().find('janela'))
+const janelas = await useFormulario().findJanela() // formGroupList(await useFormulario().find('janela'))
 const grupos = await useUsuarioGrupo().getItemList()
 const operacao = ref([])
 const cadastro = ref([])
