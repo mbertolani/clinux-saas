@@ -26,17 +26,17 @@ const schema: FormKitSchemaDefinition = [
     name: 'ds_fila',
     label: 'Descrição',
     validation: 'required',
-    outerClass: formClass(12)
-  },
-  {
-    $formkit: 'dropdown',
-    name: 'cd_medico',
-    id: 'cd_medico',
-    bind: '$cd_medico',
-    label: 'Médico',
-    selectionRemovable: true,
     outerClass: formClass(10)
   },
+  // {
+  //   $formkit: 'dropdown',
+  //   name: 'cd_medico',
+  //   id: 'cd_medico',
+  //   bind: '$cd_medico',
+  //   label: 'Médico',
+  //   selectionRemovable: true,
+  //   outerClass: formClass(10)
+  // },
   {
     $formkit: 'time',
     name: 'dt_validade',
@@ -90,19 +90,13 @@ const schema: FormKitSchemaDefinition = [
     $formkit: 'toggle',
     name: 'sn_filtro',
     label: 'Usar Filtro ?',
-    outerClass: formClass(2)
-  },
-  {
-    $formkit: 'toggle',
-    name: 'sn_geral',
-    label: 'Geral ?',
-    outerClass: formClass(10)
+    outerClass: formClass(12)
   }
   // {
   //   $formkit: 'toggle',
-  //   name: 'sn_laudado',
-  //   label: 'Áudio ?',
-  //   outerClass: formClass(2)
+  //   name: 'sn_geral',
+  //   label: 'Geral ?',
+  //   outerClass: formClass(10)
   // }
 ]
 

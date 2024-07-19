@@ -255,7 +255,11 @@ export const Icones: Record<string, string> = {
   acesso: 'i-mdi-gate',
   fila: 'i-mdi-archive-cog',
   convenio: 'i-mdi-shield-account',
-  plano: 'i-mdi-credit-card-outline'
+  plano: 'i-mdi-credit-card-outline',
+  material: 'i-mdi-package-variant',
+  material_grupo: 'i-mdi-package-variant-closed',
+  unidade: 'i-mdi-ruler',
+  estoque: 'i-mdi-store'
 }
 
 export const mainMenu = [
@@ -290,15 +294,15 @@ export const mainMenu = [
       { label: 'Fila de Trabalho', to: '/laudo/fila', icon: Icones.fila }
     ]
   },
-  // {
-  //   label: 'Estoque'
-  //   // children: [
-  //   //   { label: 'Estoque', to: '/login', disabled: true },
-  //   //   { label: 'Material', to: '/login', disabled: true },
-  //   //   { label: 'Unidade', to: '/login', disabled: true },
-  //   //   { label: 'Compras', to: '/login', disabled: true }
-  //   // ]
-  // },
+  {
+    label: 'Estoque',
+    children: [
+      { label: 'Estoque', to: '/login', icon: Icones.estoque },
+      { label: 'Grupos', to: '/login', icon: Icones.material_grupo },
+      { label: 'Material', to: '/login', icon: Icones.material },
+      { label: 'Unidade', to: '/login', icon: Icones.unidade }
+    ]
+  },
   // {
   //   label: 'Faturamento'
   //   // children: [

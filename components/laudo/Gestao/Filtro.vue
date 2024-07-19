@@ -73,7 +73,7 @@ const data = reactive({
     options: async () => getFieldList(await find('fluxo'))
   },
   cd_fila: {
-    options: async () => getFieldList(await find('fila'))
+    options: async () => getFieldList(await find('trabalho'))
   },
   nr_edicao: {
     options: async () => getFieldList(await find('edicao'))

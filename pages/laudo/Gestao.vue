@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
+import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoEditorLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoEditorVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
@@ -975,12 +975,12 @@ const selectionChanged = params => avisoVip.value = params.ds_vip
         :data="idGrid"
       />
     </div>
-    <LaudoLeo
+    <LaudoEditorLeo
       v-if="openLeo"
       :token="useAuthStore().user.idleo"
       @laudo-capturado="capturarLeo"
     />
-    <LaudoVariavel
+    <LaudoEditorVariavel
       v-model="showFormula"
       :schema="schemaFormula"
       @submit="salvarFormula"
@@ -1000,7 +1000,7 @@ const selectionChanged = params => avisoVip.value = params.ds_vip
       @open-form="openForm"
     >
       <template #filter>
-        <LaudoFiltro
+        <LaudoGestaoFiltro
           ref="apiFilter"
           v-model="modelFilter"
           @submit="filtrar"
