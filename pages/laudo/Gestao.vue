@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoPainelData, LaudoPainelChat, LaudoPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
+import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
@@ -954,22 +954,22 @@ const selectionChanged = params => avisoVip.value = params.ds_vip
         @load="loadEditor($event)"
         @texto="selecionarAutotexto"
       />
-      <LaudoPainelData
+      <LaudoEditorPainelData
         v-if="idEditor"
         :id="Number(idEditor)"
         class="md:col-span-3 px-2 pb-2"
       />
-      <LaudoPainelChat
+      <LaudoEditorPainelChat
         v-if="idEditor"
         class="md:col-span-3 px-2 pb-2"
         :data="idGrid"
       />
-      <LaudoPainelAnexo
+      <LaudoEditorPainelAnexo
         v-if="idEditor"
         class="md:col-span-3 px-2 pb-2"
         :data="idGrid"
       />
-      <LaudoPainelHistorico
+      <LaudoEditorPainelHistorico
         v-if="idEditor"
         class="md:col-span-3 px-2"
         :data="idGrid"

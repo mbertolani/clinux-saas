@@ -90,7 +90,13 @@ const schema: FormKitSchemaDefinition = [
     $formkit: 'toggle',
     name: 'sn_filtro',
     label: 'Usar Filtro ?',
-    outerClass: formClass(12)
+    outerClass: formClass(2)
+  },
+  {
+    $formkit: 'toggle',
+    name: 'sn_geral',
+    label: 'Geral ?',
+    outerClass: formClass(10)
   }
   // {
   //   $formkit: 'toggle',

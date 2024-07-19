@@ -17,13 +17,20 @@ const controller = useFila()
 const showModal = ref(false)
 const id = ref(0)
 const modal = useModal()
+const showMedico = ref(false)
 const actionMenu = [
+  {
+    name: 'acMedico',
+    title: 'Associar Médico',
+    icon: Icones.medico,
+    action: () => associarMedico(apiPage.value.selectedId())
+  },
   {
     name: 'acEmpresa',
     title: 'Associar Empresa',
     icon: Icones.empresa,
     action: () => {
-      associarEmpresa(apiPage.value.selectedNode()?.id)
+      associarEmpresa(apiPage.value.selectedId())
     }
   },
   {
@@ -31,7 +38,7 @@ const actionMenu = [
     title: 'Associar Sala',
     icon: Icones.sala,
     action: () => {
-      associarSala(apiPage.value.selectedNode()?.id)
+      associarSala(apiPage.value.selectedId())
     }
   },
   {
@@ -39,7 +46,7 @@ const actionMenu = [
     title: 'Associar Modalidade',
     icon: Icones.modalidade,
     action: () => {
-      associarModalidade(apiPage.value.selectedNode()?.id)
+      associarModalidade(apiPage.value.selectedId())
     }
   },
   {
@@ -47,7 +54,7 @@ const actionMenu = [
     title: 'Associar Grupo',
     icon: Icones.grupo,
     action: () => {
-      associarGrupo(apiPage.value.selectedNode()?.id)
+      associarGrupo(apiPage.value.selectedId())
     }
   },
   {
@@ -55,7 +62,7 @@ const actionMenu = [
     title: 'Associar Procedimento',
     icon: Icones.procedimento,
     action: () => {
-      associarProcedimento(apiPage.value.selectedNode()?.id)
+      associarProcedimento(apiPage.value.selectedId())
     }
   },
   {
@@ -63,7 +70,7 @@ const actionMenu = [
     title: 'Associar Convênio',
     icon: Icones.convenio,
     action: () => {
-      associarConvenio(apiPage.value.selectedNode()?.id)
+      associarConvenio(apiPage.value.selectedId())
     }
   },
   {
@@ -71,7 +78,7 @@ const actionMenu = [
     title: 'Associar Plano',
     icon: Icones.plano,
     action: () => {
-      associarPlano(apiPage.value.selectedNode()?.id)
+      associarPlano(apiPage.value.selectedId())
     }
   }
 ]
@@ -85,6 +92,10 @@ const onSubmit = (data: any) => {
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
 
+const associarMedico = (fila: number) => {
+  showMedico.value = true
+  id.value = fila
+}
 const associarEmpresa = async (codigo?: number) => {
   const [options, master, value] = await Promise.all([
     useEmpresa().getItemList(),
@@ -233,21 +244,29 @@ const associarPlano = async (codigo?: number) => {
 </script>
 
 <template>
-  <BasePage
-    ref="apiPage"
-    :header="{ title, icon: Icones.fila }"
-    :controller
-    :action-menu
-    @open-form="openForm"
-  >
-    <template #form>
-      <LaudoFila
-        :id
-        v-model="showModal"
-        :title
-        @submit="onSubmit"
-        @close="showModal = false"
-      />
-    </template>
-  </BasePage>
+  <div>
+    <BasePage
+      ref="apiPage"
+      :header="{ title, icon: Icones.fila }"
+      :controller
+      :action-menu
+      @open-form="openForm"
+    >
+      <template #form>
+        <LaudoFila
+          :id
+          v-model="showModal"
+          :title
+          @submit="onSubmit"
+          @close="showModal = false"
+        />
+      </template>
+    </BasePage>
+    <LaudoFilaMedico
+      v-if="showMedico"
+      :id
+      v-model="showMedico"
+      @close="showMedico=false"
+    />
+  </div>
 </template>

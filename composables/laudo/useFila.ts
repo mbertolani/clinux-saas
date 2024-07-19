@@ -6,7 +6,7 @@ export const useFila = () => {
     return getFieldListOrder(await useBaseStore('/laudo/fila').find('status'))
   }
   const getData = async () => {
-    return getFieldListOrder(await useBaseStore('/laudo/fila').find('data'))
+    return (await useBaseStore('/laudo/fila').find('data')).map(item => item.ds_tipo)
   }
   const getFluxo = async () => {
     return getFieldListOrder(await useBaseStore('/laudo/fila').find('fluxo'))
@@ -17,6 +17,9 @@ export const useFila = () => {
   const getName = async (id: number) => {
     return (await useFila().get(id, 'ds_fila')).ds_fila
   }
+  const getSemana = async () => {
+    return getFieldListOrder(await useBaseStore('/laudo/fila/').find('semana'))
+  }
   const getAssociacao = async (cd_fila: number, field: string) => {
     const response = Object.values(await useBaseStore('/laudo/fila').get(cd_fila, field))[0] as any
     return response ? response.split(',').map((item: string) => parseInt(item)) : []
@@ -26,6 +29,7 @@ export const useFila = () => {
   }
   return {
     getName,
+    getSemana,
     setAssociacao,
     getAssociacao,
     getHorario,
