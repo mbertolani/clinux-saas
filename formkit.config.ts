@@ -14,7 +14,9 @@ import { createProPlugin, autocomplete,
   transferlist,
   currency } from '@formkit/pro'
 import { pt } from '@formkit/i18n'
+import { createMultiStepPlugin } from '@formkit/addons'
 import { rootClasses } from './formkit.theme'
+import '@formkit/addons/css/multistep'
 
 const proPlugin = createProPlugin('fk-5bd805bc8f', {
   autocomplete,
@@ -79,7 +81,7 @@ function scrollToErrors(node) {
 }
 
 export default defineFormKitConfig(() => ({
-  plugins: [proPlugin, scrollToErrors, defaultToEmptyString],
+  plugins: [proPlugin, scrollToErrors, defaultToEmptyString, createMultiStepPlugin()],
   icons: { ...genesisIcons },
   locales: { pt },
   locale: 'pt',

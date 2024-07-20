@@ -256,8 +256,8 @@ export const Icones: Record<string, string> = {
   fila: 'i-mdi-archive-cog',
   convenio: 'i-mdi-shield-account',
   plano: 'i-mdi-credit-card-outline',
-  material: 'i-mdi-package-variant',
-  material_grupo: 'i-mdi-package-variant-closed',
+  material: 'i-mdi-medication',
+  material_grupo: 'i-mdi-package-variant',
   unidade: 'i-mdi-ruler',
   estoque: 'i-mdi-store'
 }
@@ -298,20 +298,18 @@ export const mainMenu = [
     label: 'Estoque',
     children: [
       // { label: 'Estoque', to: '/estoque/estoque', icon: Icones.estoque },
-      { label: 'Grupo de Material', to: '/estoque/materialgrupo', icon: Icones.material_grupo },
+      { label: 'Grupo', to: '/estoque/materialgrupo', icon: Icones.material_grupo },
       { label: 'Material', to: '/estoque/material', icon: Icones.material },
       { label: 'Unidade', to: '/estoque/unidade', icon: Icones.unidade }
     ]
   },
-  // {
-  //   label: 'Faturamento'
-  //   // children: [
-  //   //   { label: 'Faturamento', to: '/login' },
-  //   //   { label: 'Plano', to: '/login' },
-  //   //   { label: 'Guia', to: '/login' },
-  //   //   { label: 'Tabela', to: '/login' }
-  //   // ]
-  // },
+  {
+    label: 'Faturamento',
+    children: [
+      { label: 'Convênio', to: '/faturamento/convenio', icon: Icones.convenio },
+      { label: 'Plano', to: '/faturamento/plano', icon: Icones.plano }
+    ]
+  },
   // {
   //   label: 'Financeiro'
   //   // children: [

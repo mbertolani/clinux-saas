@@ -43,7 +43,7 @@ export function formClass(cols: number) {
 export function getFieldName(schema) {
   return schema.reduce((acc, item) => {
     if (item.name) {
-      if (item.$formkit !== 'group')
+      if (!('group,step,multi-step').includes(item.$formkit))
         acc.push(item.name)
     }
     if (item.children) {
