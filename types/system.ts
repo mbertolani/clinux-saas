@@ -252,7 +252,7 @@ export const Icones: Record<string, string> = {
   transfer: 'i-mdi-transfer',
   sla: 'i-mdi-timer-sand',
   password: 'i-mdi-lock',
-  acesso: 'i-mdi-gate',
+  acesso: 'i-mdi-boom-gate',
   fila: 'i-mdi-archive-cog',
   convenio: 'i-mdi-shield-account',
   plano: 'i-mdi-credit-card-outline',
@@ -297,10 +297,10 @@ export const mainMenu = [
   {
     label: 'Estoque',
     children: [
-      { label: 'Estoque', to: '/login', icon: Icones.estoque },
-      { label: 'Grupos', to: '/login', icon: Icones.material_grupo },
-      { label: 'Material', to: '/login', icon: Icones.material },
-      { label: 'Unidade', to: '/login', icon: Icones.unidade }
+      // { label: 'Estoque', to: '/estoque/estoque', icon: Icones.estoque },
+      { label: 'Grupo de Material', to: '/estoque/materialgrupo', icon: Icones.material_grupo },
+      { label: 'Material', to: '/estoque/material', icon: Icones.material },
+      { label: 'Unidade', to: '/estoque/unidade', icon: Icones.unidade }
     ]
   },
   // {
