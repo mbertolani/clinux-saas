@@ -52,7 +52,48 @@ export function getFieldName(schema) {
     return acc
   }, [])
 }
-
+export function loadSchemaGroup(schema) {
+  const resultado = {}
+  schema.forEach((root) => {
+    if (root.$formkit === 'multi-step') {
+      resultado[root.name] = {}
+      root.children.forEach((step) => {
+        if (step.$formkit === 'step') {
+          const stepName = step.name
+          resultado[root.name][stepName] = resultado[root.name][stepName] || {}
+          step.children.forEach((child) => {
+            resultado[root.name][stepName][child.name] = null
+          })
+        }
+      })
+    }
+  })
+  return resultado
+}
+export function setSchemaGroup(origem, destino) {
+  const firstKey = Object.keys(destino)[0]
+  Object.keys(destino[firstKey]).forEach((section) => {
+    Object.keys(destino[firstKey][section]).forEach((key) => {
+      destino[firstKey][section][key] = origem[key]
+    })
+  })
+  return destino
+}
+export function getSchemaGroup(obj) {
+  const leafNodes = {}
+  function findLeafNodes(node, path = '') {
+    if (typeof node === 'object' && node !== null) {
+      Object.entries(node).forEach(([key, value]) => {
+        const newPath = key
+        findLeafNodes(value, newPath)
+      })
+    } else {
+      leafNodes[path] = node
+    }
+  }
+  findLeafNodes(obj)
+  return leafNodes
+}
 export function getFieldItem(item: object, value?: string, label?: string) {
   return item
     ? {

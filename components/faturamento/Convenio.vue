@@ -74,19 +74,18 @@ const schema = [
     tabStyle: 'tab',
     name: 'convenio',
     outerClass: formClass(12),
+    wrapperClass: '!max-w-full',
     children: [
       {
         $formkit: 'step',
         name: 'cadastro',
         label: 'Cadastro',
-        // outerClass: formClass(12),
         children: schema1
       },
       {
         $formkit: 'step',
         name: 'endereco',
         label: 'Endereço',
-        // outerClass: formClass(12),
         children: [
           {
             $formkit: 'text',
@@ -123,36 +122,13 @@ const schema = [
     ]
   }
 ]
-// console.log(getFieldObjects(schema))
-// const data1 = { cd_fornecedor: 498, ds_fornecedor: 'CDT DIAGNOSTICOS', ds_razao: null, ds_cnpj: null, ds_operadora: null, sn_ativo: true, ds_logradouro: 'RUA 1', ds_numero: '1', ds_complemento: null, ds_bairro: 'CENTRO', ds_cep: '12345-678', ds_cidade: 'CIDADE', ds_uf: 'UF', ds_pais: 'BRASIL' }
+// const data1 = { cd_fornecedor: 498, ds_fornecedor: 'CDT DIAGNOSTICOS', ds_razao: null, ds_cnpj: null, ds_operadora: null, sn_ativo: true, ds_logradouro: 'RUA 1', ds_numero: '1', ds_complemento: null, ds_bairro: 'CENTRO', ds_cep: '12345-678', ds_cidade: 'CIDADE', ds_estado: 'UF', ds_pais: 'BRASIL' }
 // const data2 = {
 //   convenio: {
 //     cadastro: { cd_fornecedor: null, ds_fornecedor: null, ds_razao: null, ds_cnpj: null, ds_operadora: null, sn_ativo: null },
 //     endereco: { ds_logradouro: null, ds_bairro: null, ds_cidade: null, ds_estado: null, ds_cep: null }
 //   }
 // }
-function gerarData2(schema) {
-  const resultado = {}
-
-  schema.forEach((root) => {
-    if (root.$formkit === 'multi-step') {
-      resultado[root.name] = {}
-      root.children.forEach((step) => {
-        if (step.$formkit === 'step') {
-          const stepName = step.name
-          resultado[root.name][stepName] = resultado[root.name][stepName] || {}
-          step.children.forEach((child) => {
-            resultado[root.name][stepName][child.name] = null
-          })
-        }
-      })
-    }
-  })
-
-  return resultado
-}
-
-console.log(gerarData2(schema))
 const onSubmit = async (...args) => {
   emit('submit', ...args)
 }
@@ -167,6 +143,7 @@ const onSubmit = async (...args) => {
       :id
       :schema
       :controller="useConvenio()"
+      :group="loadSchemaGroup(schema)"
       @submit="onSubmit"
     />
   </BaseForm>

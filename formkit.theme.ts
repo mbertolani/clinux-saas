@@ -3136,7 +3136,7 @@ const classes: Record<string, Record<string, boolean>> = {
     'data-[disabled]:opacity-50': true,
     'text-base': true,
     'group/multistep': true,
-    'max-w-[32rem]': true
+    'max-w-[32rem]': false
   },
   'multi-step__wrapper': {
     'group/wrapper': true,
