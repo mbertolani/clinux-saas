@@ -6,17 +6,21 @@ export const useGrid = () => {
   // const DbGridColumns = ref<DbGridColumn[]>([])
   const AgGridColumns = ref([])
 
-  const currencyFormatter = p =>
-    parseFloat(p.value).toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    })
+  // const fieldCurrency = {
+  //   filter: 'agNumberColumnFilter',
+  //   type: 'numericColumn',
+  //   aggFunc: 'sum',
+  //   valueFormatter: p => parseFloat(p.value).toLocaleString('pt-BR', {
+  //     style: 'currency',
+  //     currency: 'BRL'
+  //   })
+  // }
 
-  const fieldCurrency = {
+  const fieldReal = {
     filter: 'agNumberColumnFilter',
     type: 'numericColumn',
     aggFunc: 'sum',
-    valueFormatter: currencyFormatter
+    valueFormatter: p => parseFloat(p.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
   }
 
   const fieldNumber = {
@@ -115,20 +119,15 @@ export const useGrid = () => {
     switch (item.dataType) {
       case 'ftString':
         return 'agTextColumnFilter'
-        break
       case 'ftInteger':
       case 'ftFloat':
         return 'agNumberColumnFilter'
-        break
       case 'ftDate':
         return 'agDateColumnFilter'
-        break
       case 'ftDateTime':
         return 'agDateColumnFilter'
-        break
       case 'ftBoolean':
         return 'agSetColumnFilter'
-        break
       default:
         return 'agTextColumnFilter'
     }
@@ -191,7 +190,7 @@ export const useGrid = () => {
       ...(item.fieldName.includes('ds_cpf') ? fieldCpf : {}),
       ...(item.fieldName.includes('ds_celular') ? fieldCel : {}),
       ...(item.fieldName.includes('ds_telefone') ? fieldFone : {}),
-      ...(item.dataType === 'ftFloat' ? fieldCurrency : {}),
+      ...(item.dataType === 'ftFloat' ? fieldReal : {}),
       ...(item.dataType === 'ftInteger' ? fieldNumber : {}),
       ...(item.dataType === 'ftDateTime' ? fieldDateTime : {}),
       ...(item.dataType === 'ftDate' ? fieldDate : {}),

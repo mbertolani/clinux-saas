@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { GerencialModalidade, GerencialModalidadeGrupo } from '#components'
+import { GerencialModalidade, GerencialModalidadeGrupo, GerencialModalidadeMedico } from '#components'
 import { useModalidade } from '~/composables/gerencial/useModalidade'
 import { Icones } from '~/types/system'
 import type { ActionMenuItem } from '~/types/grid'
@@ -30,6 +30,19 @@ const actionMenu: ActionMenuItem[] = [
       modal.open(GerencialModalidadeGrupo, {
         title: 'Grupos de Procedimento',
         pid: apiPage.value.selectedId(),
+        onClose() {
+          modal.close()
+        }
+      })
+    }
+  },
+  {
+    name: 'acMedico',
+    title: 'Auditoria',
+    icon: Icones.medico,
+    action: () => {
+      modal.open(GerencialModalidadeMedico, {
+        id: apiPage.value.selectedId(),
         onClose() {
           modal.close()
         }

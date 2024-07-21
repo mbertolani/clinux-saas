@@ -27,7 +27,7 @@ const props = defineProps({
     required: false
   }
 })
-const value = ref(null)
+const model = ref(null)
 const [rowData, columnDefs, parentID] = await Promise.all([
   props.controller.getAll(),
   props.controller.getGrid(),
@@ -41,7 +41,8 @@ const gridOptions = {
 }
 
 const onRowDoubleClicked = async (params) => {
-  value.value = params.data
+  // value.value = params.data
+  reset('form-kit', params.data)
 }
 
 const onSubmit = async (_data: any) => {
@@ -108,7 +109,7 @@ const getRowId = ({ data }) => Object.values(data)[0]
     <FormKit
       id="form-kit"
       v-slot="{ state: { dirty } }"
-      v-model="value"
+      :value="model"
       dirty-behavior="compare"
       type="form"
       :actions="false"

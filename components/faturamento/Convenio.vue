@@ -112,9 +112,11 @@ const schema = [
             outerClass: formClass(3)
           },
           {
-            $formkit: 'text',
+            $formkit: 'mask',
             name: 'ds_cep',
             label: 'CEP',
+            mask: '#####-###',
+            unmaskValue: true,
             outerClass: formClass(3)
           }
         ]
