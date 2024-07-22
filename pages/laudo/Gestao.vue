@@ -706,6 +706,7 @@ const editarPendencia = async (id: number) => {
       async onSubmit(data) {
         apiPage.value.applyTransaction({ update: data })
         modal.close()
+        closeEditor()
       },
       onClose() {
         modal.close()

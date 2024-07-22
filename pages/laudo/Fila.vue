@@ -3,6 +3,7 @@ import { LaudoFila, ModalCheckbox } from '#components'
 import { useFila } from '~/composables/laudo/useFila'
 import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 import { useSala } from '~/composables/gerencial/useSala'
+import { useMedico } from '~/composables/gerencial/useMedico'
 import { useModalidade } from '~/composables/gerencial/useModalidade'
 import { useProcedimentoGrupo } from '~/composables/gerencial/useProcedimentoGrupo'
 import { useProcedimento } from '~/composables/gerencial/useProcedimento'
@@ -39,6 +40,14 @@ const actionMenu = [
     icon: Icones.sala,
     action: () => {
       associarSala(apiPage.value.selectedId())
+    }
+  },
+  {
+    name: 'acExecutante',
+    title: 'Associar Executante',
+    icon: Icones.executante,
+    action: () => {
+      associarExecutante(apiPage.value.selectedId())
     }
   },
   {
@@ -136,7 +145,26 @@ const associarSala = async (codigo?: number) => {
     }
   })
 }
-
+const associarExecutante = async (codigo?: number) => {
+  const [options, master, value] = await Promise.all([
+    useMedico().getItemList(),
+    useFila().getName(codigo),
+    useFila().getAssociacao(codigo, 'ds_executante')
+  ])
+  modal.open(ModalCheckbox, {
+    title: 'Associar Executante',
+    options,
+    master,
+    value,
+    async onSubmit(data) {
+      await useFila().setAssociacao(codigo, 'ds_executante', data.field.join(','))
+      modal.close()
+    },
+    onClose() {
+      modal.close()
+    }
+  })
+}
 const associarModalidade = async (codigo?: number) => {
   const [options, master, value] = await Promise.all([
     useModalidade().getItemList(),
