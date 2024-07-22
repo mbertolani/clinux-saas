@@ -51,6 +51,12 @@ const actionMenu = [
     action: () => showCadastroProcedencia.value = true
   },
   {
+    name: 'acComplemento',
+    title: 'Complementos',
+    icon: Icones.complemento,
+    action: () => showCadastroComplemento.value = true
+  },
+  {
     name: 'acSla',
     title: 'Slas',
     icon: Icones.sla,
@@ -87,6 +93,7 @@ const actionMenu = [
 ]
 const showCadastroSla = ref(false)
 const showCadastroProcedencia = ref(false)
+const showCadastroComplemento = ref(false)
 const showProcedencia = ref(false)
 const showProcedimento = ref(false)
 const showSla = ref(false)
@@ -156,7 +163,10 @@ const associarMedico = () => {
       :filter
       @open-form="openForm"
     >
-      <template #filter>
+      <template
+        v-if="false"
+        #filter
+      >
         <GerencialEmpresaFiltro
           v-model="filter"
           @submit="filtrar"
@@ -200,6 +210,11 @@ const associarMedico = () => {
       v-if="showCadastroProcedencia"
       v-model="showCadastroProcedencia"
       @close="showCadastroProcedencia=false"
+    />
+    <SetupComplemento
+      v-if="showCadastroComplemento"
+      v-model="showCadastroComplemento"
+      @close="showCadastroComplemento=false"
     />
     <SetupSla
       v-if="showCadastroSla"

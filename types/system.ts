@@ -259,7 +259,8 @@ export const Icones: Record<string, string> = {
   material: 'i-mdi-medication',
   material_grupo: 'i-mdi-package-variant',
   unidade: 'i-mdi-ruler',
-  estoque: 'i-mdi-store'
+  estoque: 'i-mdi-store',
+  complemento: 'i-mdi-alert'
 }
 
 export const mainMenu = [
