@@ -936,7 +936,7 @@ const classificarLaudo = async () => {
   return true
 }
 const avisoVip = ref()
-const selectionChanged = params => avisoVip.value = params.ds_vip
+const selectionChanged = params => avisoVip.value = params?.ds_vip
 </script>
 
 <template>

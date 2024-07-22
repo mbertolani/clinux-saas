@@ -42,13 +42,14 @@ const props = defineProps({
   }
 })
 
-const selectedData = () => {
-  return selectedNode()?.data
+const selectedData = (aShowMessage = true) => {
+  return selectedNode(aShowMessage)?.data
 }
-const selectedNode = () => {
+const selectedNode = (aShowMessage = true) => {
   const node = apiGrid.value.getSelectedNodes()[0]
   if (!node) {
-    useMessage().showError()
+    if (aShowMessage)
+      useMessage().showError(Messages.MSG_FNF_GRID)
     return null
   }
   return node
@@ -180,7 +181,7 @@ const buttonLog = async () => {
   })
 }
 const onRowDoubleClicked = async params => actionEdit(params.node.id)
-const onSelectionChanged = () => emit('selectionChanged', selectedData())
+const onSelectionChanged = () => emit('selectionChanged', selectedData(false))
 
 const onCellKeyDown = ({ event, api }) => {
   switch (event.key) {

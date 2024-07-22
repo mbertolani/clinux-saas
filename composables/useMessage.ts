@@ -28,7 +28,7 @@ export const useMessage = () => {
     useToast().add({
       title: title || 'Erro',
       color: 'red',
-      description: message || Messages.MSG_FNF_GRID,
+      description: message || 'Erro não identificado',
       icon: 'i-heroicons-exclamation-triangle'
     })
   }
