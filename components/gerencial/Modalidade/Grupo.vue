@@ -33,20 +33,25 @@ const gridOptions = {
 }
 const confirmarDelete = ref(false)
 const nodeData = ref()
-
+const excluirConfirmar = (data) => {
+  if (!data) return
+  nodeData.value = data
+  confirmarDelete.value = data.cd_grupo > 0
+}
 const onCellKeyDown = ({ event, data }) => {
   switch (event.key) {
     case 'Delete':
-      nodeData.value = data
-      confirmarDelete.value = data.cd_grupo > 0
+      excluirConfirmar(data)
       break
   }
 }
 const excluir = async () => {
   const response = await controller.remove(nodeData.value.cd_grupo)
   confirmarDelete.value = false
-  if (response)
+  if (response) {
     gridRef.value?.coreApi.api.applyTransaction({ remove: [nodeData.value] })
+    cancelar()
+  }
 }
 const salvar = async () => {
   nodeData.value.ds_grupo = inputSearch.value
@@ -100,17 +105,24 @@ cancelar()
           v-show="inputSearch !== ''"
           color="gray"
           variant="link"
-          icon="i-mdi-floppy"
+          icon="i-mdi-undo"
           :padded="false"
-          @click="salvar()"
+          @click="cancelar()"
         />
         <UButton
           v-show="inputSearch !== ''"
           color="gray"
           variant="link"
+          icon="i-mdi-floppy"
+          :padded="false"
+          @click="salvar()"
+        />
+        <UButton
+          color="gray"
+          variant="link"
           icon="i-mdi-trash-can"
           :padded="false"
-          @click="cancelar()"
+          @click="excluirConfirmar(gridRef.coreApi.api.getSelectedRows()[0])"
         />
       </template>
     </UInput>

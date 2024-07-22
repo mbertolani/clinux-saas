@@ -28,11 +28,12 @@ const props = defineProps({
   }
 })
 const model = ref(null)
-const [rowData, columnDefs, parentID] = await Promise.all([
+const [rowData, columnDefs, master] = await Promise.all([
   props.controller.getAll(),
   props.controller.getGrid(),
   props.controller.getTitle()
 ])
+const titleMaster = Object.values(master)[0]
 const gridOptions = {
   suppressHorizontalScroll: true,
   autoSizeStrategy: {
@@ -92,12 +93,6 @@ const getRowId = ({ data }) => Object.values(data)[0]
     :title
     @close="emit('close')"
   >
-    <div
-      v-if="id > 0"
-      class="bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center"
-    >
-      {{ Object.values(parentID)[0] }}
-    </div>
     <!-- <BaseFormLayout
       :id="0"
       :schema
@@ -116,6 +111,16 @@ const getRowId = ({ data }) => Object.values(data)[0]
       @submit="onSubmit"
     >
       <div class="grid gap-x-2 grid-cols-1 md:grid-cols-12">
+        <div
+          v-if="id > 0"
+          :class="`bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center ${formClass($slots.buttons ? 11 : 12)}`"
+        >
+          {{ titleMaster }}
+        </div>
+        <slot
+          name="buttons"
+          :class="formClass(1)"
+        />
         <slot />
         <FormKitSchema
           :schema
