@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoEditorLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoEditorVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia } from '#components'
+import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoEditorLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoEditorVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia, LaudoEditorPainelGrid } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { useLaudoMedico } from '~/composables/laudo/useLaudoMedico'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import { Icones } from '~/types/system'
@@ -86,6 +87,13 @@ const toolBarItens = [
     id: 'anexo',
     cssClass: 'e-de-toolbar-btn'
   },
+  {
+    prefixIcon: 'e-description',
+    tooltipText: 'Dados do Atendimento',
+    text: 'Dados',
+    id: 'dados',
+    cssClass: 'e-de-toolbar-btn'
+  },
   // {
   //   prefixIcon: 'e-sort-ascending',
   //   tooltipText: 'Dicionário',
@@ -154,6 +162,9 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
     case 'anexo':
       editarAnexo(Number(selectedData()?.cd_atendimento))
       break
+    case 'dados':
+      exibirDados(selectedData())
+      break
     case 'dicionario':
       console.log('dicionario')
       break
@@ -201,7 +212,7 @@ const actionMenu = [
       if (selectedData()?.dt_assinado) {
         openImagem()
       } else {
-        useMessage().showMessage('Laudo não assinado !')
+        useMessage().showError('Laudo não assinado !')
       }
     }
   },
@@ -317,7 +328,7 @@ const schemaFormula = ref()
 const showFormula = ref(false)
 const apiPage = ref(null)
 const apiEditor = ref(null)
-const controller = useLaudo()
+const controller = useAuthStore().user.idmedico == 0 ? useLaudo() : useLaudoMedico()
 const modal = useModal()
 const openForm = () => {
   if (selectedData()?.dt_assinado) {
@@ -674,7 +685,9 @@ const cancelarLaudos = async (cd_motivo?: number) => {
   // updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
   //   return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
   // })))
-  return useLaudo().execCancelar({ cd_exame: selectedData().cd_exame, cd_motivo })
+  updateNodes(await Promise.all([
+    useLaudo().execCancelar({ cd_exame: selectedData().cd_exame, cd_motivo })
+  ]))
 }
 const cancelarLaudo = async () => {
   if (!selectedNode())
@@ -739,8 +752,16 @@ const editarAuditoria = async (id: number) => {
       }
     })
 }
+const exibirDados = async (data: object) => {
+  modal.open(LaudoEditorPainelGrid, {
+    gridData: data,
+    gridHeader: await controller.getGrid(),
+    onClose() {
+      modal.close()
+    }
+  })
+}
 const editarAnexo = async (id: number) => {
-  modal.close()
   if (id)
     modal.open(LaudoAnexo, { id })
 }

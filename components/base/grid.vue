@@ -75,7 +75,7 @@ const defaultColDef = ref({
   enableCellChangeFlash: true
 })
 
-const getRowId = ({ data }) => Object.values(data)[0]
+const getRowId = ({ data }) => String(Object.values(data)[0])
 
 const onGridReady = async ({ api }) => {
   await restoreColumnState()

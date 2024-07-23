@@ -18,6 +18,10 @@ useLaudo().doLaudoDados(props.id).then((data) => {
       value: formatDate(data.dt_data)
     },
     {
+      label: 'Entrega',
+      value: formatDate(data.dt_entrega)
+    },
+    {
       label: 'Protocolo',
       value: data.nr_controle
     },

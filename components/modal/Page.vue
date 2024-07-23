@@ -85,7 +85,7 @@ const log = async () => {
   dataLog.value = await props.controller.getLog(selectedNode.id)
   showLog.value = true
 }
-const getRowId = ({ data }) => Object.values(data)[0]
+const getRowId = ({ data }) => String(Object.values(data)[0])
 </script>
 
 <template>

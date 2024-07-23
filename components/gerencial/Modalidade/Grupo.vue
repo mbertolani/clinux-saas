@@ -17,7 +17,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['onClose'])
-const getRowId = ({ data }) => Object.values(data)[0]
+const getRowId = ({ data }) => String(Object.values(data)[0])
 const inputSearch = ref('')
 const gridRef = ref()
 const controller = useModalidadeGrupo(props.pid)
