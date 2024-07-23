@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { setMainMenu } from '~/types/system'
+
 // const { data: page } = await useAsyncData('index', () => queryContent('/').findOne())
 // if (!page.value) {
 //   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
@@ -37,6 +39,7 @@ const page = ref({
     <ULandingHero
       :title="page.hero.title"
       :description="page.hero.description"
+      :links="setMainMenu(true)"
     >
       <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
     </ULandingHero>

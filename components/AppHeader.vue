@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { mainMenu } from '~/types/system'
+import { setMainMenu } from '~/types/system'
 
 const { signOut, getSession } = useAuthStore()
 const { user, token } = storeToRefs(useAuthStore())
-const { moduleId, clientId, clientName } = storeToRefs(useRouterStore())
+const { moduleId, clientId, clientName } = useRouterStore()
 const userColor = computed(() => user.value?.idmedico > 0 ? 'primary' : 'red')
 const userName = computed(() => user.value?.name)
 const homeUrl = computed(() => `/${moduleId}/${clientId}`)
@@ -20,7 +20,7 @@ const logout = () => {
 
 <template>
   <UHeader
-    :links="moduleId === 'clinux' ? mainMenu : []"
+    :links="setMainMenu()"
   >
     <template #logo>
       {{ clientName }} <UBadge
@@ -55,7 +55,7 @@ const logout = () => {
 
     <template #panel>
       <UNavigationTree
-        :links="mainMenu"
+        :links="setMainMenu()"
         default-open
       />
     </template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LaudoPrescricao } from '#components'
+import { LaudoPrescricao, LaudoPrescricaoFiltro } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones, Messages } from '~/types/system'
@@ -63,6 +63,9 @@ const actionMenu: ActionMenuItem[] = [
     action: () => { buttonAction('reiniciar') }
   }
 ]
+const filter = ref({
+  dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value
+})
 </script>
 
 <template>
@@ -72,8 +75,15 @@ const actionMenu: ActionMenuItem[] = [
     :controller
     :action-menu
     :row-class-rules
+    :filter="filter"
     @open-form="openForm"
-  />
+  >
+    <template #filter>
+      <LaudoPrescricaoFiltro
+        v-model="filter"
+      />
+    </template>
+  </BasePage>
 </template>
 
 <style>

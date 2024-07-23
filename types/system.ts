@@ -52,7 +52,10 @@ export interface Setup {
 export enum ModuleType {
   DICOMVIX = 'dicomvix',
   CLINUX = 'clinux',
-  OTRS = 'otrs'
+  OTRS = 'otrs',
+  PORTAL = 'portal',
+  DOCTOR = 'doctor',
+  CLIENT = 'client'
 }
 export type userType = 'funcionario' | 'medico' | 'paciente' | 'solicitante'
 export interface Client {
@@ -266,13 +269,21 @@ export const Icones: Record<string, string> = {
 }
 export const portalMenu = [
   {
-    label: 'Atendimento',
+    label: 'Agendamento',
+    to: '/'
+  },
+  {
+    label: 'Resultado',
+    to: '/'
+  },
+  {
+    label: 'Cadastro',
     to: '/'
   }
 ]
 export const doctorMenu = [
   {
-    label: 'Resultados',
+    label: 'Resultado',
     to: '/'
   }
 ]
@@ -280,6 +291,16 @@ export const otrsMenu = [
   {
     label: 'Chamados',
     to: '/'
+  }
+]
+export const clientMenu = [
+  {
+    label: 'Atendimento',
+    to: '/atendimento/atendimento'
+  },
+  {
+    label: 'Prescrição',
+    to: '/atendimento/prescricao'
   }
 ]
 export const mainMenu = [
@@ -362,3 +383,22 @@ export const mainMenu = [
     // ]
   }
 ]
+
+export function setMainMenu(noChildren: boolean = false) {
+  switch (useRouterStore().moduleId) {
+    case ModuleType.DICOMVIX:
+      return mainMenu
+    case ModuleType.CLINUX:
+      return !noChildren ? mainMenu : []
+    case ModuleType.PORTAL:
+      return portalMenu
+    case ModuleType.OTRS:
+      return otrsMenu
+    case ModuleType.DOCTOR:
+      return doctorMenu
+    case ModuleType.CLIENT:
+      return clientMenu
+    default:
+      return []
+  }
+}
