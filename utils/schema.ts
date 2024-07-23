@@ -1,4 +1,4 @@
-export function formClass(cols: number) {
+export function formClass(cols?: number) {
   switch (cols) {
     case 1:
       return 'md:col-span-1'
@@ -37,7 +37,7 @@ export function formClass(cols: number) {
       return 'md:col-span-12'
       break
     default:
-      return ''
+      return 'grid gap-x-2 grid-cols-1 md:grid-cols-12'
   }
 }
 export function getFieldName(schema) {

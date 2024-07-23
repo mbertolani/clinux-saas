@@ -53,29 +53,34 @@ export const useLaudo = () => {
   }) {
     return await post('doLaudoGravar', payload)
   }
+  async function doMedicoViewer() {
+    const id = useAuthStore().user.idmedico
+    if (id)
+      return await useMedico().get(id, 'ds_viewer')
+  }
   async function doMedicoToken(): Promise<{ data: { token: string, url: string }, error: string }> {
-    const { data, error } = await post('doMedicoToken')
-    const { token, url } = data as any
-    return {
-      data: { token, url },
-      error: error.message
-    }
+    return await post('doMedicoToken')
+    // const { token, url } = data as any
+    // return {
+    //   data: { token, url },
+    //   error: error.message
+    // }
   }
   async function validarCertificado(): Promise<boolean> {
-    const { user } = useAuthStore()
-    if (user.certificado) {
-      const response = await doMedicoToken()
-      if (!response.data.token) {
-        if (response.data.url) {
-          window.open(response.data.url + '/autenticarmedico', '_blank', 'noreferrer')
-        } else {
-          useMessage().showError('Url do token não informada !')
-        }
-      }
-      return response.data.token ? true : false
-    } else {
+    if (!useAuthStore().user.certificado)
       return true
-    }
+
+    const response = await doMedicoToken()
+
+    if (response.data.token)
+      return true
+
+    if (response.data.url)
+      window.open(response.data.url + '/autenticarmedico', '_blank', 'noreferrer')
+    else
+      useMessage().showError('Url do certificado não informado !')
+
+    return false
   }
   async function doLaudoDados(cd_exame: number) {
     const response = await post('doLaudoDados', { cd_exame })
@@ -409,6 +414,7 @@ export const useLaudo = () => {
     doDicomDownloadLink,
     carregarViewers,
     doFuncionarioAcesso,
+    doMedicoViewer,
     doLaudoModeloChave,
     doLaudoModeloChaveLista,
     doLaudoExternoLista,

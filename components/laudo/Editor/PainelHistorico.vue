@@ -23,7 +23,7 @@ const onRowDoubleClicked = async (params) => {
   const response = await useLaudo().laudoAssinado({ cd_atendimento, cd_exame })// cd_atendimento: 1723321, cd_exame: 12834
   if (!response.error)
     useModal().open(LaudoAssinado, {
-      title: params.data.ds_procedimento,
+      title: params.data.ds_paciente,
       src: URL.createObjectURL(response.data),
       onClose() {
         useModal().close()
@@ -42,6 +42,26 @@ const onFirstDataRendered = async ({ api }) => {
 doLaudoLista(props.data.cd_paciente).then((response) => {
   rowData.value = response.data
 })
+const openImagem = async (cd_exame) => {
+  const response = await useLaudo().doDicomViewer({ cd_exame })
+  window.open(response.data, '_blank')
+}
+
+const getContextMenuItems = params =>
+  [
+    {
+      name: 'Imagem',
+      action: () => {
+        openImagem(params.node.data.cd_exame)
+      }
+    },
+    {
+      name: 'Laudo',
+      action: () => {
+        onRowDoubleClicked(params.node)
+      }
+    }
+  ]
 </script>
 
 <template>
@@ -51,6 +71,7 @@ doLaudoLista(props.data.cd_paciente).then((response) => {
     :row-data
     :pagination="false"
     :on-row-double-clicked="onRowDoubleClicked"
+    :get-context-menu-items="getContextMenuItems"
     @first-data-rendered="onFirstDataRendered"
   />
 </template>

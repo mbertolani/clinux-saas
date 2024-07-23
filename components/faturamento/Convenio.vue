@@ -31,7 +31,7 @@ const schema1: FormKitSchemaDefinition = [
     $formkit: 'text',
     name: 'ds_razao',
     label: 'Razão Social',
-    outerClass: formClass(9)
+    outerClass: formClass(8)
   },
   {
     $formkit: 'mask',
@@ -39,13 +39,13 @@ const schema1: FormKitSchemaDefinition = [
     label: 'Cnpj',
     mask: '##.###.###/####-##',
     unmaskValue: true,
-    outerClass: formClass(3)
+    outerClass: formClass(4)
   },
   {
     $formkit: 'text',
     name: 'ds_operadora',
     label: 'Registro ANS',
-    outerClass: formClass(3)
+    outerClass: formClass(12)
   },
   {
     $formkit: 'toggle',
@@ -80,37 +80,15 @@ const schema = [
         $formkit: 'step',
         name: 'cadastro',
         label: 'Cadastro',
+        stepInnerClass: formClass(),
         children: schema1
       },
       {
         $formkit: 'step',
         name: 'endereco',
         label: 'Endereço',
+        stepInnerClass: formClass(),
         children: [
-          {
-            $formkit: 'text',
-            name: 'ds_logradouro',
-            label: 'Endereço',
-            outerClass: formClass(12)
-          },
-          {
-            $formkit: 'text',
-            name: 'ds_bairro',
-            label: 'Bairro',
-            outerClass: formClass(6)
-          },
-          {
-            $formkit: 'text',
-            name: 'ds_cidade',
-            label: 'Cidade',
-            outerClass: formClass(6)
-          },
-          {
-            $formkit: 'text',
-            name: 'ds_estado',
-            label: 'UF',
-            outerClass: formClass(3)
-          },
           {
             $formkit: 'mask',
             name: 'ds_cep',
@@ -118,6 +96,30 @@ const schema = [
             mask: '#####-###',
             unmaskValue: true,
             outerClass: formClass(3)
+          },
+          {
+            $formkit: 'text',
+            name: 'ds_logradouro',
+            label: 'Endereço',
+            outerClass: formClass(9)
+          },
+          {
+            $formkit: 'text',
+            name: 'ds_bairro',
+            label: 'Bairro',
+            outerClass: formClass(5)
+          },
+          {
+            $formkit: 'text',
+            name: 'ds_cidade',
+            label: 'Cidade',
+            outerClass: formClass(5)
+          },
+          {
+            $formkit: 'text',
+            name: 'ds_estado',
+            label: 'UF',
+            outerClass: formClass(2)
           }
         ]
       }

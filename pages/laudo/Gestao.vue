@@ -357,7 +357,10 @@ const closeEditor = async (aChange: boolean = true) => {
 const abrirLaudo = async (cd_exame: number, ds_exame?: string) => {
   if (!cd_exame)
     return
-  const response = await useLaudo().doLaudoAbrir({ cd_exame, cd_fila: modelFilter.value.cd_fila, ds_exame }) as any
+  const certificado = await useLaudo().validarCertificado()
+  if (!certificado)
+    return
+  const response = await useLaudo().doLaudoAbrir({ cd_exame, cd_fila: modelFilter.value.cd_fila, ds_exame })
   if (response.error)
     return
   idEditor.value = cd_exame
@@ -365,6 +368,9 @@ const abrirLaudo = async (cd_exame: number, ds_exame?: string) => {
   if (response.data) {
     apiEditor.value.load(response.data)
   } else {
+    const viewer = await useLaudo().doMedicoViewer()
+    if (viewer)
+      openImagem()
     const modelo = await selecionarModelo()
     if (!modelo)
       apiEditor.value.clear()
@@ -876,7 +882,6 @@ const capturarLeo = async (texto) => {
   openLeo.value = false
 }
 const openImagem = async () => {
-  // console.log('openImagem')
   const response = await useLaudo().doDicomViewer({ cd_exame: idEditor.value })
   window.open(response.data, '_blank')
 }
@@ -959,6 +964,14 @@ const classificarLaudo = async () => {
 }
 const avisoVip = ref()
 const selectionChanged = params => avisoVip.value = params?.ds_vip
+
+const { idle } = useIdle(5 * 60 * 1000) // 5 min
+
+watch(idle, (idleValue) => {
+  if (idleValue) {
+    useAuthStore().signOut()
+  }
+})
 </script>
 
 <template>

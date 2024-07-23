@@ -335,8 +335,8 @@ export const mainMenu = [
     ]
   },
   {
-    label: 'Setup'
-    // to: '/tools',
+    label: 'Setup',
+    to: '/setup'
     // children: [
     //   { label: 'Editor', to: '/tools/editor' },
     //   { label: 'Grid', to: '/tools/grid' },

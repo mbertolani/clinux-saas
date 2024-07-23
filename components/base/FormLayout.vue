@@ -77,7 +77,7 @@ const onSubmit = async (_data: any) => {
     :actions="false"
     @submit="onSubmit"
   >
-    <div class="grid gap-x-2 grid-cols-1 md:grid-cols-12">
+    <div :class="formClass()">
       <slot />
       <FormKitSchema
         :schema

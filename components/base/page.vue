@@ -118,8 +118,9 @@ const setColumnDefs = async () => {
 //   const result = menuAction.concat(remainingActionMenuItems)
 //   return result.length ? result : props.actionMenu
 // }
-rowData.value = await setRowData()
-columnDefs.value = await setColumnDefs()
+const [rowDataResult, columnDefsResult] = await Promise.all([setRowData(), setColumnDefs()])
+rowData.value = rowDataResult
+columnDefs.value = columnDefsResult
 // menu.value = await setMenu()
 const buttonSearch = async () => {
   rowData.value = await setRowData()
@@ -224,7 +225,10 @@ watch(inputSearch, () => {
 </script>
 
 <template>
-  <UPage class="mx-4">
+  <UPage
+    v-if="rowData"
+    class="mx-4"
+  >
     <UPageHeader
       :title="header.title"
       headline=""
@@ -264,7 +268,12 @@ watch(inputSearch, () => {
           </template>
         </UInput>
       </template>
-      <slot name="filter" />
+      <div
+        v-if="$slots.filter"
+        class="mt-2"
+      >
+        <slot name="filter" />
+      </div>
     </UPageHeader>
     <UPageBody class="mt-2">
       <BaseGrid

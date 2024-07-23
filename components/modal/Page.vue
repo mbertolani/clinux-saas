@@ -110,7 +110,7 @@ const getRowId = ({ data }) => String(Object.values(data)[0])
       :actions="false"
       @submit="onSubmit"
     >
-      <div class="grid gap-x-2 grid-cols-1 md:grid-cols-12">
+      <div :class="formClass()">
         <div
           v-if="id > 0"
           :class="`bg-emerald-600 text-white px-3 py-2 rounded mb-2 text-center ${formClass($slots.buttons ? 11 : 12)}`"

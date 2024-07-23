@@ -226,24 +226,22 @@ const schema: FormKitSchemaDefinition = [
     :actions="false"
     @submit="emit('submit')"
   >
-    <div class="flex justify-left pt-2">
-      <div class="grid gap-x-2 grid-cols-1 lg:grid-cols-12 w-full">
-        <FormKitSchema
-          :schema
-          :data
-        />
-        <UButton
-          v-if="model.cd_paciente"
-          class="col-span-12"
-          color="primary"
-          icon="i-mdi-trash-can"
-          block
-          @click="emit('historico')"
-        >
-          Desativar Histórico
-        </UButton>
-      </div>
-    </div>
+    <BaseLayout>
+      <FormKitSchema
+        :schema
+        :data
+      />
+      <UButton
+        v-if="model.cd_paciente"
+        class="col-span-12"
+        color="primary"
+        icon="i-mdi-trash-can"
+        block
+        @click="emit('historico')"
+      >
+        Desativar Histórico
+      </UButton>
+    </BaseLayout>
   </FormKit>
 </template>
 
