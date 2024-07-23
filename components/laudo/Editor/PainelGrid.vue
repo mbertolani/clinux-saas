@@ -46,7 +46,7 @@ const onFirstDataRendered = async ({ api }) => {
     @close="emit('close')"
   >
     <BaseGridCore
-      style="height: 100vh; width: 100%;"
+      style="height: 80vh; width: 100%;"
       :column-defs
       :row-data
       :pagination="false"

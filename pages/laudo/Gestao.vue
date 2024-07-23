@@ -532,7 +532,7 @@ const selecionarModelo = async () => {
     return true
   }
   modal.open(ModalPesquisa, {
-    title: 'Modelos de Laudo',
+    title: 'Modelos',
     data: response.data,
     onSubmit(id) {
       carregarModelo(id)
