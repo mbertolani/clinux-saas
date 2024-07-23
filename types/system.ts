@@ -264,7 +264,24 @@ export const Icones: Record<string, string> = {
   estoque: 'i-mdi-store',
   complemento: 'i-mdi-alert'
 }
-
+export const portalMenu = [
+  {
+    label: 'Atendimento',
+    to: '/'
+  }
+]
+export const doctorMenu = [
+  {
+    label: 'Resultados',
+    to: '/'
+  }
+]
+export const otrsMenu = [
+  {
+    label: 'Chamados',
+    to: '/'
+  }
+]
 export const mainMenu = [
   {
     label: 'Gerencial',

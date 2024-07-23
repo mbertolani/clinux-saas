@@ -20,7 +20,7 @@ const logout = () => {
 
 <template>
   <UHeader
-    :links="mainMenu"
+    :links="moduleId === 'clinux' ? mainMenu : []"
   >
     <template #logo>
       {{ clientName }} <UBadge

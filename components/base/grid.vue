@@ -299,7 +299,7 @@ function applyFilterChanged(payload: string) {
   />
 </template>
 
-<style>
+<!-- <style>
 .custom-row-alert {
   color: rgb(255, 150, 150);
 }
@@ -310,4 +310,4 @@ function applyFilterChanged(payload: string) {
     --ag-grid-size: 6px;
     --ag-list-item-height: 20px;
 }
-</style>
+</style> -->

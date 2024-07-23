@@ -5,6 +5,7 @@ import { useLaudoMedico } from '~/composables/laudo/useLaudoMedico'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import { Icones } from '~/types/system'
+import { useSetup } from '~/composables/gerencial/useSetup'
 
 const toolBarItens = [
   {
@@ -964,9 +965,8 @@ const classificarLaudo = async () => {
 }
 const avisoVip = ref()
 const selectionChanged = params => avisoVip.value = params?.ds_vip
-
-const { idle } = useIdle(5 * 60 * 1000) // 5 min
-
+const idleTime = await useSetup().getSetup('nr_login_tempo') || 15
+const { idle } = useIdle(idleTime * 60 * 1000)
 watch(idle, (idleValue) => {
   if (idleValue) {
     useAuthStore().signOut()
