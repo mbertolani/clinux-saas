@@ -279,7 +279,8 @@ watch(inputSearch, () => {
         >
           <div class="flex flex-wrap gap-1.5">
             <FormKit
-              type="text"
+              type="search"
+              prefix-icon="search"
               name="text"
               class="flex-col"
               placeholder="Pesquisa..."

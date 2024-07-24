@@ -30,7 +30,7 @@ export default defineNuxtConfig({
   ],
 
   modules: [
-    '@formkit/auto-animate',
+    // '@formkit/auto-animate',
     '@formkit/nuxt',
     '@nuxt/eslint',
     '@nuxt/image',
