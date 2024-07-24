@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LaudoPrescricao, LaudoPrescricaoFiltro } from '#components'
+import { LaudoPrescricao } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones, Messages } from '~/types/system'
@@ -78,11 +78,11 @@ const filter = ref({
     :filter="filter"
     @open-form="openForm"
   >
-    <template #filter>
+    <!-- <template #filter>
       <LaudoPrescricaoFiltro
         v-model="filter"
       />
-    </template>
+    </template> -->
   </BasePage>
 </template>
 

@@ -7,17 +7,9 @@ const emit = defineEmits(['submit'])
 
 const schema: FormKitSchemaDefinition = [
   {
-    $formkit: 'date',
+    $formkit: 'datepicker',
     name: 'dt_de',
     placeholder: 'Data',
-    format: 'DD/MM/YYYY',
-    valueFormat: 'YYYY-MM-DD',
-    outerClass: formClass(2)
-  },
-  {
-    $formkit: 'date',
-    name: 'dt_ate',
-    placeholder: 'Até',
     format: 'DD/MM/YYYY',
     valueFormat: 'YYYY-MM-DD',
     outerClass: formClass(2)

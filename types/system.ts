@@ -300,7 +300,7 @@ export const clientMenu = [
   },
   {
     label: 'Prescrição',
-    to: '/atendimento/prescricao'
+    to: '/laudo/prescricao'
   }
 ]
 export const mainMenu = [

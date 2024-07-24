@@ -26,6 +26,10 @@ const props = defineProps({
     type: Object,
     required: false
   },
+  filterDate: {
+    type: Boolean,
+    required: false
+  },
   appendColumnDefs: {
     type: Array,
     required: false,
@@ -218,9 +222,9 @@ const onCellKeyDown = ({ event, api }) => {
 //     handler: () => { buttonEdit() }
 //   }
 // })
-const inputSearch = ref('')
+const inputSearch = ref({ text: '', date: useDateFormat(new Date(), 'YYYY-MM-DD').value })
 watch(inputSearch, () => {
-  apiGrid.value?.applyFilterChanged(inputSearch.value)
+  apiGrid.value?.applyFilterChanged(inputSearch.value.text)
 })
 </script>
 
@@ -231,8 +235,7 @@ watch(inputSearch, () => {
   >
     <UPageHeader
       :title="header.title"
-      headline=""
-      :ui="{ strategy: 'override', wrapper: 'relative border-b border-gray-200 dark:border-gray-800 py-2' }"
+      :ui="{ wrapper: 'py-2 mt-2', container: 'gap-2' }"
       :links="[
         { label: 'Pesquisar', icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
         { label: 'Incluir', icon: 'i-heroicons-plus-20-solid', click: buttonNew },
@@ -244,10 +247,11 @@ watch(inputSearch, () => {
       <template #icon>
         <icon
           :name="header.icon"
-          size="36px"
+          size="46px"
         />
       </template>
       <template #title>
+        <!--
         <UInput
           v-model="inputSearch"
           placeholder="Pesquisa..."
@@ -267,6 +271,27 @@ watch(inputSearch, () => {
             />
           </template>
         </UInput>
+ -->
+        <FormKit
+          v-model="inputSearch"
+          type="form"
+          :actions="false"
+        >
+          <div class="flex flex-wrap gap-1.5">
+            <FormKit
+              type="text"
+              name="text"
+              class="flex-col"
+              placeholder="Pesquisa..."
+            />
+            <FormKit
+              v-if="filterDate"
+              type="datepicker"
+              name="date"
+              class="flex-col"
+            />
+          </div>
+        </FormKit>
       </template>
       <div
         v-if="$slots.filter"
