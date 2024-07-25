@@ -22,16 +22,22 @@ const schema: FormKitSchemaDefinition = [
   },
   {
     $formkit: 'text',
-    name: 'ds_form',
-    label: 'Classe',
-    outerClass: formClass(12)
-  },
-  {
-    $formkit: 'text',
     name: 'ds_caption',
     label: 'Descrição',
     inputClass: '!normal-case',
     outerClass: formClass(12)
+  },
+  {
+    $formkit: 'text',
+    name: 'ds_form',
+    label: 'Classe',
+    outerClass: formClass(6)
+  },
+  {
+    $formkit: 'text',
+    name: 'ds_atual',
+    label: 'Cadastro',
+    outerClass: formClass(6)
   },
   {
     $formkit: 'dropdown',
@@ -45,7 +51,13 @@ const schema: FormKitSchemaDefinition = [
     name: 'cd_pai',
     label: 'Janela',
     options: masterOptions,
-    outerClass: formClass(6)
+    outerClass: formClass(4)
+  },
+  {
+    $formkit: 'number',
+    name: 'nr_menu',
+    label: 'Ordem',
+    outerClass: formClass(2)
   }
 ]
 const data = ref({})

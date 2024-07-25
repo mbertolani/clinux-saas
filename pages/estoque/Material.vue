@@ -8,7 +8,7 @@ const apiPage = ref(null)
 const controller = useMaterial()
 const showModal = ref(false)
 const id = ref(0)
-
+const showUnidade = ref(false)
 const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
@@ -18,6 +18,18 @@ const onSubmit = (data: any) => {
   showModal.value = false
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
 }
+
+const actionMenu = [
+  {
+    name: 'acUnidade',
+    title: 'Associar Unidade',
+    icon: Icones.unidade,
+    action: () => {
+      id.value = apiPage.value.selectedId()
+      showUnidade.value = true
+    }
+  }
+]
 </script>
 
 <template>
@@ -25,6 +37,7 @@ const onSubmit = (data: any) => {
     ref="apiPage"
     :header="{ title, icon: Icones.material }"
     :controller
+    :action-menu
     @open-form="openForm"
   >
     <template #form>
@@ -36,5 +49,11 @@ const onSubmit = (data: any) => {
         @close="showModal = false"
       />
     </template>
+    <EstoqueMaterialUnidade
+      v-if="showUnidade"
+      :id
+      v-model="showUnidade"
+      @close="showUnidade=false"
+    />
   </BasePage>
 </template>

@@ -319,5 +319,6 @@ const onSubmit = async (...args) => {
       />
     </UPageBody>
     <slot name="form" />
+    <slot />
   </UPage>
 </template>

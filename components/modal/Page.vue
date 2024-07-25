@@ -49,6 +49,8 @@ const onRowDoubleClicked = async (params) => {
 const onSubmit = async (_data: any) => {
   const id = Object.values(_data)[0]
   const response = (id) ? await props.controller.update(id, _data) : await props.controller.create(_data)
+  if (!response)
+    return
   if (id)
     gridRef.value?.coreApi.api.applyTransaction({ update: [response] })
   else
