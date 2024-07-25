@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { setMainMenu } from '~/types/system'
 
-const { signOut, getSession } = useAuthStore()
+const { signOut, getSession, refreshToken } = useAuthStore()
 const { user, token } = storeToRefs(useAuthStore())
 const { moduleId, clientId, clientName } = useRouterStore()
 const userColor = computed(() => user.value?.idmedico > 0 ? 'primary' : 'red')
@@ -9,6 +9,7 @@ const userName = computed(() => user.value?.name)
 const homeUrl = computed(() => `/${moduleId}/${clientId}`)
 onMounted(async () => {
   getSession()
+  refreshToken()
 })
 const logout = () => {
   signOut()
@@ -23,7 +24,8 @@ const logout = () => {
     :links="setMainMenu()"
   >
     <template #logo>
-      {{ clientName }} <UBadge
+      {{ clientName }}
+      <UBadge
         :label="moduleId"
         variant="subtle"
         class="mb-0.5"

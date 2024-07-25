@@ -37,7 +37,10 @@ export const useHttp = async (
       status: 'success'
     }
   } catch (e) {
-    if (fileDownload)
+    if (e.response.status === 401) {
+      useMessage().showError('Sessão expirada, por favor faça login novamente')
+      useAuthStore().signOut()
+    } else if (fileDownload)
       useMessage().showError('Falha no download do arquivo')
     else
       useMessage().showError(e?.response?._data?.error || 'Falha de conexão com o servidor')

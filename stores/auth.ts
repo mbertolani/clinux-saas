@@ -29,10 +29,20 @@ export const useAuthStore = defineStore({
       if (data?.token?.bearer) {
         const token = useCookie('token')
         token.value = 'Bearer ' + data.token.bearer // set token to cookie `Bearer ${token}`
+        // renew.value = data.token.refreshtoken // set refresh token to cookie
         this.authenticated = true // set authenticated  state value to true
         await navigateTo('/')
       } else {
         useMessage().showError('Token não encontrado!')
+      }
+    },
+    async refreshToken() {
+      const { data } = await useHttp('auth/token')
+      if (data?.token?.bearer) {
+        const token = useCookie('token')
+        token.value = 'Bearer ' + data.token.bearer // set token to cookie `Bearer ${token}`
+      } else {
+        this.signOut()
       }
     },
     async signOut() {

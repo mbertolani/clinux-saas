@@ -18,6 +18,9 @@ const model = defineModel({ type: Object })
 watch(filtro, () => {
   model.value = filtro.value.cd_tipo.includes('sn_') ? { [filtro.value.cd_tipo]: true } : { [filtro.value.cd_tipo]: filtro.value.ds_filtro }
 })
+const onSubmit = (_data) => {
+  console.log(_data)
+}
 // const setMask = computed(() => {
 //   switch (filtro.value.cd_tipo) {
 //     case 'ds_cpf':
@@ -37,6 +40,7 @@ watch(filtro, () => {
     v-model="filtro"
     type="form"
     :actions="false"
+    @submit="onSubmit"
   >
     <BaseLayout>
       <FormKit

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { setup } = useSystemStore()
 </script>
 
 <template>
@@ -45,6 +46,9 @@
     </template>
 
     <template #right>
+      <p class="text-gray-500 dark:text-gray-400 text-sm">
+        Versão: Api {{ setup.nr_clinux }} Banco {{ setup.nr_banco }}
+      </p>
       <UButton
         v-if="false"
         target="_blank"

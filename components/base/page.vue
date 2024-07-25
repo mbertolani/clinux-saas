@@ -95,8 +95,8 @@ const setRowData = async () => {
 }
 const setColumnDefs = async () => {
   const columns = await props.controller.getGrid()
-  const appendColumns = columns.concat(props.appendColumnDefs)
-  const mergedColumns = appendColumns.map((column) => {
+  const appendColumns = columns?.concat(props.appendColumnDefs)
+  const mergedColumns = appendColumns?.map((column) => {
     return (props.mergeColumnDefs[column.field]) ? Object.assign(column, props.mergeColumnDefs[column.field]) : column
   })
   return mergedColumns

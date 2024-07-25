@@ -179,7 +179,7 @@ export const useGrid = () => {
   // }
   const getCols = (DbGridColumns: DbGridColumn[]) => {
     // DbGridColumns.value = await apiGrid()
-    AgGridColumns.value = DbGridColumns.filter(item => item.visible).map(item => ({
+    AgGridColumns.value = DbGridColumns?.filter(item => item.visible).map(item => ({
       field: formatField(item),
       headerName: formatDisplayLabel(item),
       cellDataType: formatCellDataType(item),
