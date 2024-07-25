@@ -81,7 +81,7 @@ defineExpose({
   }
 })
 
-const emit = defineEmits(['openForm', 'selectionChanged'])
+const emit = defineEmits(['openForm', 'selectionChanged', 'submit'])
 
 const apiGrid = ref(null)
 const rowData = ref([])
@@ -226,6 +226,9 @@ const inputSearch = ref({ text: '', date: useDateFormat(new Date(), 'YYYY-MM-DD'
 watch(inputSearch, () => {
   apiGrid.value?.applyFilterChanged(inputSearch.value.text)
 })
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
+}
 </script>
 
 <template>
@@ -276,6 +279,7 @@ watch(inputSearch, () => {
           v-model="inputSearch"
           type="form"
           :actions="false"
+          @submit="onSubmit()"
         >
           <div class="flex flex-wrap gap-1.5">
             <FormKit

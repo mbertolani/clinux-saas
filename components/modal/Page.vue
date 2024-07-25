@@ -56,7 +56,7 @@ const onSubmit = async (_data: any) => {
   cancelar()
 }
 const cancelar = () => {
-  reset('form-kit')
+  reset('form-kit', {})
 }
 const confirmarDelete = ref(false)
 const nodeData = ref()
