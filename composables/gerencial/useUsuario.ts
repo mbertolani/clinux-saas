@@ -12,7 +12,11 @@ export const useUsuario = (id?: number) => {
   async function getEmpresas() {
     return getFieldList(await useEmpresa().getAll(), 'cd_empresa', 'ds_empresa')
   }
+  async function getGrupo() {
+    return (await useBaseStore('/gerencial/usuario').get(useAuthStore().user.id, 'cd_grupo')).cd_grupo
+  }
   return {
+    getGrupo,
     useUsuarioEmpresa,
     getUsuarioEmpresa,
     getEmpresas,

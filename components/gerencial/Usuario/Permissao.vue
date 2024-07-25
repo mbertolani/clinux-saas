@@ -1,13 +1,31 @@
 <script lang="ts" setup>
 import { useFormulario } from '~/composables/gerencial/useFormulario'
 import { useUsuarioGrupo } from '~/composables/gerencial/useUsuarioGrupo'
+import { useUsuario } from '~/composables/gerencial/useUsuario'
 
 const emit = defineEmits(['close'])
-
-const janelas = await useFormulario().findJanela() // formGroupList(await useFormulario().find('janela'))
-const grupos = await useUsuarioGrupo().getItemList()
+const props = defineProps({
+  id: {
+    type: Number,
+    default: null
+  }
+})
+// const grupo = await useUsuario().getGrupo()
+// const janelas = await useFormulario().findJanela() // formGroupList(await useFormulario().find('janela'))
+// const grupos = await useUsuarioGrupo().getItemList()
+const [grupo, janelas, grupos] = await Promise.all([
+  useUsuario().getGrupo(),
+  useFormulario().findJanela(),
+  useUsuarioGrupo().getItemList()
+])
 const operacao = ref([])
 const cadastro = ref([])
+const value = {
+  cd_form: props.id,
+  cd_grupo: grupo,
+  cd_operacao: [],
+  cd_cadastro: []
+}
 const getLista = async (cd_form, cd_grupo) => {
   if (!cd_form || !cd_grupo) return
 
@@ -30,16 +48,26 @@ const getLista = async (cd_form, cd_grupo) => {
   getNode('cd_cadastro').props.options = cadastroOptions
   getNode('cd_cadastro').input(cadastro.value)
 }
-useFormKitNodeById('cd_form', (node) => {
+// useFormKitNodeById('cd_form', (node) => {
+//   node.on('commit', () => {
+//     getLista(getNode('cd_form').value, getNode('cd_grupo').value)
+//   })
+// })
+// useFormKitNodeById('cd_grupo', (node) => {
+//   node.on('commit', () => {
+//     getLista(getNode('cd_form').value, getNode('cd_grupo').value)
+//   })
+// })
+const setLista = (node) => {
   node.on('commit', () => {
     getLista(getNode('cd_form').value, getNode('cd_grupo').value)
   })
-})
-useFormKitNodeById('cd_grupo', (node) => {
-  node.on('commit', () => {
+}
+const setNode = (node) => {
+  node.on('mounted', () => {
     getLista(getNode('cd_form').value, getNode('cd_grupo').value)
   })
-})
+}
 const onSubmit = async (data) => {
   await Promise.all([
     useFormulario().setOperacao(data.cd_form, data.cd_grupo, data.cd_operacao.join(',')),
@@ -61,7 +89,9 @@ const onSubmit = async (data) => {
     <FormKit
       id="form-kit"
       type="form"
+      :value
       @submit="onSubmit"
+      @node="setNode"
     >
       <BaseLayout>
         <FormKit
@@ -72,6 +102,7 @@ const onSubmit = async (data) => {
           :options="janelas"
           validation="required"
           :outer-class="formClass(6)"
+          @node="setLista"
         />
         <FormKit
           id="cd_grupo"
@@ -81,6 +112,7 @@ const onSubmit = async (data) => {
           :options="grupos"
           validation="required"
           :outer-class="formClass(6)"
+          @node="setLista"
         />
         <FormKit
           id="cd_cadastro"
