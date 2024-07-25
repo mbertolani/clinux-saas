@@ -400,11 +400,21 @@ const assinarLaudo = async (aClose: boolean = true, aTipo: number = 0) => {
   }
   return response
 }
-const dataInicio = new Date()
-dataInicio.setDate(dataInicio.getDate() - 90)
+const dataHoje = new Date()
+const dataInterval = useRouterStore().clientId === 'localhost'
+  ? {
+      dt_de: useDateFormat(dataHoje.setDate(dataHoje.getDate() - 90), 'YYYY-MM-DD').value,
+      dt_ate: useDateFormat(new Date(), 'YYYY-MM-DD').value
+    }
+  : {
+      dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value,
+      dt_ate: null
+    }
 const modelFilter = ref({
-  'dt_de': useDateFormat(dataInicio, 'YYYY-MM-DD').value,
-  'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,
+  // 'dt_de': useDateFormat(dataInicio, 'YYYY-MM-DD').value,
+  // 'dt_ate': useDateFormat(useNow(), 'YYYY-MM-DD').value,
+  'dt_de': dataInterval.dt_de,
+  'dt_ate': dataInterval.dt_ate,
   'nr_periodo': 1,
   'ae.nr_controle': null,
   'sa.cd_modalidade': null,
@@ -836,16 +846,24 @@ const mergeColumnDefs = {
   nr_controle: {
     cellStyle: ({ data }) => {
       return {
-        'background-color': data?.ds_sla ? '#' + data.ds_sla : 'undefined',
-        'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
+        'background-color': !data?.ds_sla ? '#' + data.ds_sla : 'undefined'
+        // 'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
+      }
+    }
+  },
+  ds_paciente: {
+    cellStyle: ({ data }) => {
+      return {
+        'background-color': data?.ds_vip ? '#229922' : 'undefined'
+        // 'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
       }
     }
   },
   ds_urgente: {
     cellStyle: ({ data }) => {
       return {
-        'background-color': data.ds_urgente ? '#ff0000' : 'undefined',
-        'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
+        'background-color': data.ds_urgente ? '#ff0000' : 'undefined'
+        // 'color': useColorMode().value === 'dark' ? 'white' : '#111827' // colorDark.value
       }
     }
   },
@@ -972,6 +990,11 @@ watch(idle, (idleValue) => {
     useAuthStore().signOut()
   }
 })
+watch(avisoVip, (aviso) => {
+  if (aviso) {
+    useMessage().showMessage(aviso)
+  }
+})
 </script>
 
 <template>
@@ -1041,12 +1064,12 @@ watch(idle, (idleValue) => {
           @submit="filtrar"
           @historico="exibirHistorico"
         />
-        <div
+        <!-- <div
           v-if="avisoVip"
           class="bg-blue-500 text-white px-2 py-2 rounded"
         >
           {{ avisoVip }}
-        </div>
+        </div> -->
       </template>
     </BasePage>
   </div>
