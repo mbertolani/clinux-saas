@@ -172,15 +172,13 @@ const associarMedico = () => {
           @submit="filtrar"
         />
       </template>
-      <template #form>
-        <GerencialEmpresa
-          :id
-          v-model="showModal"
-          :title
-          @submit="onSubmit"
-          @close="showModal = false"
-        />
-      </template>
+      <GerencialEmpresa
+        :id
+        v-model="showModal"
+        :title
+        @submit="onSubmit"
+        @close="showModal = false"
+      />
     </BasePage>
     <GerencialEmpresaProcedimento
       v-if="showProcedimento"

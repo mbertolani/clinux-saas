@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import DashboardModal from '@nuxt/ui-pro/components/dashboard/DashboardModal.vue'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { formatDateTime } from '@/utils/masks'
 
@@ -53,7 +52,7 @@ const onSelectionChange = async ({ api }) => {
 </script>
 
 <template>
-  <DashboardModal
+  <UDashboardModal
     title="Laudo"
     :description="_nomeFuncionario"
     :fullscreen="true"
@@ -77,5 +76,5 @@ const onSelectionChange = async ({ api }) => {
         :original-val
       />
     </UPage>
-  </DashboardModal>
+  </UDashboardModal>
 </template>

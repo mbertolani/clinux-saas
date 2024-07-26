@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { useModelo } from '~/composables/gerencial/useModelo'
+import { useTexto } from '~/composables/laudo/useTexto'
 
 const emit = defineEmits(['submit', 'close'])
 
-// const modelValue = defineModel({ type: String, required: true })
 const props = defineProps({
   id: {
     type: Number,
@@ -12,24 +11,25 @@ const props = defineProps({
 })
 
 const salvar = async () => {
-  const response = await useModelo().setFormula(props.id, schema.value)
+  const response = await useTexto().setFormula(props.id, schema.value)
   if (response)
     emit('close')
 }
+
 const abrir = async () => {
-  [modelo.value, schema.value] = await Promise.all([
-    useModelo().get(props.id, 'ds_modelo'),
-    useModelo().getFormula(props.id)
+  [texto.value, schema.value] = await Promise.all([
+    useTexto().get(props.id, 'ds_chave'),
+    useTexto().getFormula(props.id)
   ])
 }
-const modelo = ref(null)
+const texto = ref(null)
 const schema = ref(null)
 await abrir()
 </script>
 
 <template>
   <UDashboardModal
-    :title="modelo.ds_modelo"
+    :title="texto.ds_chave"
     :fullscreen="true"
   >
     <template #footer>

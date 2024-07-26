@@ -7,7 +7,7 @@ import { Icones, Messages } from '~/types/system'
 const actionMenu: ActionMenuItem[] = [
   {
     name: 'miEditarArquivo',
-    title: 'Editar Arquivo',
+    title: 'Editar Texto',
     icon: 'i-mdi-file-edit-outline',
     action: () => abrirModelo()
   },
@@ -24,7 +24,7 @@ const actionMenu: ActionMenuItem[] = [
     action: () => abrirFormula()
   }
 ]
-const title = 'Modelos'
+const title = 'Modelo'
 const showMonaco = ref(false)
 const idFormula = ref(0)
 const idEditor = ref(0)

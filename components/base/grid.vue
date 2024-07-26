@@ -193,7 +193,6 @@ const customMenu = props.menu.length
   : null
 toolPanel.value = {
   toolPanels: [
-    { ...customMenu },
     {
       id: 'columns',
       labelDefault: 'Columns',
@@ -208,10 +207,11 @@ toolPanel.value = {
       iconKey: 'filter',
       toolPanel: 'agFiltersToolPanel'
     }
-
   ]
 }
-
+if (customMenu !== null) {
+  toolPanel.value.toolPanels.unshift(customMenu)
+}
 // const getRowStyle = props.getRowStyle || (({ data }) => {
 //   if (data && 'sn_ativo' in data)
 //     if (!data?.sn_ativo) {

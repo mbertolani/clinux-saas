@@ -214,7 +214,7 @@ export const Icones: Record<string, string> = {
   medico: 'i-mdi-doctor',
   modalidade: 'i-mdi-desktop-mac',
   procedimento: 'i-mdi-monitor-account',
-  modelo: 'i-mdi-file-document-edit',
+  modelo: 'i-mdi-text-box-outline',
   calendario: 'i-mdi-calendar',
   horario: 'i-mdi-clock-outline',
   layout: 'i-mdi-printer-outline',
@@ -233,7 +233,7 @@ export const Icones: Record<string, string> = {
   urgencia: 'i-healthicons-ambulance',
   atendimento: 'i-mdi-account-group',
   exame: 'i-mdi-account-file',
-  // laudo: 'i-mdi-file-document-edit',
+  editor: 'i-mdi-file-document-edit',
   laudo: 'i-mdi-monitor-edit',
   pendencia: 'i-mdi-alert',
   achado: 'i-mdi-magnify',
@@ -265,7 +265,9 @@ export const Icones: Record<string, string> = {
   material_grupo: 'i-mdi-package-variant',
   unidade: 'i-mdi-ruler',
   estoque: 'i-mdi-store',
-  complemento: 'i-mdi-alert'
+  complemento: 'i-mdi-alert',
+  texto: 'i-mdi-touch-text-outline',
+  formula: 'i-mdi-function-variant'
 }
 export const portalMenu = [
   {
@@ -314,7 +316,7 @@ export const mainMenu = [
       { label: 'Médico', to: '/gerencial/medico', icon: Icones.medico },
       { label: 'Modalidade', to: '/gerencial/modalidade', icon: Icones.modalidade },
       { label: 'Procedimento', to: '/gerencial/procedimento', icon: Icones.procedimento },
-      { label: 'Laudo', to: '/gerencial/modelo', icon: Icones.laudo },
+      // { label: 'Laudo', to: '/gerencial/modelo', icon: Icones.laudo },
       { label: 'Agenda', to: '/gerencial/horario', icon: Icones.horario },
       { label: 'Impressora', to: '/gerencial/layout', icon: Icones.layout },
       { label: 'Sistema', to: '/gerencial/formulario', icon: Icones.sistema }
@@ -332,7 +334,9 @@ export const mainMenu = [
       { label: 'Gestão', to: '/laudo/gestao', icon: Icones.gestao },
       { label: 'Prescrição', to: '/laudo/prescricao', icon: Icones.prescricao },
       { label: 'Auditoria', to: '/laudo/auditoria', icon: Icones.auditoria },
-      { label: 'Fila de Trabalho', to: '/laudo/fila', icon: Icones.fila }
+      { label: 'Fila de Trabalho', to: '/laudo/fila', icon: Icones.fila },
+      { label: 'Modelo', to: '/gerencial/modelo', icon: Icones.laudo },
+      { label: 'Auto-Texto', to: '/laudo/texto', icon: Icones.texto }
     ]
   },
   {
