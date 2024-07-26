@@ -56,7 +56,6 @@ const editarFormula = async () => {
     return
   }
   id.value = Number(node.id)
-  // const response = await useTexto().getFormula(id.value)
   showFormula.value = true
 }
 const loadEditor = (payload) => {

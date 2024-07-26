@@ -8,7 +8,12 @@ export const useTexto = () => {
     return await getBlob(id, 'bb_chave')
   }
   const getFormula = async (id: number) => {
-    return await getBlob(id, 'bb_formula')
+    const response = await useBase.get(id, 'bb_formula')
+    return Decode64(response?.bb_formula)
+  }
+  const getFormulaData = async (id: number) => {
+    const data = await getFormula(id)
+    return data ? JSON.parse(data) : null
   }
   const setTexto = async (id: number, payload: string) => {
     return await useBase.update(id, { bb_chave: payload })
@@ -21,6 +26,7 @@ export const useTexto = () => {
     setTexto,
     getTexto,
     getFormula,
+    getFormulaData,
     ...useBase
   }
 }

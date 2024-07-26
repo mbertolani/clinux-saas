@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoEditorLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoEditorVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia, LaudoEditorPainelGrid } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
+import { useTexto } from '~/composables/laudo/useTexto'
 import { useLaudoMedico } from '~/composables/laudo/useLaudoMedico'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
@@ -443,6 +444,11 @@ const abrirFormula = async (id: number) => {
   schemaFormula.value = response
   showFormula.value = response ? true : false
 }
+const abrirFormulaTexto = async (id: number) => {
+  const response = id ? await useTexto().getFormulaData(id) : null
+  schemaFormula.value = response
+  showFormula.value = response ? true : false
+}
 const selecionarAutotexto = async (payload?: any) => {
   const response = await useLaudo().doLaudoFiltroTexto({ cd_exame: idEditor.value, ds_texto: payload || '%' })
   if (response.error)
@@ -458,6 +464,7 @@ const selecionarAutotexto = async (payload?: any) => {
     } else {
       apiEditor.value.insert(texto)
     }
+    abrirFormulaTexto(response.data[0].id)
   } else {
     modal.open(ModalPesquisa,
       {
