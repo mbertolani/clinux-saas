@@ -4,6 +4,9 @@ export const usePrescricao = (id?: number) => {
   const useBase = useBaseStore('/atendimento/prescricao')
   const usePaciente = useBaseStore('/atendimento/paciente')
   const usePrescricaoMaterial = useBaseStore(`/atendimento/prescricao/${id}/material`)
+  async function getExames(cd_paciente: number, dt_prescricao: string) {
+    return getFieldList(await useBase.find('exame', { cd_paciente, dt_prescricao }))
+  }
   async function getMaterial(id: number) {
     const response = getFieldItem(await useBaseStore('/estoque/material').get(id, 'cd_material,ds_material'))
     return response
@@ -33,6 +36,7 @@ export const usePrescricao = (id?: number) => {
     return response.ds_status
   }
   return {
+    getExames,
     getStatus,
     getPaciente,
     getPacientes,

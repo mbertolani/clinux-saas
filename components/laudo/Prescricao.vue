@@ -11,7 +11,7 @@ const props = defineProps({
     required: true
   }
 })
-const { get, update, create, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes } = usePrescricao(props.id)
+const { get, update, create, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes, getExames } = usePrescricao(props.id)
 const { get: _get, update: _update, create: _create, getAll: _getAll, remove: _remove } = usePrescricaoMaterial
 
 // const optionsMaterial = await getMateriais()
@@ -62,18 +62,40 @@ const data = reactive({
     options: async () => {
       return await getMateriais()
     }
+  },
+  cd_exame: {
+    options: async () => {
+      return await listaExames()
+    }
+  },
+  ds_exame: (node) => {
+    return setExame(node)
   }
 })
+const setExame = (node) => {
+  node.on('commit', () => {
+    getNode('cd_exame').input(null)
+    getNode('cd_exame').props.options = listaExames
+  })
+}
+const listaExames = async () => {
+  if (!getNode('cd_paciente').value || !getNode('dt_prescricao').value) return []
+  return await getExames(Number(getNode('cd_paciente').value), String(getNode('dt_prescricao').value))
+}
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
     name: 'cd_prescricao'
   },
   {
-    $formkit: 'date',
+    $formkit: 'datepicker',
+    id: 'dt_prescricao',
     name: 'dt_prescricao',
     label: 'Data',
     validation: 'required',
+    format: 'DD/MM/YYYY',
+    valueFormat: 'YYYY-MM-DD',
+    onNode: '$ds_exame',
     outerClass: formClass(4)
   },
   {
@@ -84,7 +106,17 @@ const schema: FormKitSchemaDefinition = [
     bind: '$cd_paciente',
     validation: 'required',
     debounce: 500,
+    onNode: '$ds_exame',
     outerClass: formClass(8)
+  },
+  {
+    $formkit: 'dropdown',
+    id: 'cd_exame',
+    name: 'cd_exame',
+    bind: '$cd_exame',
+    multiple: true,
+    label: 'Exame',
+    outerClass: formClass(12)
   },
   {
     $formkit: 'textarea',
@@ -104,7 +136,7 @@ const schemaFilho: FormKitSchemaDefinition = [
     label: 'Material',
     bind: '$cd_material',
     validation: 'required',
-    outerClass: formClass(4)
+    outerClass: formClass(6)
   },
   {
     $formkit: 'number',
@@ -112,7 +144,7 @@ const schemaFilho: FormKitSchemaDefinition = [
     label: 'Quantidade',
     // number
     validation: 'required',
-    outerClass: formClass(4)
+    outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
@@ -127,6 +159,7 @@ const schemaRepeater: FormKitSchemaDefinition = [
   {
     $formkit: 'repeater',
     name: 'material',
+    contentClass: formClass(),
     outerClass: formClass(12),
     children: schemaFilho
   }
@@ -139,6 +172,7 @@ if (props.id === 0) {
 } else {
   const prescricao = await get(props.id, getFieldName(schema))
   prescricao.bb_observacao = Decode64(prescricao.bb_observacao)
+  prescricao.cd_exame = prescricao.cd_exame?.split(',').map((item: string) => parseInt(item))
   model.value = {
     prescricao,
     material: itensMaterial
@@ -146,6 +180,7 @@ if (props.id === 0) {
 }
 const onSubmit = async (_data: any) => {
   _data.prescricao.bb_observacao = Encode64(_data.prescricao.bb_observacao)
+  _data.prescricao.cd_exame = _data.prescricao.cd_exame.join(',')
   let response = null
   if (props.id === 0) {
     response = await create(_data.prescricao)
