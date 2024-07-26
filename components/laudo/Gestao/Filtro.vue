@@ -12,7 +12,7 @@ const model = defineModel({ type: Object })
 // })
 const emit = defineEmits(['submit', 'historico'])
 
-const { getMedico, getEmpresa, getModalidade, getEmpresas, getModalidades, find } = useLaudo()
+const { getMedico, getEmpresa, getModalidade, getEmpresas, getModalidades, getMedicos, find } = useLaudo()
 
 const data = reactive({
   cd_modalidade: {
@@ -54,7 +54,7 @@ const data = reactive({
       // return id
       //   ? await getMedicos(Number(id))
       //   : await find('medico')
-      return find('medico')
+      return await getMedicos()
     }
   },
   nr_aviso: {

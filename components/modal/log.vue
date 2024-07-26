@@ -10,6 +10,7 @@ defineProps({
 
 const emit = defineEmits(['close'])
 const columnDefs = [
+  { field: 'cd_log', sort: 'desc', initialHide: true },
   { field: 'ds_log', headerName: 'Data', width: useGrid().dataTypeWidth('ftString', 32) },
   { field: 'ds_funcionario', headerName: 'Usuário', width: useGrid().dataTypeWidth('ftString', 32) },
   { field: 'ds_campo', headerName: 'Campo', width: useGrid().dataTypeWidth('ftString', 32) },
