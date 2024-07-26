@@ -1,13 +1,20 @@
 <script lang="ts" setup>
 import { LaudoPrescricao } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
-import type { ActionMenuItem } from '~/types/grid'
 import { Icones, Messages } from '~/types/system'
 
+const { moduleId } = useRouterStore()
 const apiPage = ref(null)
 const controller = usePrescricao()
 const modal = useModal()
-const openForm = (codigo?: number) => {
+const openForm = async (codigo?: number) => {
+  if (codigo) {
+    const response = await controller.getStatus(codigo)
+    if (response !== 'ABERTO') {
+      useMessage().showError(Messages.MSG_SYS_NOT + ' Status da Prescrição: ' + response)
+      return
+    }
+  }
   modal.open(LaudoPrescricao, {
     id: Number(codigo),
     onClose: () => modal.close(),
@@ -43,26 +50,28 @@ const buttonAction = async (action: string) => {
     noClick: () => { useMessage().closeDialog() }
   })
 }
-const actionMenu: ActionMenuItem[] = [
-  {
-    name: 'aprovar',
-    title: 'Aprovar',
-    icon: 'i-mdi-check-circle-outline',
-    action: () => { buttonAction('aprovar') }
-  },
-  {
-    name: 'recusar',
-    title: 'Recusar',
-    icon: 'i-mdi-close-circle-outline',
-    action: () => { buttonAction('recusar') }
-  },
-  {
-    name: 'reiniciar',
-    title: 'Reiniciar',
-    icon: 'i-mdi-restore',
-    action: () => { buttonAction('reiniciar') }
-  }
-]
+const actionMenu = moduleId === 'clinux'
+  ? [
+      {
+        name: 'aprovar',
+        title: 'Aprovar',
+        icon: 'i-mdi-check-circle-outline',
+        action: () => { buttonAction('aprovar') }
+      },
+      {
+        name: 'recusar',
+        title: 'Recusar',
+        icon: 'i-mdi-close-circle-outline',
+        action: () => { buttonAction('recusar') }
+      },
+      {
+        name: 'reiniciar',
+        title: 'Reiniciar',
+        icon: 'i-mdi-restore',
+        action: () => { buttonAction('reiniciar') }
+      }
+    ]
+  : []
 const filter = ref({
   dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value
 })
@@ -76,6 +85,7 @@ const filter = ref({
     :action-menu
     :row-class-rules
     :filter="filter"
+    :filter-date="filter"
     @open-form="openForm"
   >
     <!-- <template #filter>

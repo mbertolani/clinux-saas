@@ -27,8 +27,8 @@ const props = defineProps({
     required: false
   },
   filterDate: {
-    type: Boolean,
-    required: false
+    type: Object,
+    default: () => ({})
   },
   appendColumnDefs: {
     type: Array,
@@ -89,9 +89,11 @@ const columnDefs = ref([])
 // const menu = ref(null)
 const modal = useModal()
 const { showError, showMessage } = useMessage()
+const inputSearch = ref({ text: '', dt_de: props.filter?.dt_de, dt_ate: props.filter?.dt_ate })
 
 const setRowData = async () => {
-  return (props.filter) ? await props.controller.getView(StrToNull(props.filter)) : await props.controller.getAll()
+  const payload = { ...props.filter, ...inputSearch.value }
+  return (props.filter) ? await props.controller.getView(StrToNull(payload)) : await props.controller.getAll()
 }
 const setColumnDefs = async () => {
   const columns = await props.controller.getGrid()
@@ -222,7 +224,6 @@ const onCellKeyDown = ({ event, api }) => {
 //     handler: () => { buttonEdit() }
 //   }
 // })
-const inputSearch = ref({ text: '', date: useDateFormat(new Date(), 'YYYY-MM-DD').value })
 watch(inputSearch, () => {
   apiGrid.value?.applyFilterChanged(inputSearch.value.text)
 })
@@ -240,11 +241,11 @@ const onSubmit = async (...args) => {
       :title="header.title"
       :ui="{ wrapper: 'py-2 mt-2', container: 'gap-2' }"
       :links="[
-        { label: 'Pesquisar', icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
-        { label: 'Incluir', icon: 'i-heroicons-plus-20-solid', click: buttonNew },
-        { label: 'Editar', icon: 'i-heroicons-pencil-20-solid', click: buttonEdit },
-        { label: 'Apagar', icon: 'i-heroicons-trash-20-solid', click: buttonDelete },
-        { label: 'Log', icon: 'i-heroicons-question-mark-circle', click: buttonLog }
+        { icon: 'i-heroicons-magnifying-glass', click: buttonSearch },
+        { icon: 'i-heroicons-plus-20-solid', click: buttonNew },
+        { icon: 'i-heroicons-pencil-20-solid', click: buttonEdit },
+        { icon: 'i-heroicons-trash-20-solid', click: buttonDelete },
+        { icon: 'i-heroicons-question-mark-circle', click: buttonLog }
       ]"
     >
       <template #icon>
@@ -281,19 +282,27 @@ const onSubmit = async (...args) => {
           :actions="false"
           @submit="onSubmit()"
         >
-          <div class="flex flex-wrap gap-1.5">
+          <div class="flex flex-wrap gap-2">
+            <FormKit
+              v-if="'dt_de' in filterDate"
+              type="datepicker"
+              name="dt_de"
+              value-format="YYYY-MM-DD"
+              class="flex-col"
+            />
+            <FormKit
+              v-if="'dt_ate' in filterDate"
+              type="datepicker"
+              name="dt_ate"
+              value-format="YYYY-MM-DD"
+              class="flex-col"
+            />
             <FormKit
               type="search"
               prefix-icon="search"
               name="text"
-              class="flex-col"
+              class="flex-col w-full"
               placeholder="Pesquisa..."
-            />
-            <FormKit
-              v-if="filterDate"
-              type="datepicker"
-              name="date"
-              class="flex-col"
             />
           </div>
         </FormKit>

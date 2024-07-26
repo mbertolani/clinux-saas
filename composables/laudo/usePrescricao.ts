@@ -1,6 +1,8 @@
 import { useMaterial } from '../estoque/useMaterial'
 
 export const usePrescricao = (id?: number) => {
+  const useBase = useBaseStore('/atendimento/prescricao')
+  const usePaciente = useBaseStore('/atendimento/paciente')
   const usePrescricaoMaterial = useBaseStore(`/atendimento/prescricao/${id}/material`)
   async function getMaterial(id: number) {
     const response = getFieldItem(await useBaseStore('/estoque/material').get(id, 'cd_material,ds_material'))
@@ -19,21 +21,26 @@ export const usePrescricao = (id?: number) => {
     return response
   }
   async function getPaciente(id: number) {
-    const response = getFieldItem(await useBaseStore('/atendimento/paciente').get(id, 'cd_paciente,ds_paciente'))
+    const response = getFieldItem(await usePaciente.get(id, 'cd_paciente,ds_paciente'))
     return response
   }
   async function getPacientes(payload: string) {
-    const response = getFieldList(await useBaseStore('/atendimento/paciente').find('paciente', { ds_pesquisa: payload }))
+    const response = getFieldList(await usePaciente.find('paciente', { ds_pesquisa: payload }))
     return response
   }
+  async function getStatus(id: number) {
+    const response = await useBase.get(id, 'ds_status')
+    return response.ds_status
+  }
   return {
+    getStatus,
     getPaciente,
     getPacientes,
     getMaterial,
     getMateriais,
     getUnidade,
     getUnidades,
-    ...useBaseStore('/atendimento/prescricao'),
+    ...useBase,
     ...{ usePrescricaoMaterial }
   }
 }

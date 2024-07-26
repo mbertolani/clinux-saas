@@ -181,17 +181,19 @@ const toolPanel = ref(null)
 //     }
 //   ]
 // }
-
-toolPanel.value = {
-  toolPanels: [
-    {
+const customMenu = props.menu.length
+  ? {
       id: 'custom',
       labelDefault: 'Funções',
       labelKey: 'custom',
       iconKey: 'menu',
       toolPanel: 'gridToolPanel',
       toolPanelParams: { menu: props.menu }
-    },
+    }
+  : null
+toolPanel.value = {
+  toolPanels: [
+    { ...customMenu },
     {
       id: 'columns',
       labelDefault: 'Columns',
