@@ -3,6 +3,13 @@ import type { DocumentEditor, DocumentEditorContainer } from '@syncfusion/ej2-vu
 import { registerLicense } from '@syncfusion/ej2-base'
 import { DocumentEditorContainerComponent, Toolbar } from '@syncfusion/ej2-vue-documenteditor'
 import { useStorage } from '@vueuse/core'
+import type { PdfSection } from '@syncfusion/ej2-pdf-export'
+import { PdfBitmap, PdfDocument, PdfPageOrientation, PdfPageSettings, SizeF } from '@syncfusion/ej2-pdf-export'
+// import { Language } from './editor/language'
+// import { localizeSyncfusion } from './editor/syncfusionLocalizationManager'
+// "@syncfusion/ej2-locale": "latest",
+// "cldr-data": "^36.0.2",
+// localizeSyncfusion(Language.Portuguese)
 import { ptBr } from '~/utils/editor'
 // registerLicense('Mgo+DSMBMAY9C3t2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5Vd0diWX9ZcHZRQWRf')
 // registerLicense(useRuntimeConfig().public.syncfusionKey)
@@ -53,6 +60,7 @@ export default {
     // console.log('mounted')
     this.editor.defaultLocale = ptBr
     this.editor.locale = 'pt-BR'
+    this.container.documentEditorSettings.formFieldSettings.shadingColor = '#FFFFFF'
     this.editor.enableLocalPaste = false
     this.editor.keyDown = this.keyDown
     this.$emit('load', this)
@@ -174,6 +182,20 @@ export default {
           id: 'CustomSave',
           cssClass: 'e-de-toolbar-btn'
         },
+        {
+          prefixIcon: 'e-print',
+          tooltipText: 'Imprimir Documento',
+          text: 'Imprimir',
+          id: 'CustomPrint',
+          cssClass: 'e-de-toolbar-btn'
+        },
+        {
+          prefixIcon: 'e-export-pdf',
+          tooltipText: 'Exportar Documento',
+          text: 'Exportar',
+          id: 'CustomExport',
+          cssClass: 'e-de-toolbar-btn'
+        },
         'Separator',
         'Undo',
         'Redo',
@@ -201,9 +223,12 @@ export default {
       this.container.toolbarClick = (args) => {
         if (args.item.id === 'CustomSave') {
           this.$emit('save', this)
-        }
-        if (args.item.id === 'CustomClose') {
+        } else if (args.item.id === 'CustomClose') {
           this.$emit('close', this)
+        } else if (args.item.id === 'CustomPrint') {
+          this.editorPrint()
+        } else if (args.item.id === 'CustomExport') {
+          this.editorExport('file.pdf')
         }
       }
     },
@@ -244,7 +269,7 @@ export default {
       this.editor.search.searchResults.clear()
       this.editor.selection.moveToParagraphEnd()
       this.editor.focusIn()
-    }
+    },
     // async appendHtml({ state }, payload) {
     //   const bb_rtf = window.btoa(payload)
     //   try {
@@ -267,6 +292,60 @@ export default {
     //     console.error(e)
     //   }
     // }
+    editorPrint() {
+      this.editor.print()
+    },
+    editorMerge(mergeData?: Array<{ fieldName: string, value: string }>) {
+      console.log('mergeData', mergeData)
+      // const mergeData = [{ fieldName: 'nome', value: 'Teste' }, { fieldName: 'endereco', value: 'Rua 123' }, { fieldName: 'cidade', value: 'Vitoria' }]
+      this.container.documentEditor.importFormData(mergeData)
+    },
+    editorExport(filename?: string) {
+      const pdfdocument = new PdfDocument()
+      const count = this.editor.pageCount
+      this.editor.documentEditorSettings.printDevicePixelRatio = 2
+      let loadedPage = 0
+      for (let i = 1; i <= count; i++) {
+        setTimeout(() => {
+          const format = 'image/jpeg'
+          // Getting pages as image
+          const image = this.editor.exportAsImage(i, format as any)
+          image.onload = async function () {
+            const imageHeight = parseInt(
+              image.style.height.toString().replace('px', '')
+            )
+            const imageWidth = parseInt(
+              image.style.width.toString().replace('px', '')
+            )
+            const section = pdfdocument.sections.add() as PdfSection
+            const settings = new PdfPageSettings(0)
+            if (imageWidth > imageHeight) {
+              settings.orientation = PdfPageOrientation.Landscape
+            }
+            settings.size = new SizeF(imageWidth, imageHeight)
+            section.setPageSettings(settings)
+            const page = section.pages.add()
+            const graphics = page.graphics
+            const imageStr = image.src.replace('data:image/jpeg;base64,', '')
+            const pdfImage = new PdfBitmap(imageStr)
+            graphics.drawImage(pdfImage, 0, 0, imageWidth, imageHeight)
+            loadedPage++
+            if (loadedPage == count) {
+              // Exporting the document as pdf
+              // console.log('Exporting the document as pdf', pdfdocument.document.document)
+              //
+              if (filename) {
+                pdfdocument.save(filename)
+              } else {
+                const document = await pdfdocument.save()
+                const data = await convertToBase64Image(document.blobData)
+                console.log(Decode64(data.replace('data:application/pdf;base64,', '')))
+              }
+            }
+          }
+        }, 500)
+      }
+    }
   }
 }
 </script>
