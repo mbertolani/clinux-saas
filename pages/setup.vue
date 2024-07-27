@@ -26,7 +26,37 @@ const geral = [{
   label: 'Tempo Ocioso',
   outerClass: formClass(2)
 }]
-const imagem = []
+const imagem = [
+  {
+    $formkit: 'text',
+    name: 'ds_dicom_remoto',
+    label: 'Arquivo Dicom',
+    inputClass: '!lowercase',
+    outerClass: formClass(12)
+  },
+  {
+    $formkit: 'text',
+    name: 'ds_fpacs_remoto',
+    label: 'Função pacs',
+    inputClass: '!lowercase',
+    outerClass: formClass(10)
+  },
+  {
+    $formkit: 'text',
+    name: 'ds_fpacs_remoto_param',
+    label: 'Parâmetros',
+    inputClass: '!lowercase',
+    outerClass: formClass(2)
+  }
+]
+const layout = [
+  {
+    $formkit: 'dropdown',
+    name: 'cd_editor_prescricao',
+    label: 'Prescrição',
+    options: await useSetup().findEditor(),
+    outerClass: formClass(12)
+  }]
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'multi-step',
@@ -48,13 +78,18 @@ const schema: FormKitSchemaDefinition = [
         label: 'Imagem',
         stepInnerClass: formClass(),
         children: imagem
+      },
+      {
+        $formkit: 'step',
+        name: 'layout',
+        label: 'Layout',
+        stepInnerClass: formClass(),
+        children: layout
       }
     ]
   }
 ]
-const onSubmit = async (...args) => {
-  console.log('onSubmit', args)
-  await useSetup().update(1, args)
+const onSubmit = async () => {
   useMessage().showMessage(Messages.MSG_SYS_OK)
 }
 </script>

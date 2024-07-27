@@ -60,7 +60,6 @@ export default {
     // console.log('mounted')
     this.editor.defaultLocale = ptBr
     this.editor.locale = 'pt-BR'
-    this.container.documentEditorSettings.formFieldSettings.shadingColor = '#FFFFFF'
     this.editor.enableLocalPaste = false
     this.editor.keyDown = this.keyDown
     this.$emit('load', this)
@@ -162,6 +161,7 @@ export default {
     // setToolBar(): Array<CustomToolbarItemModel | ToolbarItem> {
     setToolBar() {
       // https://ej2.syncfusion.com/vue/documentation/appearance/icons#available-icons
+      this.container.documentEditorSettings.formFieldSettings.shadingColor = this.toolBar ? '#FFFFFF' : '#CCCCCC'
       if (this.toolBar) {
         this.container.toolbarItems = this.toolBar.items
         this.container.toolbarClick = this.toolBar.click
