@@ -10,7 +10,7 @@ import { PdfBitmap, PdfDocument, PdfPageOrientation, PdfPageSettings, SizeF } fr
 // "@syncfusion/ej2-locale": "latest",
 // "cldr-data": "^36.0.2",
 // localizeSyncfusion(Language.Portuguese)
-import { ptBr } from '~/utils/editor'
+// import { ptBr } from '~/utils/editor'
 // registerLicense('Mgo+DSMBMAY9C3t2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5Vd0diWX9ZcHZRQWRf')
 // registerLicense(useRuntimeConfig().public.syncfusionKey)
 
@@ -58,8 +58,8 @@ export default {
   },
   async mounted() {
     // console.log('mounted')
-    this.editor.defaultLocale = ptBr
-    this.editor.locale = 'pt-BR'
+    // this.editor.defaultLocale = ptBr
+    // this.editor.locale = 'pt-BR'
     this.editor.enableLocalPaste = false
     this.editor.keyDown = this.keyDown
     this.$emit('load', this)

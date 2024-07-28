@@ -2,6 +2,7 @@
 import { BaseEditor, LaudoEditorPainelHistorico, LaudoAchado, LaudoAssinado, LaudoAuditoria, LaudoPendencia, LaudoEditorLeo, ModalPesquisa, LaudoAnexo, LaudoChat, LaudoDiff, LaudoEditorVariavel, LaudoEditorPainelData, LaudoEditorPainelChat, LaudoEditorPainelAnexo, LaudoExame, LaudoTransferencia, LaudoEditorPainelGrid } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useTexto } from '~/composables/laudo/useTexto'
+import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import { useLaudoMedico } from '~/composables/laudo/useLaudoMedico'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
@@ -217,6 +218,11 @@ const actionMenu = [
         useMessage().showError('Laudo não assinado !')
       }
     }
+  },
+  {
+    title: 'Prescrição',
+    icon: Icones.prescricao,
+    action: () => { visualizarPrescricao(selectedData()?.cd_exame) }
   },
   {
     name: 'acAnexo',
@@ -780,6 +786,19 @@ const exibirDados = async (data: object) => {
   modal.open(LaudoEditorPainelGrid, {
     gridData: data,
     gridHeader: await controller.getGrid(),
+    onClose() {
+      modal.close()
+    }
+  })
+}
+const visualizarPrescricao = async (id: number) => {
+  const response = await usePrescricao().getPrescricao(id)
+  if (!response)
+    return useMessage().showError('Prescrição não encontrada !')
+  const document = await usePrescricao().getAssinado(response)
+  modal.open(LaudoAssinado, {
+    title: 'Prescrição',
+    src: URL.createObjectURL(document.data),
     onClose() {
       modal.close()
     }

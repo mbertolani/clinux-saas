@@ -90,7 +90,14 @@ const actionMenu = moduleId === 'clinux'
         action: () => { abrirDocumento() }
       }
     ]
-  : []
+  : [
+      {
+        name: 'visualizar',
+        title: 'Visualizar',
+        icon: 'i-mdi-file-document',
+        action: () => { abrirDocumento() }
+      }
+    ]
 const filter = ref({
   dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value
 })

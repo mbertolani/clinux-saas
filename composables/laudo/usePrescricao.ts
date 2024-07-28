@@ -37,6 +37,10 @@ export const usePrescricao = (id?: number) => {
     const response = await useBase.get(id, 'ds_status')
     return response.ds_status === 'ABERTO'
   }
+  async function getPrescricao(cd_exame: number) {
+    const response = await useBase.find('prescricao', { cd_exame })
+    return response ? response[0].cd_prescricao : null
+  }
   const setDocumento = async (id: number, payload: string) => {
     return await useBase.update(id, { bb_pdf: Encode64(payload) })
   }
@@ -55,6 +59,7 @@ export const usePrescricao = (id?: number) => {
     return await useHttp(`/atendimento/prescricao/blob/${id}?fieldname=bb_pdf&filename=doc.pdf`, { method: 'post', fileDownload: true })
   }
   return {
+    getPrescricao,
     getAssinado,
     getDocumento,
     setDocumento,
