@@ -35,7 +35,7 @@ export const usePrescricao = (id?: number) => {
   }
   async function getStatus(id: number) {
     const response = await useBase.get(id, 'ds_status')
-    return response.ds_status
+    return response.ds_status === 'ABERTO'
   }
   const setDocumento = async (id: number, payload: string) => {
     return await useBase.update(id, { bb_pdf: Encode64(payload) })

@@ -11,11 +11,9 @@ const showEditor = ref(false)
 const apiEditor = ref(null)
 const openForm = async (codigo?: number) => {
   if (codigo) {
-    const response = await controller.getStatus(codigo)
-    if (response !== 'ABERTO') {
-      useMessage().showError(Messages.MSG_SYS_NOT + ' Status da Prescrição: ' + response)
-      return
-    }
+    const aberto = await controller.getStatus(codigo)
+    if (!aberto)
+      return useMessage().showError(Messages.MSG_SYS_NOT)
   }
   modal.open(LaudoPrescricao, {
     id: Number(codigo),
@@ -41,16 +39,22 @@ const commandAction = async (action) => {
   const data = apiPage.value.selectedData()
   const response = await controller.exec(action, { cd_prescricao: data.cd_prescricao })
   apiPage.value.applyTransaction({ update: response })
-  if (action === 'aprovar' || action === 'recusar') {
+  if (action !== 'reiniciar') {
     const document = await controller.getDocumento(data.cd_prescricao)
     openEditor(document.layout, document.data)
   }
 }
 
 const buttonAction = async (action: string) => {
-  if (!apiPage.value.getSelectedNodes().length) {
-    showError(Messages.MSG_FNF_GRID)
-    return
+  const data = apiPage.value.selectedData()
+
+  if (!data)
+    return useMessage().showError(Messages.MSG_FNF_GRID)
+
+  if (action !== 'reiniciar') {
+    const aberto = await controller.getStatus(data.cd_prescricao)
+    if (!aberto)
+      return useMessage().showError(Messages.MSG_SYS_NOT)
   }
   useMessage().openDialog({
     title: 'Atualizar Prescrição',
