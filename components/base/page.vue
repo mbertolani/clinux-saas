@@ -89,10 +89,14 @@ const columnDefs = ref([])
 // const menu = ref(null)
 const modal = useModal()
 const { showError, showMessage } = useMessage()
-const inputSearch = ref({ text: '', dt_de: props.filter?.dt_de, dt_ate: props.filter?.dt_ate })
+const inputSearch = ref({ text: '', dt_de: props.filterDate?.dt_de, dt_ate: props.filterDate?.dt_ate })
 
 const setRowData = async () => {
-  const payload = { ...props.filter, ...inputSearch.value }
+  const payload = { ...props.filter }
+  if (inputSearch.value.dt_de)
+    payload.dt_de = inputSearch.value.dt_de
+  if (inputSearch.value.dt_ate)
+    payload.dt_de = inputSearch.value.dt_ate
   return (props.filter) ? await props.controller.getView(StrToNull(payload)) : await props.controller.getAll()
 }
 const setColumnDefs = async () => {

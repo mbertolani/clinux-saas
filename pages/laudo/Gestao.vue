@@ -442,7 +442,8 @@ const exibirHistorico = async () => {
   apiPage.value.applySearch()
 }
 const salvarFormula = async (data: any) => {
-  await apiEditor.value?.searchReplace(data)
+  // await apiEditor.value?.searchReplace(data)
+  apiEditor.value?.editorMerge(data)
   showFormula.value = false
 }
 const abrirFormula = async (id: number) => {

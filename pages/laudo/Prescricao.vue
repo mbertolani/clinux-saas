@@ -13,7 +13,7 @@ const openForm = async (codigo?: number) => {
   if (codigo) {
     const aberto = await controller.getStatus(codigo)
     if (!aberto)
-      return useMessage().showError(Messages.MSG_SYS_NOT)
+      return abrirDocumento()
   }
   modal.open(LaudoPrescricao, {
     id: Number(codigo),

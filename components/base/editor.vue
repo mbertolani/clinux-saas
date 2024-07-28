@@ -303,7 +303,7 @@ export default {
     convertDataFormat(data) {
       const result = []
       for (const key in data)
-        result.push({ fieldName: key, value: data[key] })
+        result.push({ fieldName: key, value: String(data[key]) })
       return result
     },
     hideShadingColor(payload: boolean = true) {

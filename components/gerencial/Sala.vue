@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormKitSchemaDefinition } from '@formkit/core'
 import { useSala } from '~/composables/gerencial/useSala'
+import { useEmpresa } from '~/composables/gerencial/useEmpresa'
 
 const emit = defineEmits(['submit', 'close'])
 
@@ -27,6 +28,15 @@ const schema: FormKitSchemaDefinition = [
     outerClass: formClass(12)
   },
   {
+    $formkit: 'dropdown',
+    name: 'cd_empresa',
+    id: 'cd_empresa',
+    label: 'Empresa',
+    bind: '$cd_empresa',
+    selectionRemovable: true,
+    outerClass: formClass(4)
+  },
+  {
     $formkit: 'toggle',
     name: 'sn_ativo',
     label: 'Ativo ?',
@@ -36,6 +46,19 @@ const schema: FormKitSchemaDefinition = [
 const onSubmit = async (...args) => {
   emit('submit', ...args)
 }
+
+const data = reactive({
+  cd_empresa: {
+    optionLoader: async (id, cachedOption) => {
+      if (cachedOption) return cachedOption
+      if (!id) return []
+      return await useEmpresa().getItem(id)
+    },
+    options: async () => {
+      return await useEmpresa().getItemList()
+    }
+  }
+})
 </script>
 
 <template>
@@ -46,6 +69,7 @@ const onSubmit = async (...args) => {
     <BaseFormLayout
       :id
       :schema
+      :data
       :controller="useSala()"
       @submit="onSubmit"
     />
