@@ -8,19 +8,19 @@ const actionMenu: ActionMenuItem[] = [
   {
     name: 'miEditarArquivo',
     title: 'Editar Texto',
-    icon: 'i-mdi-file-edit-outline',
+    icon: Icones.editor,
     action: () => abrirModelo()
   },
   {
     name: 'miEditarLayout',
     title: 'Editar Layout',
-    icon: 'i-mdi-text-box-outline',
+    icon: Icones.layout,
     action: () => abrirLayout()
   },
   {
     name: 'miEditarFormula',
     title: 'Editar Fórmula',
-    icon: 'i-mdi-function-variant',
+    icon: Icones.formula,
     action: () => abrirFormula()
   }
 ]

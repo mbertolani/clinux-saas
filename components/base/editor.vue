@@ -36,7 +36,7 @@ export default {
       required: false
     }
   },
-  emits: ['load', 'save', 'close', 'texto'],
+  emits: ['load', 'save', 'close', 'texto', 'export'],
   data() {
     return {
       sfdt: '',
@@ -87,12 +87,13 @@ export default {
       this.updateContainerSize()
       this.sfdt = this.editor.serialize()
       this.loadDraft()
+      this.hideShadingColor(false)
     },
     clear() {
       this.editor.openBlank()
       this.show()
     },
-    async load(payload?: string) {
+    async load(payload?: string, data?: Array<{ fieldName: string, value: string }>) {
       if (!payload) {
         this.clear()
         return
@@ -101,6 +102,8 @@ export default {
       this.editor.open(response)
       this.editor.selection.moveToDocumentEnd()
       this.show()
+      if (data)
+        this.editorMerge(data)
     },
     async paste(payload) {
       const sfdt = await useEditor().Import(payload)
@@ -114,6 +117,9 @@ export default {
     async save() {
       const response = await this.saveBase()
       return response.split(',')[1]
+    },
+    async export() {
+      return await this.editorExport()
     },
     async saveBase() {
       const response = await this.saveBlob()
@@ -161,7 +167,6 @@ export default {
     // setToolBar(): Array<CustomToolbarItemModel | ToolbarItem> {
     setToolBar() {
       // https://ej2.syncfusion.com/vue/documentation/appearance/icons#available-icons
-      this.container.documentEditorSettings.formFieldSettings.shadingColor = this.toolBar ? '#FFFFFF' : '#CCCCCC'
       if (this.toolBar) {
         this.container.toolbarItems = this.toolBar.items
         this.container.toolbarClick = this.toolBar.click
@@ -189,13 +194,13 @@ export default {
           id: 'CustomPrint',
           cssClass: 'e-de-toolbar-btn'
         },
-        {
-          prefixIcon: 'e-export-pdf',
-          tooltipText: 'Exportar Documento',
-          text: 'Exportar',
-          id: 'CustomExport',
-          cssClass: 'e-de-toolbar-btn'
-        },
+        // {
+        //   prefixIcon: 'e-export-pdf',
+        //   tooltipText: 'Exportar Documento',
+        //   text: 'Exportar',
+        //   id: 'CustomExport',
+        //   cssClass: 'e-de-toolbar-btn'
+        // },
         'Separator',
         'Undo',
         'Redo',
@@ -295,56 +300,68 @@ export default {
     editorPrint() {
       this.editor.print()
     },
-    editorMerge(mergeData?: Array<{ fieldName: string, value: string }>) {
-      console.log('mergeData', mergeData)
-      // const mergeData = [{ fieldName: 'nome', value: 'Teste' }, { fieldName: 'endereco', value: 'Rua 123' }, { fieldName: 'cidade', value: 'Vitoria' }]
-      this.container.documentEditor.importFormData(mergeData)
+    convertDataFormat(data) {
+      const result = []
+      for (const key in data)
+        result.push({ fieldName: key, value: data[key] })
+      return result
     },
-    editorExport(filename?: string) {
-      const pdfdocument = new PdfDocument()
-      const count = this.editor.pageCount
-      this.editor.documentEditorSettings.printDevicePixelRatio = 2
-      let loadedPage = 0
-      for (let i = 1; i <= count; i++) {
-        setTimeout(() => {
-          const format = 'image/jpeg'
-          // Getting pages as image
-          const image = this.editor.exportAsImage(i, format as any)
-          image.onload = async function () {
-            const imageHeight = parseInt(
-              image.style.height.toString().replace('px', '')
-            )
-            const imageWidth = parseInt(
-              image.style.width.toString().replace('px', '')
-            )
-            const section = pdfdocument.sections.add() as PdfSection
-            const settings = new PdfPageSettings(0)
-            if (imageWidth > imageHeight) {
-              settings.orientation = PdfPageOrientation.Landscape
-            }
-            settings.size = new SizeF(imageWidth, imageHeight)
-            section.setPageSettings(settings)
-            const page = section.pages.add()
-            const graphics = page.graphics
-            const imageStr = image.src.replace('data:image/jpeg;base64,', '')
-            const pdfImage = new PdfBitmap(imageStr)
-            graphics.drawImage(pdfImage, 0, 0, imageWidth, imageHeight)
-            loadedPage++
-            if (loadedPage == count) {
-              // Exporting the document as pdf
-              // console.log('Exporting the document as pdf', pdfdocument.document.document)
-              //
-              if (filename) {
-                pdfdocument.save(filename)
-              } else {
-                const document = await pdfdocument.save()
-                const data = await convertToBase64Image(document.blobData)
-                console.log(Decode64(data.replace('data:application/pdf;base64,', '')))
+    hideShadingColor(payload: boolean = true) {
+      this.container.documentEditorSettings.formFieldSettings.shadingColor = payload ? '#FFFFFF' : '#CCCCCC'
+    },
+    editorMerge(mergeData?: Array<{ fieldName: string, value: string }>) {
+      this.hideShadingColor()
+      this.container.documentEditor.importFormData(this.convertDataFormat(mergeData))
+    },
+    async editorExport(filename?: string) {
+      return new Promise((resolve, reject) => {
+        const pdfdocument = new PdfDocument()
+        const count = this.editor.pageCount
+        this.editor.documentEditorSettings.printDevicePixelRatio = 2
+        let loadedPage = 0
+        for (let i = 1; i <= count; i++) {
+          setTimeout(() => {
+            const format = 'image/jpeg'
+            // Getting pages as image
+            const image = this.editor.exportAsImage(i, format as any)
+            image.onload = async function () {
+              const imageHeight = parseInt(
+                image.style.height.toString().replace('px', '')
+              )
+              const imageWidth = parseInt(
+                image.style.width.toString().replace('px', '')
+              )
+              const section = pdfdocument.sections.add() as PdfSection
+              const settings = new PdfPageSettings(0)
+              if (imageWidth > imageHeight) {
+                settings.orientation = PdfPageOrientation.Landscape
+              }
+              settings.size = new SizeF(imageWidth, imageHeight)
+              section.setPageSettings(settings)
+              const page = section.pages.add()
+              const graphics = page.graphics
+              const imageStr = image.src.replace('data:image/jpeg;base64,', '')
+              const pdfImage = new PdfBitmap(imageStr)
+              graphics.drawImage(pdfImage, 0, 0, imageWidth, imageHeight)
+              loadedPage++
+              if (loadedPage == count) {
+                try {
+                  if (filename) {
+                    pdfdocument.save(filename)
+                    resolve(null)
+                  } else {
+                    const document = await pdfdocument.save()
+                    const data = await convertToBase64Image(document.blobData)
+                    resolve(Decode64(data.replace('data:application/pdf;base64,', '')))
+                  }
+                } catch (e) {
+                  reject(e)
+                }
               }
             }
-          }
-        }, 500)
-      }
+          }, 500)
+        }
+      })
     }
   }
 }

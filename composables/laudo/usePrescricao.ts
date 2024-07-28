@@ -1,4 +1,6 @@
 import { useMaterial } from '../estoque/useMaterial'
+import { useSetup } from '../gerencial/useSetup'
+import { useLayout } from '../gerencial/useLayout'
 
 export const usePrescricao = (id?: number) => {
   const useBase = useBaseStore('/atendimento/prescricao')
@@ -35,7 +37,27 @@ export const usePrescricao = (id?: number) => {
     const response = await useBase.get(id, 'ds_status')
     return response.ds_status
   }
+  const setDocumento = async (id: number, payload: string) => {
+    return await useBase.update(id, { bb_pdf: Encode64(payload) })
+  }
+  const getDocumento = async (id: number) => {
+    const editor = await useSetup().get(1, 'cd_editor_prescricao')
+    const [layout, data] = await Promise.all([
+      useLayout().get(editor.cd_editor_prescricao, 'bb_layout'),
+      useLayout().find('mestre', { cd_editor: editor.cd_editor_prescricao, id })
+    ])
+    return {
+      layout: Decode64(layout.bb_layout),
+      data
+    }
+  }
+  async function getAssinado(id: number) {
+    return await useHttp(`/atendimento/prescricao/blob/${id}?fieldname=bb_pdf&filename=doc.pdf`, { method: 'post', fileDownload: true })
+  }
   return {
+    getAssinado,
+    getDocumento,
+    setDocumento,
     getExames,
     getStatus,
     getPaciente,

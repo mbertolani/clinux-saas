@@ -27,13 +27,11 @@ const openForm = async (codigo?: number) => {
 
 const actionMenu = [
   {
-    name: 'acTexto',
     title: 'Editar Texto',
     icon: Icones.editor,
     action: () => editarTexto()
   },
   {
-    name: 'miEditarFormula',
     title: 'Editar Fórmula',
     icon: Icones.formula,
     action: () => editarFormula()
