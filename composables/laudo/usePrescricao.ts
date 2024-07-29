@@ -29,8 +29,8 @@ export const usePrescricao = (id?: number) => {
     const response = getFieldItem(await usePaciente.get(id, 'cd_paciente,ds_paciente'))
     return response
   }
-  async function getPacientes(payload: string) {
-    const response = getFieldList(await usePaciente.find('paciente', { ds_pesquisa: payload }))
+  async function getPacientes(ds_paciente: string, dt_prescricao: string) {
+    const response = getFieldList(await useBase.find('paciente', { ds_paciente, dt_prescricao }))
     return response
   }
   async function getStatus(id: number) {
@@ -40,6 +40,10 @@ export const usePrescricao = (id?: number) => {
   async function getPrescricao(cd_exame: number) {
     const response = await useBase.find('prescricao', { cd_exame })
     return response ? response[0].cd_prescricao : null
+  }
+  async function getAtendimento(cd_prescricao: number) {
+    const response = await useBase.find('atendimento', { cd_prescricao })
+    return response?.length ? response[0].cd_atendimento : null
   }
   const setDocumento = async (id: number, payload: string) => {
     return await useBase.update(id, { bb_pdf: Encode64(payload) })
@@ -59,6 +63,7 @@ export const usePrescricao = (id?: number) => {
     return await useHttp(`/atendimento/prescricao/blob/${id}?fieldname=bb_pdf&filename=doc.pdf`, { method: 'post', fileDownload: true })
   }
   return {
+    getAtendimento,
     getPrescricao,
     getAssinado,
     getDocumento,

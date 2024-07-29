@@ -338,6 +338,7 @@ const apiPage = ref(null)
 const apiEditor = ref(null)
 const controller = useAuthStore().user.idmedico == 0 ? useLaudo() : useLaudoMedico()
 const modal = useModal()
+const showAnexo = ref(false)
 const openForm = () => {
   if (selectedData()?.dt_assinado) {
     laudoAssinado(selectedNode().data)
@@ -806,8 +807,10 @@ const visualizarPrescricao = async (id: number) => {
   })
 }
 const editarAnexo = async (id: number) => {
-  if (id)
-    modal.open(LaudoAnexo, { id })
+  // if (id)
+  //   modal.open(LaudoAnexo, { id })
+  showAnexo.value = id > 0
+  idGrid.value = selectedData()
 }
 const editarChat = async (id: number) => {
   if (id)
@@ -1070,6 +1073,12 @@ watch(avisoVip, (aviso) => {
       :schema="schemaFormula"
       @submit="salvarFormula"
       @close="showFormula = false"
+    />
+    <LaudoAnexo
+      v-if="showAnexo"
+      :id="idGrid.cd_atendimento"
+      v-model="showAnexo"
+      @close="showAnexo = false"
     />
     <BasePage
       v-show="!idEditor"

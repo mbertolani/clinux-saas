@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LaudoAssinado } from '#components'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { useAnexo } from '~/composables/atendimento/useAnexo'
 import { Messages } from '~/types/system'
@@ -31,12 +32,12 @@ const listaAnexos = async () => {
   }
 }
 
-function saveFile(filename, blob) {
-  const a = document.createElement('a')
-  a.download = filename
-  a.href = window.URL.createObjectURL(blob)
-  a.click()
-}
+// function saveFile(filename, blob) {
+//   const a = document.createElement('a')
+//   a.download = filename
+//   a.href = window.URL.createObjectURL(blob)
+//   a.click()
+// }
 const submitHandler = async (data): Promise<void> => {
   await Promise.all(data.bb_arquivo.map((fileItem) => {
     return new Promise((resolve) => {
@@ -87,13 +88,22 @@ const onCellKeyDown = ({ event, api }) => {
       break
   }
 }
-const onRowDoubleClicked = async (params) => {
-  const response = await doAnexoDownload(params.data.cd_documento)
-  saveFile(response.filename, response.stream.data)
-}
-const onCellClicked = async ({ data }) => {
+// const onRowDoubleClicked = async (params) => {
+//   const response = await doAnexoDownload(params.data.cd_documento)
+//   saveFile(response.filename, response.stream.data)
+// }
+const onRowDoubleClicked = async ({ data }) => {
   const response = await doAnexoDownload(data.cd_documento)
-  rowImage.value = response.stream.data instanceof Blob ? URL.createObjectURL(response.stream.data) : ''
+  if (response.filename.includes('.pdf'))
+    useModal().open(LaudoAssinado, {
+      title: response.filename,
+      src: URL.createObjectURL(response.stream.data),
+      onClose() {
+        useModal().close()
+      }
+    })
+  else
+    rowImage.value = response.stream.data instanceof Blob ? URL.createObjectURL(response.stream.data) : ''
 }
 listaAnexos()
 </script>
@@ -136,7 +146,6 @@ listaAnexos()
           :grid-options
           :on-row-double-clicked="onRowDoubleClicked"
           :on-cell-key-down="onCellKeyDown"
-          :on-cell-clicked="onCellClicked"
         />
       </div>
       <div

@@ -35,7 +35,7 @@ const data = reactive({
     },
     options: async ({ search }) => {
       if (!search) return []
-      return await getPacientes(search)
+      return await getPacientes(search, getNode('dt_prescricao').value as string)
     }
   },
   cd_unidade: {

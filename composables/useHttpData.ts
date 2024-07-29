@@ -102,9 +102,9 @@ export const useBaseStore = (
   const getTitle = async () => {
     return await Get('title')
   }
-  const download = async (id: number, fieldname: string, filename: string) => {
-    return await useHttp(`${url}/${id}?fieldname=${fieldname}&filename=${filename}`, {
-      method: 'put',
+  const getBlob = async (id: number, fieldname: string, filename: string) => {
+    return await useHttp(`${url}/blob/${id}?fieldname=${fieldname}&filename=${filename}`, {
+      method: 'post',
       fileDownload: true
     })
   }
@@ -124,6 +124,6 @@ export const useBaseStore = (
     getTitle,
     find,
     exec,
-    download
+    getBlob
   }
 }

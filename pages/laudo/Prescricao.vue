@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LaudoPrescricao, LaudoAssinado } from '#components'
+import { LaudoPrescricao, LaudoAssinado, LaudoAnexo } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import { Icones, Messages } from '~/types/system'
 
@@ -9,6 +9,7 @@ const controller = usePrescricao()
 const modal = useModal()
 const showEditor = ref(false)
 const apiEditor = ref(null)
+const anexoId = ref(null)
 const openForm = async (codigo?: number) => {
   if (codigo) {
     const aberto = await controller.getStatus(codigo)
@@ -63,6 +64,18 @@ const buttonAction = async (action: string) => {
     noClick: () => { useMessage().closeDialog() }
   })
 }
+const menuClient = [
+  {
+    title: 'Visualizar',
+    icon: 'i-mdi-file-document',
+    action: () => { abrirDocumento() }
+  },
+  {
+    title: 'Documentos',
+    icon: Icones.anexo,
+    action: () => { abrirAnexo() }
+  }
+]
 const actionMenu = moduleId === 'clinux'
   ? [
       {
@@ -84,20 +97,23 @@ const actionMenu = moduleId === 'clinux'
         action: () => { buttonAction('reiniciar') }
       },
       {
-        name: 'visualizar',
-        title: 'Visualizar',
-        icon: 'i-mdi-file-document',
-        action: () => { abrirDocumento() }
-      }
+        title: '-'
+      },
+      ...menuClient
     ]
-  : [
-      {
-        name: 'visualizar',
-        title: 'Visualizar',
-        icon: 'i-mdi-file-document',
-        action: () => { abrirDocumento() }
-      }
-    ]
+  : menuClient
+const showAnexo = ref(false)
+const abrirAnexo = async () => {
+  const node = apiPage.value.selectedNode()
+  if (!node)
+    return useMessage().showError(Messages.MSG_FNF_GRID)
+  const id = await usePrescricao().getAtendimento(node.id)
+  if (!id)
+    return useMessage().showError('Atendimento não encontrado !')
+  // modal.open(LaudoAnexo, { id })
+  anexoId.value = id
+  showAnexo.value = true
+}
 const filter = ref({
   dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value
 })
@@ -130,8 +146,10 @@ const abrirDocumento = async () => {
     return
   }
   const response = await usePrescricao().getAssinado(node.id)
+  if (!response?.data?.size)
+    return useMessage().showError(Messages.MSG_FNF_ERROR)
   modal.open(LaudoAssinado, {
-    title: 'Prescrição',
+    title: node.data.ds_paciente,
     src: URL.createObjectURL(response.data),
     onClose() {
       modal.close()
@@ -158,6 +176,12 @@ const abrirDocumento = async () => {
       @load="loadEditor($event)"
       @close="closeEditor()"
       @save="saveEditor()"
+    />
+    <LaudoAnexo
+      v-if="showAnexo"
+      :id="anexoId"
+      v-model="showAnexo"
+      @close="showAnexo = false"
     />
   </div>
 </template>

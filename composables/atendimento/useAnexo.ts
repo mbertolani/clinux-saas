@@ -13,7 +13,7 @@ export const useAnexo = (cd_atendimento: number) => {
   }
   async function doAnexoDownload(cd_documento: number): Promise<any> {
     const data = await useBase.get(cd_documento, 'ds_arquivo') as any
-    const response = await useBase.download(cd_documento, 'bb_documento', data.ds_arquivo)
+    const response = await useBase.getBlob(cd_documento, 'bb_documento', data.ds_arquivo)
     return {
       stream: response,
       filename: data.ds_arquivo
