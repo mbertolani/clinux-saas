@@ -326,6 +326,9 @@ export const useLaudo = () => {
   async function execProcedencia(payload: { cd_atendimento: number, cd_procedencia?: number }) {
     return await Post('laudo/laudo/exec/acProcedencia', payload)
   }
+  async function execSla(payload: { cd_atendimento: number, cd_sla?: number }) {
+    return await Post('laudo/laudo/exec/acSla', payload)
+  }
   async function bloquearLayout(): Promise<boolean> {
     const { data, error } = await post('doFuncionarioAcesso', { ds_form: 'ATE_LAUDO_EXE_CABECALHO' }) as any
     return !error && data.length > 0
@@ -364,6 +367,7 @@ export const useLaudo = () => {
     execPendencia,
     execUrgencia,
     execProcedencia,
+    execSla,
     //
     carregarViewer,
     downloadRadiant,

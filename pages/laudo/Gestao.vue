@@ -270,6 +270,12 @@ const actionMenu = [
     action: () => { editarProcedencia() }
   },
   {
+    name: 'acSla',
+    title: 'Alterar Sla',
+    icon: Icones.sla,
+    action: () => { editarSla() }
+  },
+  {
     name: 'acProcedimento',
     title: 'Alterar Procedimento',
     icon: Icones.procedimento,
@@ -713,7 +719,23 @@ const editarProcedencia = async () => {
     }
   })
 }
-
+const editarSla = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execSla({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalPesquisa, {
+    title: 'Alterar Sla',
+    data: response.data,
+    async onSubmit(cd_sla) {
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execSla({ cd_atendimento: node.data.cd_atendimento, cd_sla })
+      })))
+    }
+  })
+}
 const cancelarLaudos = async (cd_motivo?: number) => {
   // updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
   //   return useLaudo().execCancelar({ cd_exame: node.data.cd_exame, cd_motivo })
