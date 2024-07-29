@@ -181,7 +181,7 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       transferirLaudo()
       break
     case 'proximo':
-      proximoLaudo()
+      assinarLaudo(true)
       break
     case 'imprimir':
       imprimirLaudo()
@@ -336,7 +336,7 @@ const schemaFormula = ref()
 const showFormula = ref(false)
 const apiPage = ref(null)
 const apiEditor = ref(null)
-const controller = useAuthStore().user.idmedico == 0 ? useLaudo() : useLaudoMedico()
+const controller = !useAuthStore().user.idmedico ? useLaudo() : useLaudoMedico()
 const modal = useModal()
 const showAnexo = ref(false)
 const openForm = () => {
@@ -395,16 +395,17 @@ const salvarLaudo = async () => {
     return true
   }
 }
-const assinarLaudo = async (aClose: boolean = true, aTipo: number = 0) => {
+const assinarLaudo = async (aProximo: boolean = false, aTipo: number = 0) => {
   if (!aTipo)
-    if (await classificarLaudo())
+    if (await classificarLaudo(aProximo))
       return
   const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, bb_html: await apiEditor.value.save(), cd_tipo: aTipo })
   if (response) {
     useMessage().showMessage()
-    if (aClose)
-      closeEditor()
     apiPage.value.applyTransaction({ update: response.data })
+    closeEditor()
+    if (aProximo)
+      proximoLaudo()
   }
   return response
 }
@@ -435,9 +436,9 @@ const apiFilter = ref(null)
 const filtrar = async () => {
   apiPage.value.applyFilter()
 }
-watch(() => modelFilter.value.cd_fila, async () => {
-  apiPage.value.applyFilter()
-})
+// watch(() => modelFilter.value.cd_fila, async () => {
+//   apiPage.value.applyFilter()
+// })
 const exibirHistorico = async () => {
   modelFilter.value.cd_paciente = modelFilter.value.cd_paciente ? null : selectedData().cd_paciente
   apiPage.value.applySearch()
@@ -975,15 +976,18 @@ const transferirLaudo = async () => {
   })
 }
 const proximoLaudo = async () => {
-  const response = await assinarLaudo(false)
-  if (!response)
-    return
+  // const response = await assinarLaudo(false)
+  // if (!response)
+  //   return
+  // const proximo = await useLaudo().doLaudoProximo()
+  // if (proximo.cd_exame) {
+  //   abrirLaudo(proximo.cd_exame)
+  // } else {
+  //   closeEditor()
+  // }
   const proximo = await useLaudo().doLaudoProximo()
-  if (proximo.cd_exame) {
+  if (proximo?.cd_exame)
     abrirLaudo(proximo.cd_exame)
-  } else {
-    closeEditor()
-  }
 }
 const imprimirLaudo = async () => {
   const response = await assinarLaudo()
@@ -993,7 +997,7 @@ const imprimirLaudo = async () => {
     laudoAssinado(response)
   }
 }
-const classificarLaudo = async () => {
+const classificarLaudo = async (aProximo: boolean = false) => {
   const response = await useLaudo().doLaudoFiltroTipo(selectedData().cd_modalidade)
   if (!response.data.length) {
     return false
@@ -1002,7 +1006,7 @@ const classificarLaudo = async () => {
     title: 'Classificar Laudo',
     data: response.data,
     onSubmit(id) {
-      assinarLaudo(true, id)
+      assinarLaudo(aProximo, id)
       modal.close()
     },
     onCancel() {

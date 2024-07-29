@@ -56,7 +56,9 @@ export const useLaudo = () => {
   async function doMedicoViewer() {
     const id = useAuthStore().user.idmedico
     if (id)
-      return await useMedico().get(id, 'ds_viewer')
+      return (await useMedico().get(id, 'ds_viewer')).ds_viewer
+    else
+      return null
   }
   async function doMedicoToken(): Promise<{ data: { token: string, url: string }, error: string }> {
     return await post('doMedicoToken')

@@ -77,6 +77,7 @@ export default {
   },
   methods: {
     close() {
+      this.clear()
       useStorage('draft', null).value = null
     },
     change() {
