@@ -26,8 +26,7 @@ const onFirstDataRendered = async ({ api }) => {
 }
 
 const rowData = ref()
-// rowData.value = (await useLaudo().doChatLista({ cd_atendimento: props.data.cd_atendimento })).data
-useLaudo().doChatLista({ cd_atendimento: props.data.cd_atendimento }).then((response) => {
+useLaudo().doChatLista(props.data.cd_atendimento).then((response) => {
   rowData.value = response.data
 })
 

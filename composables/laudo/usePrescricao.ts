@@ -39,7 +39,7 @@ export const usePrescricao = (id?: number) => {
   }
   async function getPrescricao(cd_exame: number) {
     const response = await useBase.find('prescricao', { cd_exame })
-    return response ? response[0].cd_prescricao : null
+    return response.length ? response[0].cd_prescricao : null
   }
   async function getAtendimento(cd_prescricao: number) {
     const response = await useBase.find('atendimento', { cd_prescricao })

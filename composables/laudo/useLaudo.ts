@@ -333,8 +333,8 @@ export const useLaudo = () => {
   async function laudoAssinado(payload: { cd_atendimento: number, cd_exame: number, cd_paciente?: number }) {
     return await useHttp(`laudo/laudo?filename=laudo.pdf&cmd=acAssinado`, { method: 'post', body: payload, fileDownload: true })
   }
-  async function doChatLista(payload: { cd_atendimento: number, sn_medico?: boolean }) {
-    return await post('doChatLista', payload)
+  async function doChatLista(cd_atendimento: number) {
+    return await post('doChatLista', { cd_atendimento, sn_medico: useRouterStore().moduleId === 'clinux' })
   }
   async function doChatApagar(payload: { cd_codigo: number }) {
     return await post('doChatApagar', payload)

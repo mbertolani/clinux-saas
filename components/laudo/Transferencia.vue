@@ -37,7 +37,7 @@ const onSubmit = async (_data: any) => {
     await useLaudo().doChatGravar({
       cd_atendimento: props.id,
       ds_mensagem: _data.bb_mensagem,
-      sn_medico: true
+      sn_medico: useAuthStore().user.idmedico
     })
     emit('submit', response.data)
   }

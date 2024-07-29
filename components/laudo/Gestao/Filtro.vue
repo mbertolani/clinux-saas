@@ -67,7 +67,7 @@ const data = reactive({
     options: async () => getFieldList(await find('periodo'))
   },
   nr_status: {
-    options: async () => getFieldList(await find('status'))
+    options: async () => getFieldListOrder(await find('status'))
   },
   nr_fluxo: {
     options: async () => getFieldList(await find('fluxo'))

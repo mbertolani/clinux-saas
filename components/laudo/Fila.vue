@@ -50,7 +50,7 @@ const schema: FormKitSchemaDefinition = [
     label: 'Data',
     options: await useFila().getData(),
     selectionRemovable: true,
-    outerClass: formClass(4)
+    outerClass: formClass(3)
   },
   {
     $formkit: 'number',
@@ -73,9 +73,9 @@ const schema: FormKitSchemaDefinition = [
     name: 'nr_status',
     id: 'nr_status',
     label: 'Status',
-    options: await useFila().getStatusTele(),
+    options: await useFila().getStatus(),
     selectionRemovable: true,
-    outerClass: formClass(2)
+    outerClass: formClass(3)
   },
   {
     $formkit: 'dropdown',

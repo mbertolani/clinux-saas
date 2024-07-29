@@ -10,7 +10,7 @@ const props = defineProps({
 })
 
 const rowData = ref()
-rowData.value = (await useLaudo().doChatLista({ cd_atendimento: props.id })).data
+rowData.value = (await useLaudo().doChatLista(props.id)).data
 const columnDefs = [
   { field: 'dt_data', headerName: 'Data', width: 200, valueFormatter: p => formatDateTime(p.value) },
   { field: 'ds_funcionario', headerName: 'Funcionário', width: 200 },
@@ -20,9 +20,9 @@ const submitHandler = async (data): Promise<void> => {
   await useLaudo().doChatGravar({
     cd_atendimento: props.id,
     ds_mensagem: data.ds_mensagem,
-    sn_medico: true
+    sn_medico: useAuthStore().user.idmedico
   })
-  rowData.value = (await useLaudo().doChatLista({ cd_atendimento: props.id })).data
+  rowData.value = (await useLaudo().doChatLista(props.id)).data
   getNode('form-chat').reset()
   // useSystemStore().showMessage()
 }
