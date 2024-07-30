@@ -4,15 +4,16 @@ import { FormKitSchema } from '@formkit/vue'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import { getFieldName } from '~/utils/schema'
 
-const emit = defineEmits(['submit', 'close'])
+const emit = defineEmits(['submit', 'close', 'documento'])
 const props = defineProps({
   id: {
     type: Number,
     required: true
   }
 })
-const { get, update, create, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes, getExames } = usePrescricao(props.id)
+const { get, update, create, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes, getExames, findExame } = usePrescricao(props.id)
 const { get: _get, update: _update, create: _create, getAll: _getAll, remove: _remove } = usePrescricaoMaterial
+const { moduleId } = useRouterStore()
 
 // const optionsMaterial = await getMateriais()
 // const optionsUnidade = await getUnidades(0)
@@ -73,9 +74,9 @@ const data = reactive({
   }
 })
 const setExame = (node) => {
-  node.on('commit', () => {
+  node.on('commit', async () => {
     getNode('cd_exame').input(null)
-    getNode('cd_exame').props.options = listaExames
+    getNode('cd_exame').props.options = await listaExames()
   })
 }
 const listaExames = async () => {
@@ -143,12 +144,14 @@ const schemaFilho: FormKitSchemaDefinition = [
     $formkit: 'number',
     name: 'nr_quantidade',
     label: 'Quantidade',
+    if: moduleId === 'clinux' ? '1' : '0',
     // number
     validation: 'required',
     outerClass: formClass(2)
   },
   {
     $formkit: 'dropdown',
+    if: moduleId === 'clinux' ? '1' : '0',
     name: 'cd_unidade',
     bind: '$cd_unidade',
     label: 'Unidade',
@@ -235,6 +238,13 @@ const onSubmit = async (_data: any) => {
 //     console.log('commit', context)
 //   })
 // })
+const onDocumentos = async () => {
+  const response = await findExame(Number(getNode('cd_paciente').value), String(getNode('dt_prescricao').value))
+  if (response.length)
+    emit('documento', response[0].cd_atendimento)
+  else
+    useMessage().showMessage('Atendimento não selecionado !')
+}
 </script>
 
 <template>
@@ -256,6 +266,11 @@ const onSubmit = async (_data: any) => {
         <FormKitSchema
           :schema="schema"
           :data
+        />
+        <FormKit
+          type="button"
+          label="Documentos"
+          @click="onDocumentos"
         />
       </FormKit>
     </BaseFormLayout>
@@ -296,9 +311,3 @@ const onSubmit = async (_data: any) => {
     </template> -->
   </BaseForm>
 </template>
-
-<style>
-.formkit-input {
-  text-transform: uppercase;
-}
-</style>

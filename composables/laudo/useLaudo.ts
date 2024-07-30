@@ -323,6 +323,9 @@ export const useLaudo = () => {
   async function execUrgencia(payload: { cd_atendimento: number, cd_urgente?: number }) {
     return await Post('laudo/laudo/exec/acUrgencia', payload)
   }
+  async function execAviso(payload: { cd_atendimento: number, cd_aviso?: number }) {
+    return await Post('laudo/laudo/exec/acAviso', payload)
+  }
   async function execProcedencia(payload: { cd_atendimento: number, cd_procedencia?: number }) {
     return await Post('laudo/laudo/exec/acProcedencia', payload)
   }
@@ -366,6 +369,7 @@ export const useLaudo = () => {
     execAchado,
     execPendencia,
     execUrgencia,
+    execAviso,
     execProcedencia,
     execSla,
     //

@@ -6,32 +6,29 @@ export const usePrescricao = (id?: number) => {
   const useBase = useBaseStore('/atendimento/prescricao')
   const usePaciente = useBaseStore('/atendimento/paciente')
   const usePrescricaoMaterial = useBaseStore(`/atendimento/prescricao/${id}/material`)
+  async function findExame(cd_paciente: number, dt_prescricao: string) {
+    return await useBase.find('exame', { cd_paciente, dt_prescricao })
+  }
   async function getExames(cd_paciente: number, dt_prescricao: string) {
-    return getFieldList(await useBase.find('exame', { cd_paciente, dt_prescricao }))
+    return getFieldList(await findExame(cd_paciente, dt_prescricao))
   }
   async function getMaterial(id: number) {
-    const response = getFieldItem(await useBaseStore('/estoque/material').get(id, 'cd_material,ds_material'))
-    return response
+    return getFieldItem(await useBaseStore('/estoque/material').get(id, 'cd_material,ds_material'))
   }
   async function getMateriais() {
-    const response = getFieldList(await useMaterial().find('medicamento') as any)
-    return response
+    return getFieldList(await useMaterial().find('medicamento') as any)
   }
   async function getUnidades(cd_material: number) {
-    const response = getFieldList(await useMaterial().find('unidade', { cd_material }))
-    return response
+    return getFieldList(await useMaterial().find('unidade', { cd_material }))
   }
   async function getUnidade(id: number) {
-    const response = getFieldItem(await useBaseStore('/estoque/unidade').get(id, 'cd_unidade,ds_unidade'))
-    return response
+    return getFieldItem(await useBaseStore('/estoque/unidade').get(id, 'cd_unidade,ds_unidade'))
   }
   async function getPaciente(id: number) {
-    const response = getFieldItem(await usePaciente.get(id, 'cd_paciente,ds_paciente'))
-    return response
+    return getFieldItem(await usePaciente.get(id, 'cd_paciente,ds_paciente'))
   }
   async function getPacientes(ds_paciente: string, dt_prescricao: string) {
-    const response = getFieldList(await useBase.find('paciente', { ds_paciente, dt_prescricao }))
-    return response
+    return getFieldList(await useBase.find('paciente', { ds_paciente, dt_prescricao }))
   }
   async function getStatus(id: number) {
     const response = await useBase.get(id, 'ds_status')
@@ -63,6 +60,7 @@ export const usePrescricao = (id?: number) => {
     return await useHttp(`/atendimento/prescricao/blob/${id}?fieldname=bb_pdf&filename=doc.pdf`, { method: 'post', fileDownload: true })
   }
   return {
+    findExame,
     getAtendimento,
     getPrescricao,
     getAssinado,

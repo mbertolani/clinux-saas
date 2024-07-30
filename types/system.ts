@@ -231,6 +231,7 @@ export const Icones: Record<string, string> = {
   revisor: 'i-healthicons-doctor-male',
   auditor: 'i-healthicons-doctor-female',
   urgencia: 'i-healthicons-ambulance',
+  aviso: 'i-mdi-alert-circle-outline',
   atendimento: 'i-mdi-account-group',
   exame: 'i-mdi-account-file',
   editor: 'i-mdi-file-document-edit',

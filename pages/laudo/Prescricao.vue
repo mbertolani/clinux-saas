@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { LaudoPrescricao, LaudoAssinado, LaudoAnexo } from '#components'
 import { usePrescricao } from '~/composables/laudo/usePrescricao'
+import { useLaudo } from '~/composables/laudo/useLaudo'
 import { Icones, Messages } from '~/types/system'
 
 const { moduleId } = useRouterStore()
@@ -8,23 +9,31 @@ const apiPage = ref(null)
 const controller = usePrescricao()
 const modal = useModal()
 const showEditor = ref(false)
+const showForm = ref(false)
 const apiEditor = ref(null)
-const anexoId = ref(null)
+const id = ref(null)
 const openForm = async (codigo?: number) => {
   if (codigo) {
     const aberto = await controller.getStatus(codigo)
     if (!aberto)
       return abrirDocumento()
   }
-  modal.open(LaudoPrescricao, {
-    id: Number(codigo),
-    onClose: () => modal.close(),
-    onSubmit: (id: number, data: any) => {
-      const nodes = id ? { update: [data] } : { add: [data] }
-      apiPage.value.applyTransaction(nodes)
-      modal.close()
-    }
-  })
+  id.value = Number(codigo)
+  showForm.value = true
+  // modal.open(LaudoPrescricao, {
+  //   id: Number(codigo),
+  //   onClose: () => modal.close(),
+  //   onSubmit: (id: number, data: any) => {
+  //     const nodes = id ? { update: [data] } : { add: [data] }
+  //     apiPage.value.applyTransaction(nodes)
+  //     modal.close()
+  //   }
+  // })
+}
+const onSubmit = (id: number, data: any) => {
+  const nodes = id ? { update: [data] } : { add: [data] }
+  apiPage.value.applyTransaction(nodes)
+  showForm.value = false
 }
 
 const rowClassRules = {
@@ -56,6 +65,9 @@ const buttonAction = async (action: string) => {
     const aberto = await controller.getStatus(data.cd_prescricao)
     if (!aberto)
       return useMessage().showError(Messages.MSG_SYS_NOT)
+    const certificado = await useLaudo().validarCertificado()
+    if (!certificado)
+      return
   }
   useMessage().openDialog({
     title: 'Atualizar Prescrição',
@@ -111,8 +123,11 @@ const abrirAnexo = async () => {
   if (!id)
     return useMessage().showError('Atendimento não encontrado !')
   // modal.open(LaudoAnexo, { id })
-  anexoId.value = id
-  showAnexo.value = true
+  exibirAnexo(id)
+}
+const exibirAnexo = (_id) => {
+  id.value = Number(_id)
+  showAnexo.value = _id > 0
 }
 const filter = ref({
   dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value
@@ -179,9 +194,17 @@ const abrirDocumento = async () => {
     />
     <LaudoAnexo
       v-if="showAnexo"
-      :id="anexoId"
+      :id
       v-model="showAnexo"
       @close="showAnexo = false"
+    />
+    <LaudoPrescricao
+      v-if="showForm"
+      :id
+      v-model="showForm"
+      @close="showForm = false"
+      @submit="onSubmit"
+      @documento="exibirAnexo"
     />
   </div>
 </template>

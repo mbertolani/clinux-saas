@@ -264,6 +264,11 @@ const actionMenu = [
     action: () => { editarUrgencia() }
   },
   {
+    title: 'Alterar Aviso',
+    icon: Icones.aviso,
+    action: () => { editarAviso() }
+  },
+  {
     name: 'acProcedencia',
     title: 'Alterar Procedência',
     icon: Icones.procedencia,
@@ -691,13 +696,25 @@ const editarUrgencia = async () => {
     title: 'Alterar Urgência',
     data: response.data,
     async onSubmit(cd_urgente) {
-      // const response = await useLaudo().execUrgencia({ cd_atendimento, cd_urgente })
-      // if (!response.error) {
-      //   apiPage.value.applyTransaction({ update: response.data })
-      //   modal.close()
-      // }
       updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
         return useLaudo().execUrgencia({ cd_atendimento: node.data.cd_atendimento, cd_urgente })
+      })))
+    }
+  })
+}
+const editarAviso = async () => {
+  if (!selectedNode())
+    return
+  const cd_atendimento = selectedData().cd_atendimento
+  const response = await useLaudo().execAviso({ cd_atendimento })
+  if (response.error)
+    return
+  modal.open(ModalPesquisa, {
+    title: 'Alterar Aviso',
+    data: response.data,
+    async onSubmit(cd_aviso) {
+      updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
+        return useLaudo().execAviso({ cd_atendimento: node.data.cd_atendimento, cd_aviso })
       })))
     }
   })
