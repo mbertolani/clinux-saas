@@ -212,8 +212,13 @@ const onSubmit = async (_data: any) => {
   }
   // comparar o array items com _data.material pela chave cd_codigo e apagar do banco
   if (response) {
-    emit('submit', props.id, response)
+    emit('submit', props.id, response, action.value)
   }
+}
+const action = ref('')
+const onAction = (_action: string) => {
+  action.value = _action
+  getNode('form').submit()
 }
 // const columnDefs = ref()
 // const rowData = ref()
@@ -238,7 +243,7 @@ const onSubmit = async (_data: any) => {
 //     console.log('commit', context)
 //   })
 // })
-const onDocumentos = async () => {
+const onDocumento = async () => {
   const response = await findExame(Number(getNode('cd_paciente').value), String(getNode('dt_prescricao').value))
   if (response.length)
     emit('documento', response[0].cd_atendimento)
@@ -260,6 +265,7 @@ const onDocumentos = async () => {
       @submit="onSubmit"
     >
       <FormKit
+        id="form"
         type="group"
         name="prescricao"
       >
@@ -269,8 +275,24 @@ const onDocumentos = async () => {
         />
         <FormKit
           type="button"
+          input-class="w-full justify-center"
+          :outer-class="formClass(2)"
           label="Documentos"
-          @click="onDocumentos"
+          @click="onDocumento"
+        />
+        <FormKit
+          type="button"
+          input-class="w-full justify-center"
+          :outer-class="formClass(2)"
+          label="Aprovar"
+          @click="onAction('aprovar')"
+        />
+        <FormKit
+          type="button"
+          input-class="w-full justify-center"
+          :outer-class="formClass(2)"
+          label="Recusar"
+          @click="onAction('recusar')"
         />
       </FormKit>
     </BaseFormLayout>

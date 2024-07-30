@@ -30,10 +30,12 @@ const openForm = async (codigo?: number) => {
   //   }
   // })
 }
-const onSubmit = (id: number, data: any) => {
+const onSubmit = (id: number, data: any, action: string = '') => {
   const nodes = id ? { update: [data] } : { add: [data] }
   apiPage.value.applyTransaction(nodes)
   showForm.value = false
+  if (action)
+    buttonAction(action)
 }
 
 const rowClassRules = {
