@@ -143,3 +143,14 @@ export function Encode64(obj) {
 export function Decode64(obj) {
   return obj ? atob(obj) : ''
 }
+export const onlyNumbers = (str: string): string => {
+  return str.replace(/\D/g, '')
+}
+export const isNumeric = (str: string): boolean => {
+  return /^[0-9]+$/.test(str)
+}
+export function isValidDate(str: string): boolean {
+  const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/
+  const match = str.match(regex)
+  return match ? true : false
+}

@@ -25,9 +25,16 @@ const props = defineProps({
   data: {
     type: Object,
     required: false
+  },
+  value: {
+    type: Object,
+    required: false
+  },
+  grid: {
+    type: String,
+    default: 'height: 400px; width: 100%;'
   }
 })
-const model = ref(null)
 const [rowData, columnDefs, master] = await Promise.all([
   props.controller.getAll(),
   props.controller.getGrid(),
@@ -106,7 +113,7 @@ const getRowId = ({ data }) => String(Object.values(data)[0])
     <FormKit
       id="form-kit"
       v-slot="{ state: { dirty } }"
-      :value="model"
+      :value
       dirty-behavior="compare"
       type="form"
       :actions="false"
@@ -165,7 +172,7 @@ const getRowId = ({ data }) => String(Object.values(data)[0])
     </FormKit>
     <BaseGridCore
       ref="gridRef"
-      style="height: 400px; width: 100%;"
+      :style="grid"
       :get-row-id="getRowId"
       :column-defs
       :row-data

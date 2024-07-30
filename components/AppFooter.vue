@@ -47,7 +47,7 @@ const { setup } = useSystemStore()
 
     <template #right>
       <p class="text-gray-500 dark:text-gray-400 text-sm">
-        Versão: Api {{ setup.nr_clinux }} App {{ '1.002' }} Banco {{ setup.nr_banco }}
+        Versão: Api {{ setup.nr_clinux }} App {{ '1.003' }} Banco {{ setup.nr_banco }}
       </p>
       <UButton
         v-if="false"

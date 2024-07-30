@@ -298,11 +298,13 @@ export const otrsMenu = [
 export const clientMenu = [
   {
     label: 'Atendimento',
-    to: '/atendimento/atendimento'
+    to: '/atendimento/atendimento',
+    icon: Icones.atendimento
   },
   {
     label: 'Prescrição',
-    to: '/laudo/prescricao'
+    to: '/laudo/prescricao',
+    icon: Icones.prescricao
   }
 ]
 export const mainMenu = [
@@ -325,6 +327,7 @@ export const mainMenu = [
   {
     label: 'Atendimento',
     children: [
+      { label: 'Atendimento', to: '/atendimento/atendimento', icon: Icones.atendimento },
       { label: 'Paciente', to: '/atendimento/paciente', icon: Icones.paciente }
     ]
   },

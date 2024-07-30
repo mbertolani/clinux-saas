@@ -1,4 +1,5 @@
 export const useAtendimento = () => {
+  const useBase = useBaseStore('/atendimento/atendimento')
   async function post(url: string, body?: object) {
     return await useHttp(`se1/${url}`, { method: 'post', body, fileUpload: true })
   }
@@ -13,8 +14,12 @@ export const useAtendimento = () => {
   }) {
     return await post('doListaMedico', payload)
   }
+  async function findSla(cd_sala: number) {
+    return getFieldList(await useBase.find('sla', { cd_sala }))
+  }
   return {
+    findSla,
     doListaMedico,
-    ...useBaseStore('/atendimento/atendimento')
+    ...useBase
   }
 }

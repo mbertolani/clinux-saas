@@ -114,6 +114,7 @@ const schema: FormKitSchemaDefinition = [
     id: 'cd_exame',
     name: 'cd_exame',
     bind: '$cd_exame',
+    validation: 'required',
     multiple: true,
     label: 'Exame',
     outerClass: formClass(12)

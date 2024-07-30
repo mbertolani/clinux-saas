@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { AtendimentoPaciente } from '#components'
-import { _1 } from '#tailwind-config/theme/aspectRatio'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import type { ActionMenuItem } from '~/types/grid'
 import { Icones } from '~/types/system'
