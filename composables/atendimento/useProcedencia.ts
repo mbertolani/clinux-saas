@@ -4,7 +4,7 @@ export const useProcedencia = () => {
     return getFieldList(await useBase.getList())
   }
   const getItem = async (id: number) => {
-    return getFieldItem(await useBase.get(id, 'cd_sala,ds_sala'))
+    return getFieldItem(await useBase.get(id, 'cd_procedencia,ds_procedencia'))
   }
   return {
     getItemList,

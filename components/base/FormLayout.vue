@@ -38,12 +38,36 @@ if (props.controller)
 else
   model.value = props.value
 
+model.value = decodeFields(model.value)
+
 if (props.group)
   model.value = setSchemaGroup(model.value, props.group)
+
+function decodeFields(obj) {
+  const decoded = {}
+  for (const key in obj) {
+    if (key.startsWith('bb_'))
+      decoded[key] = Decode64(obj[key])
+    else
+      decoded[key] = obj[key]
+  }
+  return decoded
+}
+function encodeFields(obj) {
+  const encoded = {}
+  for (const key in obj) {
+    if (key.startsWith('bb_'))
+      encoded[key] = Encode64(obj[key])
+    else
+      encoded[key] = obj[key]
+  }
+  return encoded
+}
 
 const onSubmit = async (_data: any) => {
   if (props.group)
     _data = getSchemaGroup(_data)
+  _data = encodeFields(_data)
   if (props.controller) {
     const item = (props.id) ? await props.controller.update(props.id, _data) : await props.controller.create(_data)
     if (item)

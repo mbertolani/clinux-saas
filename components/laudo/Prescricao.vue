@@ -9,6 +9,10 @@ const props = defineProps({
   id: {
     type: Number,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
   }
 })
 const { get, update, create, usePrescricaoMaterial, getMaterial, getUnidade, getMateriais, getUnidades, getPaciente, getPacientes, getExames, findExame } = usePrescricao(props.id)
@@ -254,7 +258,7 @@ const onDocumento = async () => {
 
 <template>
   <BaseForm
-    title="Prescrição"
+    :title
     @close="emit('close')"
   >
     <BaseFormLayout

@@ -9,6 +9,10 @@ const props = defineProps({
   id: {
     type: Number,
     required: true
+  },
+  title: {
+    type: String,
+    required: true
   }
 })
 
@@ -49,7 +53,7 @@ model.value.bb_complemento = Decode64(model.value.bb_complemento)
 
 <template>
   <BaseForm
-    title="Pendência"
+    :title
     @close="emit('close')"
   >
     <BaseFormLayout

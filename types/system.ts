@@ -328,7 +328,7 @@ export const mainMenu = [
   {
     label: 'Atendimento',
     children: [
-      { label: 'Atendimento', to: '/atendimento/atendimento', icon: Icones.atendimento },
+      { label: 'Atendimento', to: '/atendimento/clinica', icon: Icones.atendimento },
       { label: 'Paciente', to: '/atendimento/paciente', icon: Icones.paciente }
     ]
   },
