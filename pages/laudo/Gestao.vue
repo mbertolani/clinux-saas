@@ -787,6 +787,7 @@ const cancelarLaudo = async () => {
 const editarPendencia = async (id: number) => {
   if (id)
     modal.open(LaudoPendencia, {
+      title: 'Pendência',
       id,
       async onSubmit(data) {
         apiPage.value.applyTransaction({ update: data })
