@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { setMainMenu } from '~/types/system'
+import { useSetup } from '~/composables/gerencial/useSetup'
 
 const { signOut, getSession, refreshToken } = useAuthStore()
 const { user, token } = storeToRefs(useAuthStore())
@@ -17,6 +18,15 @@ const logout = () => {
   useSystemStore().$reset()
   // useRouterStore().$reset()
 }
+const idleTime = await useSetup().getSetup('nr_login_tempo') || 15
+const { idle } = useIdle(idleTime * 60 * 1000)
+console.log('idleValue', idle.value, idleTime)
+watch(idle, (idleValue) => {
+  if (idleValue) {
+    console.log('Tempo ocioso atingido: ' + idleValue)
+    useAuthStore().signOut()
+  }
+})
 </script>
 
 <template>

@@ -23,7 +23,7 @@ const geral = [{
 {
   $formkit: 'number',
   name: 'nr_login_tempo',
-  label: 'Tempo Ocioso',
+  label: 'Tempo Ocioso (min)',
   outerClass: formClass(2)
 }]
 const imagem = [

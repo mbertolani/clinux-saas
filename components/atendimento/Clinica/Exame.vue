@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-const title = 'Associar Exames'
+const title = 'Exames'
 const controller = useExame(props.id)
 const data = reactive({
   cd_medico: {

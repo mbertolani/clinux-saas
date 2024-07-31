@@ -1,11 +1,10 @@
 export const usePaciente = () => {
+  const useBase = useBaseStore('/atendimento/paciente')
   async function getPaciente(id: number) {
-    const response = getFieldItem(await useBaseStore('/atendimento/paciente').get(id, 'cd_paciente,ds_paciente,dt_nascimento'))
-    return response
+    return await useBase.get(id, 'cd_paciente,ds_paciente')
   }
   async function getPacientes(payload: string) {
-    const response = getFieldList(await useBaseStore('/atendimento/paciente').find('paciente', { ds_pesquisa: payload }))
-    return response
+    return getFieldList(await useBase.find('paciente', { ds_pesquisa: payload }))
   }
   return {
     getPaciente,

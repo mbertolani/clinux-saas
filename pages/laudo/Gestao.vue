@@ -7,7 +7,6 @@ import { useLaudoMedico } from '~/composables/laudo/useLaudoMedico'
 import { usePaciente } from '~/composables/atendimento/usePaciente'
 import { useModelo } from '~/composables/gerencial/useModelo'
 import { Icones } from '~/types/system'
-import { useSetup } from '~/composables/gerencial/useSetup'
 
 const toolBarItens = [
   {
@@ -166,7 +165,7 @@ const toolBarClick = async (args) => { // EmitType<(ClickEventArgs)>
       editarAnexo(Number(selectedData()?.cd_atendimento))
       break
     case 'dados':
-      exibirDados(selectedData())
+      exibirDados(Number(idEditor.value))
       break
     case 'dicionario':
       console.log('dicionario')
@@ -410,7 +409,7 @@ const assinarLaudo = async (aProximo: boolean = false, aTipo: number = 0) => {
   if (!aTipo)
     if (await classificarLaudo(aProximo))
       return
-  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, bb_html: await apiEditor.value.save(), cd_tipo: aTipo })
+  const response = await useLaudo().doLaudoAssinar({ cd_exame: idEditor.value, bb_html: await apiEditor.value.save(), cd_tipo: aTipo, ds_exame: selectedNodeIds().join(',') })
   if (response) {
     useMessage().showMessage()
     apiPage.value.applyTransaction({ update: response.data })
@@ -630,11 +629,6 @@ const editarMedico = async () => {
     title: 'Alterar Médico',
     data: response.data,
     async onSubmit(cd_medico) {
-      // const response = await useLaudo().execMedico({ cd_atendimento, cd_medico })
-      // if (!response.error) {
-      //   apiPage.value.applyTransaction({ update: response.data })
-      //   modal.close()
-      // }
       updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
         return useLaudo().execMedico({ cd_atendimento: node.data.cd_atendimento, cd_medico })
       })))
@@ -652,11 +646,6 @@ const editarRevisor = async () => {
     title: 'Alterar Revisor',
     data: response.data,
     async onSubmit(cd_medico) {
-      // const response = await useLaudo().execRevisor({ cd_atendimento, cd_medico })
-      // if (!response.error) {
-      //   apiPage.value.applyTransaction({ update: response.data })
-      //   modal.close()
-      // }
       updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
         return useLaudo().execRevisor({ cd_atendimento: node.data.cd_atendimento, cd_medico })
       })))
@@ -674,11 +663,6 @@ const editarAuditor = async () => {
     title: 'Alterar Auditor',
     data: response.data,
     async onSubmit(cd_medico) {
-      // const response = await useLaudo().execAuditor({ cd_atendimento, cd_medico })
-      // if (!response.error) {
-      //   apiPage.value.applyTransaction({ update: response.data })
-      //   modal.close()
-      // }
       updateNodes(await Promise.all(apiPage.value.getSelectedNodes().map((node) => {
         return useLaudo().execAuditor({ cd_atendimento: node.data.cd_atendimento, cd_medico })
       })))
@@ -825,10 +809,14 @@ const editarAuditoria = async (id: number) => {
       }
     })
 }
-const exibirDados = async (data: object) => {
+const exibirDados = async (id: number) => {
+  const [gridData, gridHeader] = await Promise.all([
+    controller.getView({ cd_exame: id }),
+    controller.getGrid()
+  ])
   modal.open(LaudoEditorPainelGrid, {
-    gridData: data,
-    gridHeader: await controller.getGrid(),
+    gridData: gridData.length ? gridData[0] : {},
+    gridHeader,
     onClose() {
       modal.close()
     }
@@ -1057,13 +1045,13 @@ const classificarLaudo = async (aProximo: boolean = false) => {
 }
 const avisoVip = ref()
 const selectionChanged = params => avisoVip.value = params?.ds_vip
-const idleTime = await useSetup().getSetup('nr_login_tempo') || 15
-const { idle } = useIdle(idleTime * 60 * 1000)
-watch(idle, (idleValue) => {
-  if (idleValue) {
-    useAuthStore().signOut()
-  }
-})
+// const idleTime = await useSetup().getSetup('nr_login_tempo') || 15
+// const { idle } = useIdle(idleTime * 60 * 1000)
+// watch(idle, (idleValue) => {
+//   if (idleValue) {
+//     useAuthStore().signOut()
+//   }
+// })
 watch(avisoVip, (aviso) => {
   if (aviso) {
     useMessage().showMessage(aviso)

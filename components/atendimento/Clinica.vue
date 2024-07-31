@@ -19,12 +19,14 @@ defineProps({
 })
 
 const sala = useSala()
+const paciente = usePaciente()
 const data = reactive({
   cd_paciente: {
     optionLoader: async (id, cachedOption) => {
       if (cachedOption) return cachedOption
       if (!id) return []
-      return await usePaciente().getPaciente(id)
+      setDataNascimento(id)
+      return await paciente.getPaciente(id)
     },
     options: async ({ search }) => {
       if (!search) return []
@@ -32,7 +34,7 @@ const data = reactive({
       if (onlyNumbers(search).length)
         if (search.length < 11 && !isValidDate(search))
           return []
-      return await usePaciente().getPacientes(search)
+      return await paciente.getPacientes(search)
     }
   },
   cd_sala: {
@@ -69,12 +71,13 @@ useFormKitNodeById('cd_sala', (node) => {
   })
 })
 
-useFormKitNodeById('cd_paciente', (node) => {
-  node.on('commit', async (context) => {
-    const response = context.payload ? await usePaciente().get(context.payload, 'dt_nascimento') : {}
-    getNode('dt_nascimento').input(formatDate(response.dt_nascimento))
-  })
-})
+useFormKitNodeById('cd_paciente', node => node.on('commit', async context => setDataNascimento(context.payload)))
+
+const setDataNascimento = async (payload) => {
+  const response = payload ? await paciente.get(payload, 'dt_nascimento') : {}
+  getNode('dt_nascimento').input(formatDate(response.dt_nascimento))
+}
+
 const schema = [
   {
     $formkit: 'hidden',
@@ -172,13 +175,13 @@ const schema = [
   {
     $formkit: 'text',
     name: 'ds_observacao',
-    placeholder: 'Observação',
+    label: 'Observação',
     outerClass: formClass(12)
   },
   {
     $formkit: 'textarea',
     name: 'bb_dados',
-    placeholder: 'Dados Clínicos',
+    label: 'Dados Clínicos',
     outerClass: formClass(12)
   }
 ]
@@ -205,7 +208,7 @@ const onSubmit = async (...args) => {
       :controller="useAtendimento()"
       @submit="onSubmit"
     >
-      <FormKit
+      <!-- <FormKit
         type="button"
         input-class="w-full justify-center"
         :outer-class="formClass(3)"
@@ -228,7 +231,7 @@ const onSubmit = async (...args) => {
         input-class="w-full justify-center"
         :outer-class="formClass(3)"
         label="Cancelar"
-      />
+      /> -->
     </BaseFormLayout>
   </BaseForm>
 </template>

@@ -268,7 +268,9 @@ export const Icones: Record<string, string> = {
   estoque: 'i-mdi-store',
   complemento: 'i-mdi-alert',
   texto: 'i-mdi-touch-text-outline',
-  formula: 'i-mdi-function-variant'
+  formula: 'i-mdi-function-variant',
+  atendimento_ficha: 'i-mdi-account-check',
+  atendimento_cancela: 'i-mdi-account-cancel'
 }
 export const portalMenu = [
   {
@@ -299,7 +301,7 @@ export const otrsMenu = [
 export const clientMenu = [
   {
     label: 'Atendimento',
-    to: '/atendimento/atendimento',
+    to: '/atendimento/clinica',
     icon: Icones.atendimento
   },
   {

@@ -8,21 +8,64 @@ const apiPage = ref(null)
 const controller = useAtendimento()
 const showModal = ref(false)
 const showExame = ref(false)
+const showAnexo = ref(false)
 const id = ref(0)
 const filter = ref()
 
 const actionMenu = [
   {
-    title: 'Associar Exames',
+    title: 'Exames',
     icon: Icones.procedimento,
     action: () => associarExame(apiPage.value.selectedId())
+  },
+  {
+    title: 'Documentos',
+    icon: Icones.anexo,
+    action: () => {
+      id.value = apiPage.value.selectedId()
+      showAnexo.value = id.value > 0
+    }
+  },
+  {
+    title: '-'
+  },
+  {
+    title: 'Solicitar',
+    icon: Icones.atendimento_ficha,
+    action: () => solicitar(true)
+  },
+  {
+    title: 'Cancelar',
+    icon: Icones.atendimento_cancela,
+    action: () => solicitar(false)
   }
 ]
-const associarExame = (_id) => {
+const solicitar = (action: boolean) => {
+  if (!apiPage.value.selectedId())
+    return
+  const _id = apiPage.value.selectedId()
+  useMessage().openDialog({
+    title: 'Atendimento',
+    description: action ? 'Confirmar solicitação ?' : 'Cancelar solicitação ?',
+    okClick: async () => {
+      const data = action ? await useAtendimento().execFicha(apiPage.value.selectedId()) : await useAtendimento().execFichaCancela(apiPage.value.selectedId())
+      apiPage.value.applyTransaction(_id ? { update: data } : { add: data })
+    }
+  })
+}
+
+const associarExame = async (_id) => {
+  const response = await useAtendimento().get(_id, 'nr_controle')
+  if (response.nr_controle)
+    return useMessage().showError('A solicitação já foi enviada !')
+
   showExame.value = true
   id.value = _id
 }
-const openForm = (codigo?: number) => {
+const openForm = async (codigo?: number) => {
+  const response = await useAtendimento().get(codigo, 'nr_controle')
+  if (response.nr_controle)
+    return useMessage().showError('A solicitação já foi enviada !')
   showModal.value = true
   id.value = Number(codigo)
 }
@@ -62,6 +105,12 @@ const onClose = () => {
       :id
       v-model="showExame"
       @close="showExame=false"
+    />
+    <LaudoAnexo
+      v-if="showAnexo"
+      :id
+      v-model="showAnexo"
+      @close="showAnexo = false"
     />
   </BasePage>
 </template>
