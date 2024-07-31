@@ -38,7 +38,6 @@ const data = reactive({
       return await useProcedimento().getItem(id)
     },
     options: async () => {
-      getNode('cd_plano').input(await controller.findParticular(props.id))
       const atendimento = await useAtendimento().get(props.id, 'cd_sala,cd_medico,dt_data')
       return await controller.findProcedimento({
         cd_sala: atendimento.cd_sala,
@@ -48,8 +47,30 @@ const data = reactive({
         cd_exame: getNode('cd_exame').value || 0
       })
     }
+  },
+  cd_plano: (node) => {
+    console.log('cd_plano', node)
   }
 })
+// useFormKitNodeById('form-kit', (node) => {
+//   node.on('reset', async () => {
+//     console.log('reset form-kit', node.value)
+//     getNode('cd_plano').input(await controller.findParticular(props.id))
+//   })
+// })
+// const onReset = async () => {
+//   console.log('reset form-kit', getNode('cd_plano').value)
+//   if (!getNode('cd_plano').value)
+//     getNode('cd_plano').input(await controller.findParticular(props.id))
+// }
+const value = {
+  cd_exame: null,
+  cd_plano: await controller.findParticular(props.id),
+  cd_procedimento: null,
+  cd_medico: null,
+  nr_filme: null,
+  ds_exame_realizado: null
+}
 const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
@@ -59,7 +80,8 @@ const schema: FormKitSchemaDefinition = [
   {
     $formkit: 'hidden',
     id: 'cd_plano',
-    name: 'cd_plano'
+    name: 'cd_plano',
+    onNode: '$cd_plano'
   },
   {
     $formkit: 'dropdown',
@@ -104,5 +126,6 @@ const schema: FormKitSchemaDefinition = [
     :data
     :icon="Icones.medico"
     :controller
+    :value
   />
 </template>

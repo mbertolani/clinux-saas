@@ -4,7 +4,7 @@ import { reset } from '@formkit/core'
 import { FormKitSchema } from '@formkit/vue'
 import { Messages } from '~/types/system'
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'reset'])
 const props = defineProps({
   title: {
     type: String,
@@ -65,12 +65,15 @@ const onSubmit = async (_data: any) => {
   cancelar()
 }
 const cancelar = () => {
-  reset('form-kit', {})
+  reset('form-kit', props.value || {})
 }
 const confirmarDelete = ref(false)
 const nodeData = ref()
 const gridRef = ref()
 const confirmarExclusao = () => {
+  if (JSON.stringify(getNode('form-kit').value) !== JSON.stringify(props.value || {})) {
+    return cancelar()
+  }
   const selection = gridRef.value?.coreApi.api.getSelectedRows()
   nodeData.value = selection[0]
   confirmarDelete.value = selection.length > 0
@@ -95,6 +98,14 @@ const log = async () => {
   showLog.value = true
 }
 const getRowId = ({ data }) => String(Object.values(data)[0])
+const setNode = (node) => {
+  node.on('reset', () => {
+    emit('reset')
+  })
+  node.on('mounted', () => {
+    emit('reset')
+  })
+}
 </script>
 
 <template>
@@ -117,6 +128,7 @@ const getRowId = ({ data }) => String(Object.values(data)[0])
       dirty-behavior="compare"
       type="form"
       :actions="false"
+      @node="setNode"
       @submit="onSubmit"
     >
       <div :class="formClass()">
