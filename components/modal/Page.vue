@@ -50,7 +50,7 @@ const gridOptions = {
 
 const onRowDoubleClicked = async (params) => {
   // value.value = params.data
-  reset('form-kit', params.data)
+  reset('form-modal-page', params.data)
 }
 
 const onSubmit = async (_data: any) => {
@@ -65,13 +65,13 @@ const onSubmit = async (_data: any) => {
   cancelar()
 }
 const cancelar = () => {
-  reset('form-kit', props.value || {})
+  reset('form-modal-page', props.value || {})
 }
 const confirmarDelete = ref(false)
 const nodeData = ref()
 const gridRef = ref()
 const confirmarExclusao = () => {
-  if (JSON.stringify(getNode('form-kit').value) !== JSON.stringify(props.value || {})) {
+  if (JSON.stringify(getNode('form-modal-page').value) !== JSON.stringify(props.value || {})) {
     return cancelar()
   }
   const selection = gridRef.value?.coreApi.api.getSelectedRows()
@@ -103,7 +103,7 @@ const setNode = (node) => {
     emit('reset')
   })
   node.on('mounted', () => {
-    emit('reset')
+    console.log('mounted', node)
   })
 }
 </script>
@@ -122,7 +122,7 @@ const setNode = (node) => {
       @submit="onSubmit"
     /> -->
     <FormKit
-      id="form-kit"
+      id="form-modal-page"
       v-slot="{ state: { dirty } }"
       :value
       dirty-behavior="compare"

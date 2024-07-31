@@ -13,14 +13,15 @@ const filter = ref()
 
 const actionMenu = [
   {
-    title: 'Associar Procedimento',
+    title: 'Associar Exames',
     icon: Icones.procedimento,
-    action: () => {
-      showExame.value = true
-      id.value = apiPage.value.selectedId()
-    }
+    action: () => associarExame(apiPage.value.selectedId())
   }
 ]
+const associarExame = (_id) => {
+  showExame.value = true
+  id.value = _id
+}
 const openForm = (codigo?: number) => {
   showModal.value = true
   id.value = Number(codigo)
@@ -28,6 +29,8 @@ const openForm = (codigo?: number) => {
 const onSubmit = (data: any) => {
   showModal.value = false
   apiPage.value.applyTransaction(id.value ? { update: [data] } : { add: [data] })
+  if (!id.value)
+    associarExame(Object.values(data)[0])
 }
 const filterDate = ref({
   dt_de: useDateFormat(new Date(), 'YYYY-MM-DD').value

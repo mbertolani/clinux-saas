@@ -36,7 +36,11 @@ const data = reactive({
     }
   },
   cd_sala: {
-    disabled: false,
+    optionLoader: async (id, cachedOption) => {
+      if (cachedOption) return cachedOption
+      if (!id) return []
+      return await useSala().getItem(id)
+    },
     options: async () => {
       return await sala.getItemList()
     }
@@ -46,6 +50,10 @@ const data = reactive({
       if (cachedOption) return cachedOption
       if (!id) return []
       return await useSla().getItem(id)
+    },
+    options: async () => {
+      const sala = Number(getNode('cd_sala').value)
+      return sala ? await useAtendimento().findSla(sala) : []
     }
   },
   editar: {
@@ -57,7 +65,6 @@ const data = reactive({
 
 useFormKitNodeById('cd_sala', (node) => {
   node.on('commit', async (context) => {
-    console.log('cd_sala', context)
     getNode('cd_sla').props.options = context.payload ? await useAtendimento().findSla(context.payload) : []
   })
 })
@@ -117,7 +124,6 @@ const schema = [
     name: 'cd_sla',
     label: 'Sla',
     bind: '$cd_sla',
-    options: [],
     selectionRemovable: true,
     outerClass: formClass(4)
   },
