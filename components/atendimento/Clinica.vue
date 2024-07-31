@@ -181,6 +181,9 @@ const value = ref({
   dt_data: useDateFormat(new Date(), 'YYYY-MM-DD').value,
   dt_hora: useDateFormat(new Date(), 'HH:mm').value
 })
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
+}
 </script>
 
 <template>
@@ -194,6 +197,32 @@ const value = ref({
       :data
       :value
       :controller="useAtendimento()"
-    />
+      @submit="onSubmit"
+    >
+      <FormKit
+        type="button"
+        input-class="w-full justify-center"
+        :outer-class="formClass(3)"
+        label="Exames"
+      />
+      <FormKit
+        type="button"
+        input-class="w-full justify-center"
+        :outer-class="formClass(3)"
+        label="Arquivos"
+      />
+      <FormKit
+        type="button"
+        input-class="w-full justify-center"
+        :outer-class="formClass(3)"
+        label="Solicitar"
+      />
+      <FormKit
+        type="button"
+        input-class="w-full justify-center"
+        :outer-class="formClass(3)"
+        label="Cancelar"
+      />
+    </BaseFormLayout>
   </BaseForm>
 </template>

@@ -261,9 +261,8 @@ watch(() => props.id, async () => {
   model.value = response
 })
 //
-const onSubmit = async (_data: any) => {
-  _data.bb_portal_anexo = Encode64(_data.bb_portal_anexo)
-  emit('submit', _data)
+const onSubmit = async (...args) => {
+  emit('submit', ...args)
 }
 </script>
 

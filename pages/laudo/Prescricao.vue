@@ -4,6 +4,7 @@ import { usePrescricao } from '~/composables/laudo/usePrescricao'
 import { useLaudo } from '~/composables/laudo/useLaudo'
 import { Icones, Messages } from '~/types/system'
 
+const title = 'Prescrição'
 const { moduleId } = useRouterStore()
 const apiPage = ref(null)
 const controller = usePrescricao()
@@ -180,7 +181,7 @@ const abrirDocumento = async () => {
     <BasePage
       v-show="!showEditor"
       ref="apiPage"
-      :header="{ title: 'Prescrição', icon: Icones.prescricao }"
+      :header="{ title, icon: Icones.prescricao }"
       :controller
       :action-menu
       :row-class-rules
@@ -204,6 +205,7 @@ const abrirDocumento = async () => {
       v-if="showForm"
       :id
       v-model="showForm"
+      :title
       @close="showForm = false"
       @submit="onSubmit"
       @documento="exibirAnexo"
