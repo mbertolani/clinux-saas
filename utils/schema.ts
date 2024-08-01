@@ -129,11 +129,9 @@ export function getFieldOrder(lista: any[], propriedade: string): any[] {
   })
 }
 export function StrToNull(obj) {
-  for (const key in obj) {
-    if (obj[key] === '') {
+  for (const key in obj)
+    if (obj[key] === '')
       obj[key] = null
-    }
-  }
   return obj
 }
 

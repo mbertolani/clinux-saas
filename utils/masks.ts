@@ -2,12 +2,13 @@ export function formatDateTime(payload: string) {
   return payload?.replace(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).*/, '$3/$2/$1 $4:$5')
 }
 export function formatTime(payload: string) {
-  if (!payload)
-    return ''
-  else if (payload.length === 8)
-    return payload?.replace(/(\d{2}):(\d{2}):(\d{2})/, '$1:$2')
-  else
-    return payload?.replace(/(\d{2}):(\d{2}):(\d{2}).(\d{6})/, '$1:$2')
+  return payload?.substring(0, 5)
+  // else if (payload.length === 8)
+  //   return payload?.replace(/(\d{2}):(\d{2}):(\d{2})/, '$1:$2')
+  // else if (payload.length === 11)
+  //   return payload?.replace(/(\d{2}):(\d{2}):(\d{2}).(\d{3})/, '$1:$2')
+  // else
+  //   return payload?.replace(/(\d{2}):(\d{2}):(\d{2}).(\d{6})/, '$1:$2')
 }
 export function formatDate(payload: string) {
   return payload?.replace(/(\d{4})-(\d{2})-(\d{2})/, '$3/$2/$1')

@@ -96,7 +96,7 @@ const setRowData = async () => {
   if (inputSearch.value.dt_de)
     payload.dt_de = inputSearch.value.dt_de
   if (inputSearch.value.dt_ate)
-    payload.dt_de = inputSearch.value.dt_ate
+    payload.dt_ate = inputSearch.value.dt_ate
   return (props.filter || props.filterDate) ? await props.controller.getView(StrToNull(payload)) : await props.controller.getAll()
 }
 const setColumnDefs = async () => {
